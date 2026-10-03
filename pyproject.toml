@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aoneb-civilization-v1"
+version = "0.1.0"
+description = "Python SDK for the Civilization v1 decision, memory, job, and export service"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+readme = "SDK.md"
+requires-python = ">=3.10"
+authors = [{name = "Vtslx"}]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Vtslx/Civilization"
+Repository = "https://github.com/Vtslx/Civilization"
+Issues = "https://github.com/Vtslx/Civilization/issues"
+
+[project.optional-dependencies]
+# Hosts the service in-process with a local model or a generic local backend.
+embedded = [
+  "torch>=2.2",
+  "transformers==4.57.6",
+  "accelerate==1.13.0",
+  "safetensors==0.7.0",
+  "huggingface_hub==0.36.2",
+  "psutil==7.2.2",
+  "datasets>=3,<5",
+  "numpy>=1.26",
+]
+# Extra libraries used by the stage runners and analysis modules
+# (figures, clustering, embedding projections).
+analysis = [
+  "matplotlib>=3.8",
+  "scikit-learn>=1.3",
+  "umap-learn>=0.5",
+]
+# Everything needed to run the test suite: the suite imports analysis modules.
+test = [
+  "pytest>=8",
+  "torch>=2.2",
+  "transformers==4.57.6",
+  "numpy>=1.26",
+  "psutil>=5.9",
+  "matplotlib>=3.8",
+  "scikit-learn>=1.3",
+  "umap-learn>=0.5",
+]
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "civilization_v1*",
+  "experiments.civilization_transformer_qwen3*",
+  "experiments.civilization_transformer_torch*",
+]
+exclude = [
+  "experiments.civilization_transformer_qwen3.tests*",
+  "experiments.civilization_transformer_torch.tests*",
+]
+namespaces = true
+
+[tool.setuptools.package-data]
+civilization_v1 = ["py.typed"]

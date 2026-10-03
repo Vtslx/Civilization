@@ -1,0 +1,5 @@
+from experiments.civilization_transformer_qwen3.analysis.stage117_trifid_checkpoint_recovery import run_stage117_trifid_checkpoint_recovery_smoke
+
+
+def test_stage117_falls_back_to_latest_valid_checkpoint(tmp_path) -> None:
+    assert run_stage117_trifid_checkpoint_recovery_smoke(output_dir=tmp_path)["passes_stage_gate"]

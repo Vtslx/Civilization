@@ -1,0 +1,48 @@
+{
+  "name": "@astreusn/civilization-transformer",
+  "version": "0.00.08-crab",
+  "description": "Provider-agnostic TypeScript SDK for the Civilization decision, memory, job, and export service",
+  "license": "Apache-2.0",
+  "private": false,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "civilization",
+    "sdk",
+    "memory",
+    "decision-service"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:live": "CIVILIZATION_BASE_URL=${CIVILIZATION_BASE_URL:-http://127.0.0.1:8765} node --test test/live.test.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vtslx/Civilization.git",
+    "directory": "sdk/civilization-transformer"
+  }
+}
