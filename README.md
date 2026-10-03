@@ -29,7 +29,7 @@ no later research lines and no internal development documents.
 | `experiments/civilization_transformer_qwen3/` | The frozen-base line, Stages 44–160: hidden-state baselines, the Civilization Adapter, memory/state/rule path training, and the persistent service chain. |
 | `civilization_v1/` | The Python SDK: a dependency-free HTTP client, the request/prediction/job models, the provider-agnostic runtime layer, and an in-process service host. |
 | `sdk/civilization-transformer/` | The TypeScript SDK: a zero-dependency client for decisions, memory, jobs, and export packages. |
-| `SDK.md`, `pyproject.toml` | Python packaging for `aoneb-civilization-v1`. |
+| `SDK.md`, `pyproject.toml` | Python packaging for `astreusn-civilization-v1`. |
 
 Over 500 tests cover the line, from the first rule-gate unit tests to the
 service, memory, and SDK contracts.
@@ -187,7 +187,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               checkpoint resolution (see Testing)
 ├── sdk/civilization-transformer/        TypeScript SDK
 ├── SDK.md                               Python SDK guide
-└── pyproject.toml                       packaging for aoneb-civilization-v1
+└── pyproject.toml                       packaging for astreusn-civilization-v1
 ```
 
 ## Testing

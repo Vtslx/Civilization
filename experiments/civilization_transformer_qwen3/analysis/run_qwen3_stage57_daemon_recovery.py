@@ -4,6 +4,7 @@ import argparse
 import json
 
 from .stage57_daemon_recovery import DEFAULT_OUTPUT_DIR, Stage57RecoveryConfig, run_stage57_recovery_smoke
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 def main() -> None:
@@ -13,7 +14,7 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--preferred-device", default="cuda")
     parser.add_argument("--max-length", type=int, default=384)
-    parser.add_argument("--model-path", default="/home/yike/AoNeb-01/Models/Qwen3-0.6B")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
     parser.add_argument("--package-manifest", default="experiments/civilization_transformer_qwen3/artifacts/stage45_adapter_package/package_manifest.json")
     parser.add_argument(
         "--centroid-bundle",

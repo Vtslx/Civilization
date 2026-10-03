@@ -23,7 +23,7 @@ v1 線把一個小型語言模型**凍結**，在其上訓練 Civilization Adapt
 | `experiments/civilization_transformer_qwen3/` | 凍結底座線，Stage 44–160：hidden-state 基線、Civilization Adapter、memory/state/rule 路徑訓練，以及常駐服務鏈。 |
 | `civilization_v1/` | Python SDK：零依賴 HTTP 客戶端、請求/預測/任務模型、與 provider 無關的 runtime 層，以及行程內服務宿主。 |
 | `sdk/civilization-transformer/` | TypeScript SDK：零依賴客戶端，涵蓋決策、記憶、非同步任務與匯出包。 |
-| `SDK.md`、`pyproject.toml` | `aoneb-civilization-v1` 的 Python 打包設定。 |
+| `SDK.md`、`pyproject.toml` | `astreusn-civilization-v1` 的 Python 打包設定。 |
 
 全倉庫有 500 多個測試，涵蓋從最早的規則閘單元測試到服務、記憶與 SDK 合約。
 
@@ -176,7 +176,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               模型路徑解析（見下節）
 ├── sdk/civilization-transformer/        TypeScript SDK
 ├── SDK.md                               Python SDK 指南
-└── pyproject.toml                       aoneb-civilization-v1 打包設定
+└── pyproject.toml                       astreusn-civilization-v1 打包設定
 ```
 
 ## 測試

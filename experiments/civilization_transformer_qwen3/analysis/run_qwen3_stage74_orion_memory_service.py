@@ -9,6 +9,7 @@ from .stage74_orion_memory_service import (
     build_stage74_real_service,
     run_stage74_orion_memory_service_smoke,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 def main() -> None:
@@ -20,7 +21,7 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--preferred-device", default="cuda")
-    parser.add_argument("--model-path", default="/home/yike/AoNeb-01/Models/Qwen3-0.6B")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
     args = parser.parse_args()
 
     if args.smoke:

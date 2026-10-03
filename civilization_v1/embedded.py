@@ -47,7 +47,7 @@ class EmbeddedConfig:
     provider_api_key_env: str = "OPENAI_API_KEY"
     provider_api_key: str | None = None
     provider_headers: Mapping[str, str] = field(default_factory=dict)
-    provider_user_agent: str = "aoneb-civilization-v1/0.00.08"
+    provider_user_agent: str = "astreusn-civilization-v1/0.00.08"
     provider_force_json_object: bool = True
     provider_extra_body: Mapping[str, Any] = field(default_factory=dict)
     allow_insecure_http: bool = False
@@ -56,7 +56,7 @@ class EmbeddedConfig:
     max_new_tokens: int = 64
     package_manifest: str = ""
     centroid_bundle: str = ""
-    state_dir: str = "~/.aoneb/civilization-v1"
+    state_dir: str = "~/.astreusn/civilization-v1"
     bearer_token_env: str | None = "CIVILIZATION_API_TOKEN"
     host: str = "127.0.0.1"
     port: int = 0

@@ -20,6 +20,7 @@ from .stage56_daemon_operations import (
     write_stage56_daemon_bundle,
     validate_stage56_daemon_bundle,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage57_daemon_recovery")
@@ -31,7 +32,7 @@ class Stage57RecoveryConfig:
     port: int = 8765
     preferred_device: str = "cuda"
     max_length: int = 384
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B"
+    model_path: str = str(DEFAULT_MODEL_PATH)
     package_manifest: str = "experiments/civilization_transformer_qwen3/artifacts/stage45_adapter_package/package_manifest.json"
     centroid_bundle: str = (
         "experiments/civilization_transformer_qwen3/artifacts/"

@@ -19,6 +19,7 @@ from .stage59_access_control_audit import (
     build_stage59_real_service,
     redact_payload,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage60_queue_rate_limit")
@@ -241,7 +242,7 @@ def build_stage60_real_service(
         "experiments/civilization_transformer_qwen3/artifacts/"
         "stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt"
     ),
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B",
+    model_path: str = str(DEFAULT_MODEL_PATH),
     preferred_device: str = "cuda",
     max_length: int = 384,
 ) -> Stage60QueueRateLimitedService:

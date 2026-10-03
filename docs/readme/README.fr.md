@@ -28,7 +28,7 @@ ultérieures et sans documents internes de développement.
 | `experiments/civilization_transformer_qwen3/` | Ligne à base gelée, Stages 44–160 : références de hidden states, Civilization Adapter, entraînement des chemins memory/state/rule et chaîne de service persistante. |
 | `civilization_v1/` | SDK Python : client HTTP sans dépendance, modèles requête/prédiction/tâche, couche runtime agnostique du fournisseur et hôte de service en processus. |
 | `sdk/civilization-transformer/` | SDK TypeScript : client sans dépendance pour décisions, mémoire, tâches et paquets d'export. |
-| `SDK.md`, `pyproject.toml` | Empaquetage Python de `aoneb-civilization-v1`. |
+| `SDK.md`, `pyproject.toml` | Empaquetage Python de `astreusn-civilization-v1`. |
 
 Plus de 500 tests couvrent la ligne, des premiers tests unitaires de règles aux
 contrats de service, de mémoire et de SDK.
@@ -187,7 +187,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               résolution du checkpoint (voir Tests)
 ├── sdk/civilization-transformer/        SDK TypeScript
 ├── SDK.md                               guide du SDK Python
-└── pyproject.toml                       empaquetage de aoneb-civilization-v1
+└── pyproject.toml                       empaquetage de astreusn-civilization-v1
 ```
 
 ## Tests

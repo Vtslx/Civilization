@@ -1,4 +1,4 @@
-"""Public API for the AoNeb Civilization v1 SDK."""
+"""Public API for the AstreusN Civilization v1 SDK."""
 
 from __future__ import annotations
 

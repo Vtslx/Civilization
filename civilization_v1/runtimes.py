@@ -85,7 +85,7 @@ class ProviderRuntimeConfig:
     timeout_seconds: float = 120.0
     max_tokens: int = 512
     allow_insecure_http: bool = False
-    user_agent: str = "aoneb-civilization-v1/0.00.08"
+    user_agent: str = "astreusn-civilization-v1/0.00.08"
     force_json_object: bool = True
     extra_body: Mapping[str, Any] = field(default_factory=dict)
 

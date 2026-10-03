@@ -12,6 +12,7 @@ from ..backend import Qwen3Backend
 from .stage73_orion_memory_kernel import MemorySystem, OrionMemoryStore
 from .stage74_orion_memory_service import build_stage74_real_service
 from .stage75_orion_adapter_context_bridge import OrionAdapterContextBridge
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage75_orion_adapter_diagnostic")
@@ -31,7 +32,7 @@ def _post(url: str, payload: dict[str, Any]) -> dict[str, Any]:
 def run_stage75_orion_adapter_diagnostic(
     *,
     output_dir: str | Path = DEFAULT_OUTPUT_DIR,
-    model_path: str | Path = "/home/yike/AoNeb-01/Models/Qwen3-0.6B",
+    model_path: str | Path = str(DEFAULT_MODEL_PATH),
     preferred_device: str = "cuda",
 ) -> dict[str, Any]:
     output = Path(output_dir)

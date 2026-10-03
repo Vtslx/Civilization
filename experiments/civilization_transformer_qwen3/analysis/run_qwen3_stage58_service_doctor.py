@@ -9,6 +9,7 @@ from .stage58_service_doctor import (
     generate_stage58_runbook,
     run_stage58_doctor,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 def _config(args: argparse.Namespace) -> Stage58DoctorConfig:
@@ -39,9 +40,9 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--preferred-device", default="cuda")
     parser.add_argument("--max-length", type=int, default=384)
-    parser.add_argument("--repo-root", default="/home/yike/AoNeb-01")
+    parser.add_argument("--repo-root", default=".")
     parser.add_argument("--python-bin", default=".venv/bin/python")
-    parser.add_argument("--model-path", default="/home/yike/AoNeb-01/Models/Qwen3-0.6B")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
     parser.add_argument("--package-manifest", default="experiments/civilization_transformer_qwen3/artifacts/stage45_adapter_package/package_manifest.json")
     parser.add_argument(
         "--centroid-bundle",
@@ -55,7 +56,7 @@ def main() -> None:
     parser.add_argument("--log-dir", default="experiments/civilization_transformer_qwen3/artifacts/logs")
     parser.add_argument("--pid-file", default="experiments/civilization_transformer_qwen3/artifacts/logs/stage56_daemon.pid")
     parser.add_argument("--log-file", default="experiments/civilization_transformer_qwen3/artifacts/logs/stage56_daemon.log")
-    parser.add_argument("--systemd-unit-name", default="aoneb-qwen3-civilization.service")
+    parser.add_argument("--systemd-unit-name", default="astreusn-qwen3-civilization.service")
     args = parser.parse_args()
     if args.doctor == args.write_runbook:
         parser.error("select exactly one of --doctor or --write-runbook")

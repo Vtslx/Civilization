@@ -10,6 +10,7 @@ from .stage60_queue_rate_limit import (
     build_stage60_real_service,
     run_stage60_queue_smoke,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 def main() -> None:
@@ -36,7 +37,7 @@ def main() -> None:
             "stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt"
         ),
     )
-    parser.add_argument("--model-path", default="/home/yike/AoNeb-01/Models/Qwen3-0.6B")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
     parser.add_argument("--preferred-device", default="cuda")
     parser.add_argument("--max-length", type=int, default=384)
     args = parser.parse_args()

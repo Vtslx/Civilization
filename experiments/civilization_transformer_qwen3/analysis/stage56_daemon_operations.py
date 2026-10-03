@@ -19,6 +19,7 @@ from .stage55_service_deployment import (
     Stage55ServiceClient,
     _wait_ready,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage56_daemon_operations")
@@ -35,7 +36,7 @@ class Stage56DaemonConfig:
         "experiments/civilization_transformer_qwen3/artifacts/"
         "stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt"
     )
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B"
+    model_path: str = str(DEFAULT_MODEL_PATH)
     output_dir: str = str(DEFAULT_OUTPUT_DIR)
     log_dir: str = str(DEFAULT_LOG_DIR)
     pid_file: str = str(DEFAULT_LOG_DIR / "stage56_daemon.pid")

@@ -1,6 +1,6 @@
-# AoNeb Civilization v1 Python SDK
+# AstreusN Civilization v1 Python SDK
 
-`aoneb-civilization-v1` provides a stable application-facing API over the
+`astreusn-civilization-v1` provides a stable application-facing API over the
 Civilization v1 service chain. Production inference always uses the `full`
 control mode. Offline ablation controls remain internal experiment tools and
 are intentionally absent from this SDK.

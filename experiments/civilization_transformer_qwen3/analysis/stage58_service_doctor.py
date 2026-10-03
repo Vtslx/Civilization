@@ -18,6 +18,7 @@ from .stage56_daemon_operations import (
     validate_stage56_daemon_bundle,
     write_stage56_daemon_bundle,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage58_service_doctor")
@@ -29,9 +30,9 @@ class Stage58DoctorConfig:
     port: int = 8765
     preferred_device: str = "cuda"
     max_length: int = 384
-    repo_root: str = "/home/yike/AoNeb-01"
+    repo_root: str = "."
     python_bin: str = ".venv/bin/python"
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B"
+    model_path: str = str(DEFAULT_MODEL_PATH)
     package_manifest: str = "experiments/civilization_transformer_qwen3/artifacts/stage45_adapter_package/package_manifest.json"
     centroid_bundle: str = (
         "experiments/civilization_transformer_qwen3/artifacts/"
@@ -42,7 +43,7 @@ class Stage58DoctorConfig:
     log_dir: str = "experiments/civilization_transformer_qwen3/artifacts/logs"
     pid_file: str = "experiments/civilization_transformer_qwen3/artifacts/logs/stage56_daemon.pid"
     log_file: str = "experiments/civilization_transformer_qwen3/artifacts/logs/stage56_daemon.log"
-    systemd_unit_name: str = "aoneb-qwen3-civilization.service"
+    systemd_unit_name: str = "astreusn-qwen3-civilization.service"
 
 
 def _json_dump(path: Path, value: Any) -> None:
@@ -181,7 +182,7 @@ def generate_stage58_runbook(
     restart_script = Path(daemon_manifest["files"]["restart_script"])
     status_script = Path(daemon_manifest["files"]["status_script"])
     unit_body = f"""[Unit]
-Description=AoNeb Qwen3 Civilization Adapter Service
+Description=AstreusN Qwen3 Civilization Adapter Service
 After=network.target
 
 [Service]

@@ -6,6 +6,7 @@ from urllib.request import Request, urlopen
 
 from .stage74_orion_memory_service import build_stage74_real_service
 from .stage84_orion_conflict_resolution import OrionConflictResolutionPolicy
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage89_orion_multisession_evaluation")
@@ -17,7 +18,7 @@ def _post(url: str, payload: dict) -> dict:
         return json.loads(response.read().decode())
 
 
-def run_stage89_orion_multisession_evaluation(*, output_dir: str | Path = DEFAULT_OUTPUT_DIR, model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B") -> dict:
+def run_stage89_orion_multisession_evaluation(*, output_dir: str | Path = DEFAULT_OUTPUT_DIR, model_path: str = str(DEFAULT_MODEL_PATH)) -> dict:
     service = build_stage74_real_service(port=0, model_path=model_path, preferred_device="cuda")
     winner = service.global_memory_store.write_cell(memory_system="semantic", content="shared global approval evidence", summary="shared winner", source="stage78", confidence=0.9)
     loser = service.global_memory_store.write_cell(memory_system="semantic", content="shared global rejection evidence", summary="shared loser", source="stage78", confidence=0.4)

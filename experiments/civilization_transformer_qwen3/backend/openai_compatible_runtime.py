@@ -70,7 +70,7 @@ class OpenAICompatibleRuntimeConfig:
     headers: Mapping[str, str] = field(default_factory=dict)
     timeout_seconds: float = 120.0
     max_tokens: int = 512
-    user_agent: str = "aoneb-civilization-v1/0.00.08"
+    user_agent: str = "astreusn-civilization-v1/0.00.08"
     allow_insecure_http: bool = False
     empty_content_retries: int = 2
     force_json_object: bool = True

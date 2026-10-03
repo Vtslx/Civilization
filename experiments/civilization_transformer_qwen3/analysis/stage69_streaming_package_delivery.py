@@ -26,6 +26,7 @@ from .stage68_export_package_delivery import (
     Stage68ExportPackageService,
     Stage68PackageConfig,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage69_streaming_package_delivery")
@@ -216,7 +217,7 @@ def build_stage69_real_service(
         "experiments/civilization_transformer_qwen3/artifacts/"
         "stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt"
     ),
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B",
+    model_path: str = str(DEFAULT_MODEL_PATH),
     preferred_device: str = "cuda",
     max_length: int = 384,
 ) -> Stage69StreamingPackageService:

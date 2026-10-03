@@ -25,7 +25,7 @@ import type {
 
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "::1", "localhost"]);
 const DEFAULT_TIMEOUT_MS = 120_000;
-const USER_AGENT = "aoneb-civilization-transformer-sdk/0.00.08";
+const USER_AGENT = "astreusn-civilization-transformer-sdk/0.00.08";
 
 type JsonRecord = Record<string, unknown>;
 

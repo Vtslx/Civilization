@@ -28,6 +28,7 @@ from .stage76_orion_replay_consolidation import OrionReplayConsolidationPolicy, 
 from .stage79_orion_global_retrieval import OrionGlobalRetrievalRouter
 from .stage86_orion_task_memory_policy import OrionTaskMemoryPolicy
 from .stage93_orion_global_store_lifecycle import OrionGlobalStoreLifecycle
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage74_orion_memory_service")
@@ -482,7 +483,7 @@ def build_stage74_real_service(
     memory_config: Stage74MemoryConfig = Stage74MemoryConfig(),
     package_manifest: str = "experiments/civilization_transformer_qwen3/artifacts/stage45_adapter_package/package_manifest.json",
     centroid_bundle: str = "experiments/civilization_transformer_qwen3/artifacts/stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt",
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B",
+    model_path: str = str(DEFAULT_MODEL_PATH),
     preferred_device: str = "cuda",
     max_length: int = 384,
 ) -> Stage74OrionMemoryService:

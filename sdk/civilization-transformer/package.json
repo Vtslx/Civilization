@@ -25,7 +25,8 @@
     "civilization",
     "sdk",
     "memory",
-    "decision-service"
+    "decision-service",
+    "astreusn"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -44,5 +45,6 @@
     "type": "git",
     "url": "git+https://github.com/Vtslx/Civilization.git",
     "directory": "sdk/civilization-transformer"
-  }
+  },
+  "author": "AstreusN"
 }

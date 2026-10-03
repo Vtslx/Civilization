@@ -4,12 +4,13 @@ import argparse
 import json
 
 from .stage75_orion_adapter_diagnostic import DEFAULT_OUTPUT_DIR, run_stage75_orion_adapter_diagnostic
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run Stage75 Orion adapter-context diagnostic")
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
-    parser.add_argument("--model-path", default="/home/yike/AoNeb-01/Models/Qwen3-0.6B")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
     parser.add_argument("--preferred-device", default="cuda")
     args = parser.parse_args()
     summary = run_stage75_orion_adapter_diagnostic(

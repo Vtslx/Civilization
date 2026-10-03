@@ -79,7 +79,7 @@ class CivilizationClient:
         return f"Bearer {token}" if token is not None else None
 
     def _request(self, method: str, path: str, payload: Mapping[str, Any] | None = None) -> dict[str, Any]:
-        headers = {"Accept": "application/json", "User-Agent": "aoneb-civilization-v1-sdk/0.1"}
+        headers = {"Accept": "application/json", "User-Agent": "astreusn-civilization-v1-sdk/0.1"}
         authorization = self._authorization()
         if authorization:
             headers["Authorization"] = authorization
@@ -288,7 +288,7 @@ class CivilizationClient:
         destination = Path(output_path)
         destination.parent.mkdir(parents=True, exist_ok=True)
         temporary = destination.with_name(f".{destination.name}.part")
-        headers = {"User-Agent": "aoneb-civilization-v1-sdk/0.1"}
+        headers = {"User-Agent": "astreusn-civilization-v1-sdk/0.1"}
         authorization = self._authorization()
         if authorization:
             headers["Authorization"] = authorization

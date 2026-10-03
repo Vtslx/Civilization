@@ -25,7 +25,7 @@ v1 라인은 작은 언어 모델을 **동결**하고 그 위에 Civilization Ad
 | `experiments/civilization_transformer_qwen3/` | 동결 베이스 라인, Stage 44–160. hidden-state 베이스라인, Civilization Adapter, memory/state/rule 경로 학습, 상주 서비스 체인. |
 | `civilization_v1/` | Python SDK. 의존성 없는 HTTP 클라이언트, 요청/예측/작업 모델, provider 비종속 runtime 계층, 프로세스 내 서비스 호스트. |
 | `sdk/civilization-transformer/` | TypeScript SDK. 결정·기억·작업·내보내기를 다루는 의존성 없는 클라이언트. |
-| `SDK.md`, `pyproject.toml` | `aoneb-civilization-v1` Python 패키징. |
+| `SDK.md`, `pyproject.toml` | `astreusn-civilization-v1` Python 패키징. |
 
 저장소 전체에 500개가 넘는 테스트가 있어 초기 규칙 게이트 단위 테스트부터 서비스·기억·SDK
 계약까지 포괄합니다.
@@ -181,7 +181,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               체크포인트 경로 해석(아래 참조)
 ├── sdk/civilization-transformer/        TypeScript SDK
 ├── SDK.md                               Python SDK 가이드
-└── pyproject.toml                       aoneb-civilization-v1 패키징
+└── pyproject.toml                       astreusn-civilization-v1 패키징
 ```
 
 ## 테스트

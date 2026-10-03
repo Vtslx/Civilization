@@ -24,6 +24,7 @@ from .stage65_batch_jobs import (
     Stage65BatchConfig,
     Stage65BatchJobService,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 DEFAULT_OUTPUT_DIR = Path("experiments/civilization_transformer_qwen3/artifacts/stage66_batch_export")
@@ -282,7 +283,7 @@ def build_stage66_real_service(
         "experiments/civilization_transformer_qwen3/artifacts/"
         "stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt"
     ),
-    model_path: str = "/home/yike/AoNeb-01/Models/Qwen3-0.6B",
+    model_path: str = str(DEFAULT_MODEL_PATH),
     preferred_device: str = "cuda",
     max_length: int = 384,
 ) -> Stage66BatchExportService:

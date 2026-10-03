@@ -13,6 +13,7 @@ from .stage56_daemon_operations import (
     validate_stage56_daemon_bundle,
     write_stage56_daemon_bundle,
 )
+from experiments.civilization_transformer_qwen3.model_paths import DEFAULT_MODEL_PATH
 
 
 def _config_from_args(args: argparse.Namespace) -> Stage56DaemonConfig:
@@ -57,7 +58,7 @@ def main() -> None:
             "stage47_centroid_batch_inference_official_full/centroid_bundle_seed_202.pt"
         ),
     )
-    parser.add_argument("--model-path", default="/home/yike/AoNeb-01/Models/Qwen3-0.6B")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--log-dir", default="experiments/civilization_transformer_qwen3/artifacts/logs")
     parser.add_argument("--pid-file", default="experiments/civilization_transformer_qwen3/artifacts/logs/stage56_daemon.pid")

@@ -28,7 +28,7 @@ investigación posteriores y sin documentos internos de desarrollo.
 | `experiments/civilization_transformer_qwen3/` | Línea de base congelada, Stages 44–160: líneas base de hidden states, Civilization Adapter, entrenamiento de rutas memory/state/rule y la cadena de servicio persistente. |
 | `civilization_v1/` | SDK de Python: cliente HTTP sin dependencias, modelos de petición/predicción/trabajo, capa de runtime agnóstica del proveedor y host de servicio en proceso. |
 | `sdk/civilization-transformer/` | SDK de TypeScript: cliente sin dependencias para decisiones, memoria, trabajos y paquetes de exportación. |
-| `SDK.md`, `pyproject.toml` | Empaquetado Python de `aoneb-civilization-v1`. |
+| `SDK.md`, `pyproject.toml` | Empaquetado Python de `astreusn-civilization-v1`. |
 
 Más de 500 pruebas cubren la línea, desde las primeras pruebas unitarias de reglas
 hasta los contratos de servicio, memoria y SDK.
@@ -186,7 +186,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               resolución del checkpoint (ver Pruebas)
 ├── sdk/civilization-transformer/        SDK de TypeScript
 ├── SDK.md                               guía del SDK de Python
-└── pyproject.toml                       empaquetado de aoneb-civilization-v1
+└── pyproject.toml                       empaquetado de astreusn-civilization-v1
 ```
 
 ## Pruebas

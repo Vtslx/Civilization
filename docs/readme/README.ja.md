@@ -26,7 +26,7 @@ states に射影され、パス単位でアブレーションと監査ができ�
 | `experiments/civilization_transformer_qwen3/` | 凍結ベースライン、Stage 44–160。hidden-state ベースライン、Civilization Adapter、memory/state/rule パス学習、常駐サービスチェーン。 |
 | `civilization_v1/` | Python SDK。依存ゼロの HTTP クライアント、リクエスト／予測／ジョブのモデル、provider 非依存の runtime 層、プロセス内サービスホスト。 |
 | `sdk/civilization-transformer/` | TypeScript SDK。決定・記憶・ジョブ・エクスポートを扱う依存ゼロのクライアント。 |
-| `SDK.md`、`pyproject.toml` | `aoneb-civilization-v1` の Python パッケージング。 |
+| `SDK.md`、`pyproject.toml` | `astreusn-civilization-v1` の Python パッケージング。 |
 
 リポジトリ全体で 500 を超えるテストがあり、初期のルールゲート単体テストからサービス・
 記憶・SDK の契約までをカバーしています。
@@ -183,7 +183,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               チェックポイント解決（下記参照）
 ├── sdk/civilization-transformer/        TypeScript SDK
 ├── SDK.md                               Python SDK ガイド
-└── pyproject.toml                       aoneb-civilization-v1 パッケージング
+└── pyproject.toml                       astreusn-civilization-v1 パッケージング
 ```
 
 ## テスト

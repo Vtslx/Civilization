@@ -27,7 +27,7 @@ Civilization Adapter и диагностические считывания. П�
 | `experiments/civilization_transformer_qwen3/` | Линия с замороженной базой, Stages 44–160: базовые линии hidden states, Civilization Adapter, обучение путей memory/state/rule и постоянная сервисная цепочка. |
 | `civilization_v1/` | Python SDK: HTTP-клиент без зависимостей, модели запроса/предсказания/задачи, независимый от провайдера слой runtime и внутрипроцессный хост сервиса. |
 | `sdk/civilization-transformer/` | TypeScript SDK: клиент без зависимостей для решений, памяти, задач и пакетов экспорта. |
-| `SDK.md`, `pyproject.toml` | Упаковка Python для `aoneb-civilization-v1`. |
+| `SDK.md`, `pyproject.toml` | Упаковка Python для `astreusn-civilization-v1`. |
 
 Более 500 тестов покрывают линию — от первых модульных тестов правил до контрактов
 сервиса, памяти и SDK.
@@ -186,7 +186,7 @@ const prediction = await client.predict({
 │       └── model_paths.py               разрешение пути к чекпоинту (см. Тесты)
 ├── sdk/civilization-transformer/        TypeScript SDK
 ├── SDK.md                               руководство по Python SDK
-└── pyproject.toml                       упаковка aoneb-civilization-v1
+└── pyproject.toml                       упаковка astreusn-civilization-v1
 ```
 
 ## Тесты

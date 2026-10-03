@@ -3,14 +3,14 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aoneb-civilization-v1"
+name = "astreusn-civilization-v1"
 version = "0.1.0"
 description = "Python SDK for the Civilization v1 decision, memory, job, and export service"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 readme = "SDK.md"
 requires-python = ">=3.10"
-authors = [{name = "Vtslx"}]
+authors = [{name = "AstreusN"}]
 dependencies = []
 
 [project.urls]
