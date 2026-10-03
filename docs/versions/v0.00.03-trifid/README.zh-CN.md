@@ -1,0 +1,47 @@
+# v0.00.03 Trifid —— 基线记录
+
+| | |
+|---|---|
+| 版本 | `v0.00.03` |
+| 代号 | Trifid |
+| Stage | 101–121 |
+| 主题 | 情景快速绑定、线索与时间消歧、受控 replay |
+| 状态 | 已实现 |
+| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage101…stage121` |
+| 合同测试 | 20 个测试文件 |
+
+## 新增能力
+
+- **情景绑定。** 把一次情景的内容快速绑定为可寻址的情景单元（`stage101_trifid_episode_binding`）。
+- **消歧。** 基于线索与时间的消歧，加时间索引，使相似情景可以按发生时间与所用线索区分（`stage102`、`stage103`）。
+- **模式补全。** 部分线索即可恢复已绑定的情景（`stage104_trifid_episode_pattern_completion`）。
+- **受控 replay。** 带显式调度器的情景 replay、候选构造，以及巩固前的批准（`stage105`–`stage108`）。
+- **冲突感知的情景检索。** 语义情景检索、冲突守卫、冲突复核、冲突裁决与冲突感知检索（`stage109`–`stage113`）。
+- **快照与检查点。** 情景快照、恢复、成对检查点、检查点恢复、保留与保留审计（`stage114`–`stage119`）。
+- **服务集成。** 把情景机制接回 Stage74 记忆服务的桥（`stage121`）。
+
+## 基线合同
+
+- 情景一经绑定即保持可寻址；消歧不会返回其他会话的情景。
+- replay 不会静默改写历史：候选需要批准，且决策被记录。
+- 快照恢复出的内容与快照时完全一致；恢复不会凭空生成或重排情景。
+- 检查点保留遵守其审计：审计声称保留的内容事后仍可恢复。
+
+## 本地验证
+
+```bash
+python -m pip install '.[test]'
+pytest experiments/civilization_transformer_qwen3/tests -q -k "stage10 or stage11 or stage12"
+```
+
+## 边界
+
+- 情景结构是显式且可审计的，不作为类人记忆的涌现性主张。
+- replay 是调度的、需批准的；不声称自主自训练。
+- 本版本不附带准确率主张 —— 它是合同基线。
+
+## 测量
+
+本版本无留档测量。Trifid 的对照为合同级。
+
+[English](README.md) · [版本索引](../README.zh-CN.md)

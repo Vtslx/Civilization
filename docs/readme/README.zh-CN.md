@@ -76,6 +76,8 @@ v1 线把一个小型语言模型**冻结**，在其上训练 Civilization Adapt
 发布标签不等于能力声明。v1 线实现到 `v0.00.07`；`v0.00.08`（Crab）只是计划，
 本仓库没有任何代码实现它。
 
+每个已实现版本都有一份**基线记录**（范围、新增能力、必须守住的合同不变量、验证命令与边界）：[docs/versions](../versions/README.zh-CN.md)。目前只有 `v0.00.07` Helix 有留档测量：[原生记忆配对 A/B](../versions/v0.00.07-helix/experiments/memory-on-off-ab.zh-CN.md)（同题同模型，开启/关闭记忆，46 对独赢、0 对独负）。
+
 ## 快速开始
 
 ### Python SDK

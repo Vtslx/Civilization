@@ -1,0 +1,4122 @@
+{
+  "schema_version": "1.0",
+  "recorded_run_id": "20261003T213755Z-ab-fae54b",
+  "captured_at_utc": "2026-10-03T21:44:43.373623+00:00",
+  "published_at_utc": "2026-10-04",
+  "artifact": "paired A/B of Civilization native (Orion) memory on vs. off",
+  "collected_by": "Civilization v1 evaluation run; reproduction script in scripts/memory_ab.py",
+  "implementation_revision": "9ebb73034c10f123e31ee9222ea82464d32967b5",
+  "provider_model": "gpt-6-luna",
+  "service_base_url": "http://127.0.0.1:8765",
+  "rounds": 3,
+  "unique_questions_per_round": 25,
+  "paired_design": "Same text, answer options, task name, session memory contents, provider model, and seed; only CivilizationRequest.read_memory differs. write_memory=False in both conditions. Condition order alternates by case.",
+  "scoring": "Exact match to a synthetic answer key; no LLM judge.",
+  "summary": {
+    "memory_on": {
+      "n": 75,
+      "exact_matches": 75,
+      "accuracy": 1.0,
+      "answerable_n": 63,
+      "answerable_correct": 63,
+      "answerable_accuracy": 1.0,
+      "isolation_n": 12,
+      "isolation_abstentions_correct": 12,
+      "api_errors": 0,
+      "target_cell_in_context": 63,
+      "target_injection_rate": 1.0,
+      "mean_latency_ms": 1846.517,
+      "p50_latency_ms": 1804.783,
+      "p95_latency_ms": 2565.085
+    },
+    "memory_off": {
+      "n": 75,
+      "exact_matches": 29,
+      "accuracy": 0.38666666666666666,
+      "answerable_n": 63,
+      "answerable_correct": 17,
+      "answerable_accuracy": 0.2698412698412698,
+      "isolation_n": 12,
+      "isolation_abstentions_correct": 12,
+      "api_errors": 0,
+      "target_cell_in_context": 0,
+      "target_injection_rate": 0.0,
+      "mean_latency_ms": 3585.838,
+      "p50_latency_ms": 3188.599,
+      "p95_latency_ms": 6745.736
+    },
+    "paired": {
+      "both_correct": 29,
+      "memory_only_correct": 46,
+      "memory_off_only_correct": 0,
+      "both_wrong": 0,
+      "pairs": 75,
+      "net_memory_wins": 46,
+      "accuracy_delta_percentage_points": 61.33,
+      "answerable_accuracy_delta_percentage_points": 73.02,
+      "by_axis": {
+        "atomic_fact_recall": {
+          "both_correct": 3,
+          "memory_only_correct": 12,
+          "memory_off_only_correct": 0,
+          "both_wrong": 0
+        },
+        "preference_recall": {
+          "both_correct": 3,
+          "memory_only_correct": 9,
+          "memory_off_only_correct": 0,
+          "both_wrong": 0
+        },
+        "temporal_ordering": {
+          "both_correct": 1,
+          "memory_only_correct": 11,
+          "memory_off_only_correct": 0,
+          "both_wrong": 0
+        },
+        "similar_entity_interference": {
+          "both_correct": 4,
+          "memory_only_correct": 8,
+          "memory_off_only_correct": 0,
+          "both_wrong": 0
+        },
+        "knowledge_update": {
+          "both_correct": 6,
+          "memory_only_correct": 6,
+          "memory_off_only_correct": 0,
+          "both_wrong": 0
+        },
+        "session_isolation_and_abstention": {
+          "both_correct": 12,
+          "memory_only_correct": 0,
+          "memory_off_only_correct": 0,
+          "both_wrong": 0
+        }
+      }
+    }
+  },
+  "limitations": [
+    "There are 25 unique synthetic questions; the three repeats measure repeatability, not 75 independent question samples.",
+    "The ordinary prediction endpoint receives fixed-choice questions, not free-form conversation or automatic memory-extraction tasks.",
+    "Session store persistence across process restart and global-memory behavior are outside this comparison.",
+    "No-memory calls can still guess from the question or option wording; report paired wins and losses rather than interpreting the raw accuracy delta alone."
+  ],
+  "cases": [
+    {
+      "round": 1,
+      "case_id": "fact-orbit-17",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What archive seal is recorded for evaluation case ORBIT-17?",
+      "options": [
+        "velvet-puma-731",
+        "coral-ibis-904",
+        "plum-kestrel-614",
+        "amber-willow-208"
+      ],
+      "expected": "plum-kestrel-614",
+      "predicted": "plum-kestrel-614",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000001"
+      ],
+      "injected_cell_ids": [
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2157.63,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-orbit-17",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What archive seal is recorded for evaluation case ORBIT-17?",
+      "options": [
+        "velvet-puma-731",
+        "coral-ibis-904",
+        "plum-kestrel-614",
+        "amber-willow-208"
+      ],
+      "expected": "plum-kestrel-614",
+      "predicted": "velvet-puma-731",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000001"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2218.277,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-fable-29",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What handoff token is recorded for evaluation case FABLE-29?",
+      "options": [
+        "copper-lynx-530",
+        "moss-cipher-271",
+        "silver-heron-482",
+        "indigo-tern-116"
+      ],
+      "expected": "moss-cipher-271",
+      "predicted": "moss-cipher-271",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000002"
+      ],
+      "injected_cell_ids": [
+        "semantic-000002",
+        "semantic-000001",
+        "semantic-000003",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1837.906,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-fable-29",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What handoff token is recorded for evaluation case FABLE-29?",
+      "options": [
+        "copper-lynx-530",
+        "moss-cipher-271",
+        "silver-heron-482",
+        "indigo-tern-116"
+      ],
+      "expected": "moss-cipher-271",
+      "predicted": "copper-lynx-530",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000002"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2584.481,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-cirrus-08",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What route code is recorded for evaluation case CIRRUS-08?",
+      "options": [
+        "birch-eagle-644",
+        "saffron-otter-930",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "saffron-otter-930",
+      "predicted": "saffron-otter-930",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000003"
+      ],
+      "injected_cell_ids": [
+        "semantic-000003",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1355.069,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-cirrus-08",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What route code is recorded for evaluation case CIRRUS-08?",
+      "options": [
+        "birch-eagle-644",
+        "saffron-otter-930",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "saffron-otter-930",
+      "predicted": "birch-eagle-644",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000003"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4006.91,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-lattice-51",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What batch marker is recorded for evaluation case LATTICE-51?",
+      "options": [
+        "quartz-finch-128",
+        "cedar-lantern-603",
+        "onyx-raven-857",
+        "pearl-wren-402"
+      ],
+      "expected": "quartz-finch-128",
+      "predicted": "quartz-finch-128",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000004"
+      ],
+      "injected_cell_ids": [
+        "semantic-000004",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1333.239,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-lattice-51",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What batch marker is recorded for evaluation case LATTICE-51?",
+      "options": [
+        "quartz-finch-128",
+        "cedar-lantern-603",
+        "onyx-raven-857",
+        "pearl-wren-402"
+      ],
+      "expected": "quartz-finch-128",
+      "predicted": "quartz-finch-128",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000004"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2063.862,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-vesper-42",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What checkpoint key is recorded for evaluation case VESPER-42?",
+      "options": [
+        "flint-hare-051",
+        "ruby-swallow-924",
+        "cobalt-anchovy-743",
+        "maple-badger-365"
+      ],
+      "expected": "cobalt-anchovy-743",
+      "predicted": "cobalt-anchovy-743",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000005"
+      ],
+      "injected_cell_ids": [
+        "semantic-000005",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1407.912,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "fact-vesper-42",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What checkpoint key is recorded for evaluation case VESPER-42?",
+      "options": [
+        "flint-hare-051",
+        "ruby-swallow-924",
+        "cobalt-anchovy-743",
+        "maple-badger-365"
+      ],
+      "expected": "cobalt-anchovy-743",
+      "predicted": "flint-hare-051",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000005"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2312.479,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-11",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-11, what is the preferred report format?",
+      "options": [
+        "plain-text paragraph",
+        "JSON object",
+        "two-column Markdown table",
+        "numbered checklist"
+      ],
+      "expected": "two-column Markdown table",
+      "predicted": "two-column Markdown table",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000006"
+      ],
+      "injected_cell_ids": [
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000008",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2148.945,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-11",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-11, what is the preferred report format?",
+      "options": [
+        "plain-text paragraph",
+        "JSON object",
+        "two-column Markdown table",
+        "numbered checklist"
+      ],
+      "expected": "two-column Markdown table",
+      "predicted": "JSON object",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000006"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5541.423,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-22",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-22, what is the preferred summary length?",
+      "options": [
+        "five bullet points",
+        "exactly three bullet points",
+        "one sentence",
+        "a full-page narrative"
+      ],
+      "expected": "exactly three bullet points",
+      "predicted": "exactly three bullet points",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000007"
+      ],
+      "injected_cell_ids": [
+        "semantic-000007",
+        "semantic-000006",
+        "semantic-000008",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1437.497,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-22",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-22, what is the preferred summary length?",
+      "options": [
+        "five bullet points",
+        "exactly three bullet points",
+        "one sentence",
+        "a full-page narrative"
+      ],
+      "expected": "exactly three bullet points",
+      "predicted": "exactly three bullet points",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000007"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3739.215,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-33",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-33, what is the preferred reminder time?",
+      "options": [
+        "18:00 local time",
+        "09:15 local time",
+        "12:45 local time",
+        "07:30 local time"
+      ],
+      "expected": "09:15 local time",
+      "predicted": "09:15 local time",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000008"
+      ],
+      "injected_cell_ids": [
+        "semantic-000008",
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1696.822,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-33",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-33, what is the preferred reminder time?",
+      "options": [
+        "18:00 local time",
+        "09:15 local time",
+        "12:45 local time",
+        "07:30 local time"
+      ],
+      "expected": "09:15 local time",
+      "predicted": "18:00 local time",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000008"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3609.393,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-44",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-44, what is the preferred chart style?",
+      "options": [
+        "one large pie chart",
+        "single stacked bar chart",
+        "plain data table",
+        "small-multiples line charts"
+      ],
+      "expected": "small-multiples line charts",
+      "predicted": "small-multiples line charts",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000009"
+      ],
+      "injected_cell_ids": [
+        "semantic-000009",
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000008"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2578.561,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "preference-profile-44",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-44, what is the preferred chart style?",
+      "options": [
+        "one large pie chart",
+        "single stacked bar chart",
+        "plain data table",
+        "small-multiples line charts"
+      ],
+      "expected": "small-multiples line charts",
+      "predicted": "plain data table",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000009"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4199.267,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-01",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-01, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "rollout",
+        "intake",
+        "review",
+        "archive"
+      ],
+      "expected": "review",
+      "predicted": "review",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000010"
+      ],
+      "injected_cell_ids": [
+        "episodic-000010",
+        "episodic-000011",
+        "episodic-000013",
+        "episodic-000012"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2968.308,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-01",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-01, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "rollout",
+        "intake",
+        "review",
+        "archive"
+      ],
+      "expected": "review",
+      "predicted": "intake",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000010"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2221.487,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-02",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-02, which event occurred latest? Choose from the named events.",
+      "options": [
+        "freeze",
+        "validation",
+        "archive",
+        "setup"
+      ],
+      "expected": "setup",
+      "predicted": "setup",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000011"
+      ],
+      "injected_cell_ids": [
+        "episodic-000011",
+        "episodic-000012",
+        "episodic-000013",
+        "episodic-000010"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1939.328,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-02",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-02, which event occurred latest? Choose from the named events.",
+      "options": [
+        "freeze",
+        "validation",
+        "archive",
+        "setup"
+      ],
+      "expected": "setup",
+      "predicted": "archive",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000011"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2896.481,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-03",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-03, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "handoff",
+        "design",
+        "audit",
+        "archive"
+      ],
+      "expected": "handoff",
+      "predicted": "handoff",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000012"
+      ],
+      "injected_cell_ids": [
+        "episodic-000012",
+        "episodic-000010",
+        "episodic-000011",
+        "episodic-000013"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1646.884,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-03",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-03, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "handoff",
+        "design",
+        "audit",
+        "archive"
+      ],
+      "expected": "handoff",
+      "predicted": "handoff",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000012"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 6786.21,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-04",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-04, which event occurred latest? Choose from the named events.",
+      "options": [
+        "launch",
+        "archive",
+        "staging",
+        "approval"
+      ],
+      "expected": "launch",
+      "predicted": "launch",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000013"
+      ],
+      "injected_cell_ids": [
+        "episodic-000012",
+        "episodic-000013",
+        "episodic-000010",
+        "episodic-000011"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2552.78,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "temporal-timeline-04",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-04, which event occurred latest? Choose from the named events.",
+      "options": [
+        "launch",
+        "archive",
+        "staging",
+        "approval"
+      ],
+      "expected": "launch",
+      "predicted": "archive",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000013"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3216.741,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-project-ax14",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What retention code belongs to PROJECT-AX14 (not the similarly named PROJECT-AX41)?",
+      "options": [
+        "birch-eagle-644",
+        "amber-fox-219",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "violet-fox-219",
+      "predicted": "violet-fox-219",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000014"
+      ],
+      "injected_cell_ids": [
+        "episodic-000014",
+        "episodic-000015",
+        "episodic-000022",
+        "episodic-000028"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1948.035,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-project-ax14",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What retention code belongs to PROJECT-AX14 (not the similarly named PROJECT-AX41)?",
+      "options": [
+        "birch-eagle-644",
+        "amber-fox-219",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "violet-fox-219",
+      "predicted": "birch-eagle-644",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000014"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5928.377,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-device-l09",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What reset phrase belongs to DEVICE-L09 (not the similarly named DEVICE-L90)?",
+      "options": [
+        "onyx-raven-857",
+        "pearl-wren-402",
+        "cedar-lantern-603",
+        "cedar-lantern-630"
+      ],
+      "expected": "cedar-lantern-603",
+      "predicted": "cedar-lantern-603",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000016"
+      ],
+      "injected_cell_ids": [
+        "episodic-000016",
+        "episodic-000017",
+        "episodic-000022",
+        "episodic-000024"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1693.406,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-device-l09",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What reset phrase belongs to DEVICE-L09 (not the similarly named DEVICE-L90)?",
+      "options": [
+        "onyx-raven-857",
+        "pearl-wren-402",
+        "cedar-lantern-603",
+        "cedar-lantern-630"
+      ],
+      "expected": "cedar-lantern-603",
+      "predicted": "onyx-raven-857",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000016"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2922.281,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-queue-m27",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What routing label belongs to QUEUE-M27 (not the similarly named QUEUE-M72)?",
+      "options": [
+        "maple-badger-536",
+        "ruby-swallow-924",
+        "maple-badger-365",
+        "flint-hare-051"
+      ],
+      "expected": "maple-badger-365",
+      "predicted": "maple-badger-365",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000018"
+      ],
+      "injected_cell_ids": [
+        "episodic-000018",
+        "episodic-000019",
+        "episodic-000024",
+        "episodic-000025"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2121.041,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-queue-m27",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What routing label belongs to QUEUE-M27 (not the similarly named QUEUE-M72)?",
+      "options": [
+        "maple-badger-536",
+        "ruby-swallow-924",
+        "maple-badger-365",
+        "flint-hare-051"
+      ],
+      "expected": "maple-badger-365",
+      "predicted": "maple-badger-536",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000018"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3938.298,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-vault-r36",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What recovery tag belongs to VAULT-R36 (not the similarly named VAULT-R63)?",
+      "options": [
+        "silver-heron-482",
+        "copper-lynx-530",
+        "indigo-tern-116",
+        "silver-heron-824"
+      ],
+      "expected": "silver-heron-482",
+      "predicted": "silver-heron-482",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000020"
+      ],
+      "injected_cell_ids": [
+        "episodic-000020",
+        "episodic-000021",
+        "episodic-000022",
+        "episodic-000024"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1317.092,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "interference-vault-r36",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What recovery tag belongs to VAULT-R36 (not the similarly named VAULT-R63)?",
+      "options": [
+        "silver-heron-482",
+        "copper-lynx-530",
+        "indigo-tern-116",
+        "silver-heron-824"
+      ],
+      "expected": "silver-heron-482",
+      "predicted": "silver-heron-482",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000020"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3554.419,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-01",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current zone code for UPDATE-01?",
+      "options": [
+        "teal-bison",
+        "amber-fox",
+        "retired-update-01",
+        "pending-update-01"
+      ],
+      "expected": "teal-bison",
+      "predicted": "teal-bison",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000023"
+      ],
+      "injected_cell_ids": [
+        "episodic-000022",
+        "episodic-000023",
+        "episodic-000024",
+        "episodic-000025"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2530.141,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-01",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current zone code for UPDATE-01?",
+      "options": [
+        "teal-bison",
+        "amber-fox",
+        "retired-update-01",
+        "pending-update-01"
+      ],
+      "expected": "teal-bison",
+      "predicted": "pending-update-01",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000023"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2547.187,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-02",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current routing label for UPDATE-02?",
+      "options": [
+        "route-copper",
+        "retired-update-02",
+        "pending-update-02",
+        "route-jade"
+      ],
+      "expected": "route-jade",
+      "predicted": "route-jade",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000025"
+      ],
+      "injected_cell_ids": [
+        "episodic-000024",
+        "episodic-000025",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1673.485,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-02",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current routing label for UPDATE-02?",
+      "options": [
+        "route-copper",
+        "retired-update-02",
+        "pending-update-02",
+        "route-jade"
+      ],
+      "expected": "route-jade",
+      "predicted": "route-copper",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000025"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 9574.496,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-03",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current owner group for UPDATE-03?",
+      "options": [
+        "group-south",
+        "group-north",
+        "pending-update-03",
+        "retired-update-03"
+      ],
+      "expected": "group-south",
+      "predicted": "group-south",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000027"
+      ],
+      "injected_cell_ids": [
+        "episodic-000026",
+        "episodic-000027",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1341.256,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-03",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current owner group for UPDATE-03?",
+      "options": [
+        "group-south",
+        "group-north",
+        "pending-update-03",
+        "retired-update-03"
+      ],
+      "expected": "group-south",
+      "predicted": "group-south",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000027"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3757.711,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-04",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current retention tier for UPDATE-04?",
+      "options": [
+        "tier-two",
+        "tier-seven",
+        "pending-update-04",
+        "retired-update-04"
+      ],
+      "expected": "tier-two",
+      "predicted": "tier-two",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000029"
+      ],
+      "injected_cell_ids": [
+        "episodic-000028",
+        "episodic-000029",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1505.519,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "update-update-04",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current retention tier for UPDATE-04?",
+      "options": [
+        "tier-two",
+        "tier-seven",
+        "pending-update-04",
+        "retired-update-04"
+      ],
+      "expected": "tier-two",
+      "predicted": "tier-two",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000029"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4035.443,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-01",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What deployment token belongs to SECURE-01? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "NOT IN SESSION",
+        "quiet-ibis-205",
+        "hidden-puma-738",
+        "silver-mole-461"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1454.045,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-01",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What deployment token belongs to SECURE-01? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "NOT IN SESSION",
+        "quiet-ibis-205",
+        "hidden-puma-738",
+        "silver-mole-461"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1539.056,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-02",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What ledger tag belongs to SECURE-02? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "cinder-wren-592",
+        "NOT IN SESSION",
+        "amber-hare-183",
+        "blue-heron-740"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1441.661,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-02",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What ledger tag belongs to SECURE-02? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "cinder-wren-592",
+        "NOT IN SESSION",
+        "amber-hare-183",
+        "blue-heron-740"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1675.445,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-03",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What recovery phrase belongs to SECURE-03? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "copper-tern-259",
+        "NOT IN SESSION",
+        "frost-otter-316",
+        "jade-fox-804"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1357.78,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-03",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What recovery phrase belongs to SECURE-03? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "copper-tern-259",
+        "NOT IN SESSION",
+        "frost-otter-316",
+        "jade-fox-804"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1320.386,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-04",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What audit nonce belongs to SECURE-04? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "violet-badger-452",
+        "moss-raven-627",
+        "pearl-lynx-913",
+        "NOT IN SESSION"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1830.515,
+      "error": null
+    },
+    {
+      "round": 1,
+      "case_id": "isolation-secure-04",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What audit nonce belongs to SECURE-04? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "violet-badger-452",
+        "moss-raven-627",
+        "pearl-lynx-913",
+        "NOT IN SESSION"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1651.941,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-orbit-17",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What archive seal is recorded for evaluation case ORBIT-17?",
+      "options": [
+        "velvet-puma-731",
+        "coral-ibis-904",
+        "plum-kestrel-614",
+        "amber-willow-208"
+      ],
+      "expected": "plum-kestrel-614",
+      "predicted": "plum-kestrel-614",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000001"
+      ],
+      "injected_cell_ids": [
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1861.344,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-orbit-17",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What archive seal is recorded for evaluation case ORBIT-17?",
+      "options": [
+        "velvet-puma-731",
+        "coral-ibis-904",
+        "plum-kestrel-614",
+        "amber-willow-208"
+      ],
+      "expected": "plum-kestrel-614",
+      "predicted": "velvet-puma-731",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000001"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2123.656,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-fable-29",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What handoff token is recorded for evaluation case FABLE-29?",
+      "options": [
+        "copper-lynx-530",
+        "moss-cipher-271",
+        "silver-heron-482",
+        "indigo-tern-116"
+      ],
+      "expected": "moss-cipher-271",
+      "predicted": "moss-cipher-271",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000002"
+      ],
+      "injected_cell_ids": [
+        "semantic-000002",
+        "semantic-000001",
+        "semantic-000003",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2230.377,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-fable-29",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What handoff token is recorded for evaluation case FABLE-29?",
+      "options": [
+        "copper-lynx-530",
+        "moss-cipher-271",
+        "silver-heron-482",
+        "indigo-tern-116"
+      ],
+      "expected": "moss-cipher-271",
+      "predicted": "copper-lynx-530",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000002"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2452.881,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-cirrus-08",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What route code is recorded for evaluation case CIRRUS-08?",
+      "options": [
+        "birch-eagle-644",
+        "saffron-otter-930",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "saffron-otter-930",
+      "predicted": "saffron-otter-930",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000003"
+      ],
+      "injected_cell_ids": [
+        "semantic-000003",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1497.289,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-cirrus-08",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What route code is recorded for evaluation case CIRRUS-08?",
+      "options": [
+        "birch-eagle-644",
+        "saffron-otter-930",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "saffron-otter-930",
+      "predicted": "birch-eagle-644",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000003"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5222.621,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-lattice-51",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What batch marker is recorded for evaluation case LATTICE-51?",
+      "options": [
+        "quartz-finch-128",
+        "cedar-lantern-603",
+        "onyx-raven-857",
+        "pearl-wren-402"
+      ],
+      "expected": "quartz-finch-128",
+      "predicted": "quartz-finch-128",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000004"
+      ],
+      "injected_cell_ids": [
+        "semantic-000004",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1308.72,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-lattice-51",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What batch marker is recorded for evaluation case LATTICE-51?",
+      "options": [
+        "quartz-finch-128",
+        "cedar-lantern-603",
+        "onyx-raven-857",
+        "pearl-wren-402"
+      ],
+      "expected": "quartz-finch-128",
+      "predicted": "quartz-finch-128",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000004"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2720.105,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-vesper-42",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What checkpoint key is recorded for evaluation case VESPER-42?",
+      "options": [
+        "flint-hare-051",
+        "ruby-swallow-924",
+        "cobalt-anchovy-743",
+        "maple-badger-365"
+      ],
+      "expected": "cobalt-anchovy-743",
+      "predicted": "cobalt-anchovy-743",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000005"
+      ],
+      "injected_cell_ids": [
+        "semantic-000005",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1631.636,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "fact-vesper-42",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What checkpoint key is recorded for evaluation case VESPER-42?",
+      "options": [
+        "flint-hare-051",
+        "ruby-swallow-924",
+        "cobalt-anchovy-743",
+        "maple-badger-365"
+      ],
+      "expected": "cobalt-anchovy-743",
+      "predicted": "flint-hare-051",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000005"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2626.693,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-11",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-11, what is the preferred report format?",
+      "options": [
+        "plain-text paragraph",
+        "JSON object",
+        "two-column Markdown table",
+        "numbered checklist"
+      ],
+      "expected": "two-column Markdown table",
+      "predicted": "two-column Markdown table",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000006"
+      ],
+      "injected_cell_ids": [
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000008",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2226.491,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-11",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-11, what is the preferred report format?",
+      "options": [
+        "plain-text paragraph",
+        "JSON object",
+        "two-column Markdown table",
+        "numbered checklist"
+      ],
+      "expected": "two-column Markdown table",
+      "predicted": "JSON object",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000006"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5840.996,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-22",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-22, what is the preferred summary length?",
+      "options": [
+        "five bullet points",
+        "exactly three bullet points",
+        "one sentence",
+        "a full-page narrative"
+      ],
+      "expected": "exactly three bullet points",
+      "predicted": "exactly three bullet points",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000007"
+      ],
+      "injected_cell_ids": [
+        "semantic-000007",
+        "semantic-000006",
+        "semantic-000008",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2565.085,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-22",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-22, what is the preferred summary length?",
+      "options": [
+        "five bullet points",
+        "exactly three bullet points",
+        "one sentence",
+        "a full-page narrative"
+      ],
+      "expected": "exactly three bullet points",
+      "predicted": "exactly three bullet points",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000007"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3578.596,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-33",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-33, what is the preferred reminder time?",
+      "options": [
+        "18:00 local time",
+        "09:15 local time",
+        "12:45 local time",
+        "07:30 local time"
+      ],
+      "expected": "09:15 local time",
+      "predicted": "09:15 local time",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000008"
+      ],
+      "injected_cell_ids": [
+        "semantic-000008",
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1809.767,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-33",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-33, what is the preferred reminder time?",
+      "options": [
+        "18:00 local time",
+        "09:15 local time",
+        "12:45 local time",
+        "07:30 local time"
+      ],
+      "expected": "09:15 local time",
+      "predicted": "18:00 local time",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000008"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4442.028,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-44",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-44, what is the preferred chart style?",
+      "options": [
+        "one large pie chart",
+        "single stacked bar chart",
+        "plain data table",
+        "small-multiples line charts"
+      ],
+      "expected": "small-multiples line charts",
+      "predicted": "small-multiples line charts",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000009"
+      ],
+      "injected_cell_ids": [
+        "semantic-000009",
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000008"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2282.199,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "preference-profile-44",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-44, what is the preferred chart style?",
+      "options": [
+        "one large pie chart",
+        "single stacked bar chart",
+        "plain data table",
+        "small-multiples line charts"
+      ],
+      "expected": "small-multiples line charts",
+      "predicted": "small-multiples line charts",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000009"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4309.236,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-01",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-01, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "rollout",
+        "intake",
+        "review",
+        "archive"
+      ],
+      "expected": "review",
+      "predicted": "review",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000010"
+      ],
+      "injected_cell_ids": [
+        "episodic-000010",
+        "episodic-000011",
+        "episodic-000013",
+        "episodic-000012"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2251.684,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-01",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-01, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "rollout",
+        "intake",
+        "review",
+        "archive"
+      ],
+      "expected": "review",
+      "predicted": "intake",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000010"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2390.878,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-02",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-02, which event occurred latest? Choose from the named events.",
+      "options": [
+        "freeze",
+        "validation",
+        "archive",
+        "setup"
+      ],
+      "expected": "setup",
+      "predicted": "setup",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000011"
+      ],
+      "injected_cell_ids": [
+        "episodic-000011",
+        "episodic-000012",
+        "episodic-000013",
+        "episodic-000010"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2155.677,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-02",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-02, which event occurred latest? Choose from the named events.",
+      "options": [
+        "freeze",
+        "validation",
+        "archive",
+        "setup"
+      ],
+      "expected": "setup",
+      "predicted": "archive",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000011"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3274.482,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-03",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-03, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "handoff",
+        "design",
+        "audit",
+        "archive"
+      ],
+      "expected": "handoff",
+      "predicted": "handoff",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000012"
+      ],
+      "injected_cell_ids": [
+        "episodic-000012",
+        "episodic-000010",
+        "episodic-000011",
+        "episodic-000013"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2221.322,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-03",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-03, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "handoff",
+        "design",
+        "audit",
+        "archive"
+      ],
+      "expected": "handoff",
+      "predicted": "design",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000012"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5029.468,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-04",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-04, which event occurred latest? Choose from the named events.",
+      "options": [
+        "launch",
+        "archive",
+        "staging",
+        "approval"
+      ],
+      "expected": "launch",
+      "predicted": "launch",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000013"
+      ],
+      "injected_cell_ids": [
+        "episodic-000012",
+        "episodic-000013",
+        "episodic-000010",
+        "episodic-000011"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2454.284,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "temporal-timeline-04",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-04, which event occurred latest? Choose from the named events.",
+      "options": [
+        "launch",
+        "archive",
+        "staging",
+        "approval"
+      ],
+      "expected": "launch",
+      "predicted": "archive",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000013"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3091.622,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-project-ax14",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What retention code belongs to PROJECT-AX14 (not the similarly named PROJECT-AX41)?",
+      "options": [
+        "birch-eagle-644",
+        "amber-fox-219",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "violet-fox-219",
+      "predicted": "violet-fox-219",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000014"
+      ],
+      "injected_cell_ids": [
+        "episodic-000014",
+        "episodic-000015",
+        "episodic-000022",
+        "episodic-000028"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2187.974,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-project-ax14",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What retention code belongs to PROJECT-AX14 (not the similarly named PROJECT-AX41)?",
+      "options": [
+        "birch-eagle-644",
+        "amber-fox-219",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "violet-fox-219",
+      "predicted": "birch-eagle-644",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000014"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4855.254,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-device-l09",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What reset phrase belongs to DEVICE-L09 (not the similarly named DEVICE-L90)?",
+      "options": [
+        "onyx-raven-857",
+        "pearl-wren-402",
+        "cedar-lantern-603",
+        "cedar-lantern-630"
+      ],
+      "expected": "cedar-lantern-603",
+      "predicted": "cedar-lantern-603",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000016"
+      ],
+      "injected_cell_ids": [
+        "episodic-000016",
+        "episodic-000017",
+        "episodic-000022",
+        "episodic-000024"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1634.668,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-device-l09",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What reset phrase belongs to DEVICE-L09 (not the similarly named DEVICE-L90)?",
+      "options": [
+        "onyx-raven-857",
+        "pearl-wren-402",
+        "cedar-lantern-603",
+        "cedar-lantern-630"
+      ],
+      "expected": "cedar-lantern-603",
+      "predicted": "onyx-raven-857",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000016"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2920.576,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-queue-m27",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What routing label belongs to QUEUE-M27 (not the similarly named QUEUE-M72)?",
+      "options": [
+        "maple-badger-536",
+        "ruby-swallow-924",
+        "maple-badger-365",
+        "flint-hare-051"
+      ],
+      "expected": "maple-badger-365",
+      "predicted": "maple-badger-365",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000018"
+      ],
+      "injected_cell_ids": [
+        "episodic-000018",
+        "episodic-000019",
+        "episodic-000024",
+        "episodic-000025"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1561.96,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-queue-m27",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What routing label belongs to QUEUE-M27 (not the similarly named QUEUE-M72)?",
+      "options": [
+        "maple-badger-536",
+        "ruby-swallow-924",
+        "maple-badger-365",
+        "flint-hare-051"
+      ],
+      "expected": "maple-badger-365",
+      "predicted": "maple-badger-536",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000018"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3975.297,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-vault-r36",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What recovery tag belongs to VAULT-R36 (not the similarly named VAULT-R63)?",
+      "options": [
+        "silver-heron-482",
+        "copper-lynx-530",
+        "indigo-tern-116",
+        "silver-heron-824"
+      ],
+      "expected": "silver-heron-482",
+      "predicted": "silver-heron-482",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000020"
+      ],
+      "injected_cell_ids": [
+        "episodic-000020",
+        "episodic-000021",
+        "episodic-000022",
+        "episodic-000024"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1447.284,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "interference-vault-r36",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What recovery tag belongs to VAULT-R36 (not the similarly named VAULT-R63)?",
+      "options": [
+        "silver-heron-482",
+        "copper-lynx-530",
+        "indigo-tern-116",
+        "silver-heron-824"
+      ],
+      "expected": "silver-heron-482",
+      "predicted": "silver-heron-482",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000020"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3707.328,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-01",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current zone code for UPDATE-01?",
+      "options": [
+        "teal-bison",
+        "amber-fox",
+        "retired-update-01",
+        "pending-update-01"
+      ],
+      "expected": "teal-bison",
+      "predicted": "teal-bison",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000023"
+      ],
+      "injected_cell_ids": [
+        "episodic-000022",
+        "episodic-000023",
+        "episodic-000024",
+        "episodic-000025"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2359.28,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-01",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current zone code for UPDATE-01?",
+      "options": [
+        "teal-bison",
+        "amber-fox",
+        "retired-update-01",
+        "pending-update-01"
+      ],
+      "expected": "teal-bison",
+      "predicted": "teal-bison",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000023"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 6352.108,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-02",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current routing label for UPDATE-02?",
+      "options": [
+        "route-copper",
+        "retired-update-02",
+        "pending-update-02",
+        "route-jade"
+      ],
+      "expected": "route-jade",
+      "predicted": "route-jade",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000025"
+      ],
+      "injected_cell_ids": [
+        "episodic-000024",
+        "episodic-000025",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1578.681,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-02",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current routing label for UPDATE-02?",
+      "options": [
+        "route-copper",
+        "retired-update-02",
+        "pending-update-02",
+        "route-jade"
+      ],
+      "expected": "route-jade",
+      "predicted": "route-copper",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000025"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 6745.736,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-03",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current owner group for UPDATE-03?",
+      "options": [
+        "group-south",
+        "group-north",
+        "pending-update-03",
+        "retired-update-03"
+      ],
+      "expected": "group-south",
+      "predicted": "group-south",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000027"
+      ],
+      "injected_cell_ids": [
+        "episodic-000026",
+        "episodic-000027",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1784.953,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-03",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current owner group for UPDATE-03?",
+      "options": [
+        "group-south",
+        "group-north",
+        "pending-update-03",
+        "retired-update-03"
+      ],
+      "expected": "group-south",
+      "predicted": "group-south",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000027"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 6987.712,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-04",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current retention tier for UPDATE-04?",
+      "options": [
+        "tier-two",
+        "tier-seven",
+        "pending-update-04",
+        "retired-update-04"
+      ],
+      "expected": "tier-two",
+      "predicted": "tier-two",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000029"
+      ],
+      "injected_cell_ids": [
+        "episodic-000028",
+        "episodic-000029",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1539.685,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "update-update-04",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current retention tier for UPDATE-04?",
+      "options": [
+        "tier-two",
+        "tier-seven",
+        "pending-update-04",
+        "retired-update-04"
+      ],
+      "expected": "tier-two",
+      "predicted": "tier-two",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000029"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4986.947,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-01",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What deployment token belongs to SECURE-01? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "NOT IN SESSION",
+        "quiet-ibis-205",
+        "hidden-puma-738",
+        "silver-mole-461"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1442.688,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-01",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What deployment token belongs to SECURE-01? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "NOT IN SESSION",
+        "quiet-ibis-205",
+        "hidden-puma-738",
+        "silver-mole-461"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1555.219,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-02",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What ledger tag belongs to SECURE-02? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "cinder-wren-592",
+        "NOT IN SESSION",
+        "amber-hare-183",
+        "blue-heron-740"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1624.353,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-02",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What ledger tag belongs to SECURE-02? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "cinder-wren-592",
+        "NOT IN SESSION",
+        "amber-hare-183",
+        "blue-heron-740"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1521.759,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-03",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What recovery phrase belongs to SECURE-03? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "copper-tern-259",
+        "NOT IN SESSION",
+        "frost-otter-316",
+        "jade-fox-804"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1349.842,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-03",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What recovery phrase belongs to SECURE-03? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "copper-tern-259",
+        "NOT IN SESSION",
+        "frost-otter-316",
+        "jade-fox-804"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1320.005,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-04",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What audit nonce belongs to SECURE-04? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "violet-badger-452",
+        "moss-raven-627",
+        "pearl-lynx-913",
+        "NOT IN SESSION"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1697.001,
+      "error": null
+    },
+    {
+      "round": 2,
+      "case_id": "isolation-secure-04",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What audit nonce belongs to SECURE-04? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "violet-badger-452",
+        "moss-raven-627",
+        "pearl-lynx-913",
+        "NOT IN SESSION"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2795.438,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-orbit-17",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What archive seal is recorded for evaluation case ORBIT-17?",
+      "options": [
+        "velvet-puma-731",
+        "coral-ibis-904",
+        "plum-kestrel-614",
+        "amber-willow-208"
+      ],
+      "expected": "plum-kestrel-614",
+      "predicted": "plum-kestrel-614",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000001"
+      ],
+      "injected_cell_ids": [
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2102.391,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-orbit-17",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What archive seal is recorded for evaluation case ORBIT-17?",
+      "options": [
+        "velvet-puma-731",
+        "coral-ibis-904",
+        "plum-kestrel-614",
+        "amber-willow-208"
+      ],
+      "expected": "plum-kestrel-614",
+      "predicted": "velvet-puma-731",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000001"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2177.029,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-fable-29",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What handoff token is recorded for evaluation case FABLE-29?",
+      "options": [
+        "copper-lynx-530",
+        "moss-cipher-271",
+        "silver-heron-482",
+        "indigo-tern-116"
+      ],
+      "expected": "moss-cipher-271",
+      "predicted": "moss-cipher-271",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000002"
+      ],
+      "injected_cell_ids": [
+        "semantic-000002",
+        "semantic-000001",
+        "semantic-000003",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1877.001,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-fable-29",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What handoff token is recorded for evaluation case FABLE-29?",
+      "options": [
+        "copper-lynx-530",
+        "moss-cipher-271",
+        "silver-heron-482",
+        "indigo-tern-116"
+      ],
+      "expected": "moss-cipher-271",
+      "predicted": "copper-lynx-530",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000002"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2762.488,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-cirrus-08",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What route code is recorded for evaluation case CIRRUS-08?",
+      "options": [
+        "birch-eagle-644",
+        "saffron-otter-930",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "saffron-otter-930",
+      "predicted": "saffron-otter-930",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000003"
+      ],
+      "injected_cell_ids": [
+        "semantic-000003",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000004"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1422.014,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-cirrus-08",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What route code is recorded for evaluation case CIRRUS-08?",
+      "options": [
+        "birch-eagle-644",
+        "saffron-otter-930",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "saffron-otter-930",
+      "predicted": "birch-eagle-644",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000003"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2770.024,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-lattice-51",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What batch marker is recorded for evaluation case LATTICE-51?",
+      "options": [
+        "quartz-finch-128",
+        "cedar-lantern-603",
+        "onyx-raven-857",
+        "pearl-wren-402"
+      ],
+      "expected": "quartz-finch-128",
+      "predicted": "quartz-finch-128",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000004"
+      ],
+      "injected_cell_ids": [
+        "semantic-000004",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1804.783,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-lattice-51",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What batch marker is recorded for evaluation case LATTICE-51?",
+      "options": [
+        "quartz-finch-128",
+        "cedar-lantern-603",
+        "onyx-raven-857",
+        "pearl-wren-402"
+      ],
+      "expected": "quartz-finch-128",
+      "predicted": "quartz-finch-128",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000004"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2040.226,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-vesper-42",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What checkpoint key is recorded for evaluation case VESPER-42?",
+      "options": [
+        "flint-hare-051",
+        "ruby-swallow-924",
+        "cobalt-anchovy-743",
+        "maple-badger-365"
+      ],
+      "expected": "cobalt-anchovy-743",
+      "predicted": "cobalt-anchovy-743",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000005"
+      ],
+      "injected_cell_ids": [
+        "semantic-000005",
+        "semantic-000001",
+        "semantic-000002",
+        "semantic-000003"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1271.507,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "fact-vesper-42",
+      "axis": "atomic_fact_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What checkpoint key is recorded for evaluation case VESPER-42?",
+      "options": [
+        "flint-hare-051",
+        "ruby-swallow-924",
+        "cobalt-anchovy-743",
+        "maple-badger-365"
+      ],
+      "expected": "cobalt-anchovy-743",
+      "predicted": "flint-hare-051",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000005"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2461.304,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-11",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-11, what is the preferred report format?",
+      "options": [
+        "plain-text paragraph",
+        "JSON object",
+        "two-column Markdown table",
+        "numbered checklist"
+      ],
+      "expected": "two-column Markdown table",
+      "predicted": "two-column Markdown table",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000006"
+      ],
+      "injected_cell_ids": [
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000008",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2024.05,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-11",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-11, what is the preferred report format?",
+      "options": [
+        "plain-text paragraph",
+        "JSON object",
+        "two-column Markdown table",
+        "numbered checklist"
+      ],
+      "expected": "two-column Markdown table",
+      "predicted": "JSON object",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000006"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5413.21,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-22",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-22, what is the preferred summary length?",
+      "options": [
+        "five bullet points",
+        "exactly three bullet points",
+        "one sentence",
+        "a full-page narrative"
+      ],
+      "expected": "exactly three bullet points",
+      "predicted": "exactly three bullet points",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000007"
+      ],
+      "injected_cell_ids": [
+        "semantic-000007",
+        "semantic-000006",
+        "semantic-000008",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1943.718,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-22",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-22, what is the preferred summary length?",
+      "options": [
+        "five bullet points",
+        "exactly three bullet points",
+        "one sentence",
+        "a full-page narrative"
+      ],
+      "expected": "exactly three bullet points",
+      "predicted": "one sentence",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000007"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3052.547,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-33",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-33, what is the preferred reminder time?",
+      "options": [
+        "18:00 local time",
+        "09:15 local time",
+        "12:45 local time",
+        "07:30 local time"
+      ],
+      "expected": "09:15 local time",
+      "predicted": "09:15 local time",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000008"
+      ],
+      "injected_cell_ids": [
+        "semantic-000008",
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000009"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1815.917,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-33",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-33, what is the preferred reminder time?",
+      "options": [
+        "18:00 local time",
+        "09:15 local time",
+        "12:45 local time",
+        "07:30 local time"
+      ],
+      "expected": "09:15 local time",
+      "predicted": "18:00 local time",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000008"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3188.599,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-44",
+      "axis": "preference_recall",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-44, what is the preferred chart style?",
+      "options": [
+        "one large pie chart",
+        "single stacked bar chart",
+        "plain data table",
+        "small-multiples line charts"
+      ],
+      "expected": "small-multiples line charts",
+      "predicted": "small-multiples line charts",
+      "exact_match": true,
+      "target_cell_ids": [
+        "semantic-000009"
+      ],
+      "injected_cell_ids": [
+        "semantic-000009",
+        "semantic-000006",
+        "semantic-000007",
+        "semantic-000008"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2360.739,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "preference-profile-44",
+      "axis": "preference_recall",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "According to preference profile PROFILE-44, what is the preferred chart style?",
+      "options": [
+        "one large pie chart",
+        "single stacked bar chart",
+        "plain data table",
+        "small-multiples line charts"
+      ],
+      "expected": "small-multiples line charts",
+      "predicted": "plain data table",
+      "exact_match": false,
+      "target_cell_ids": [
+        "semantic-000009"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4012.973,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-01",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-01, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "rollout",
+        "intake",
+        "review",
+        "archive"
+      ],
+      "expected": "review",
+      "predicted": "review",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000010"
+      ],
+      "injected_cell_ids": [
+        "episodic-000010",
+        "episodic-000011",
+        "episodic-000013",
+        "episodic-000012"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2014.971,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-01",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-01, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "rollout",
+        "intake",
+        "review",
+        "archive"
+      ],
+      "expected": "review",
+      "predicted": "intake",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000010"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2085.449,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-02",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-02, which event occurred latest? Choose from the named events.",
+      "options": [
+        "freeze",
+        "validation",
+        "archive",
+        "setup"
+      ],
+      "expected": "setup",
+      "predicted": "setup",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000011"
+      ],
+      "injected_cell_ids": [
+        "episodic-000011",
+        "episodic-000012",
+        "episodic-000013",
+        "episodic-000010"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1367.279,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-02",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-02, which event occurred latest? Choose from the named events.",
+      "options": [
+        "freeze",
+        "validation",
+        "archive",
+        "setup"
+      ],
+      "expected": "setup",
+      "predicted": "archive",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000011"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2333.346,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-03",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-03, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "handoff",
+        "design",
+        "audit",
+        "archive"
+      ],
+      "expected": "handoff",
+      "predicted": "handoff",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000012"
+      ],
+      "injected_cell_ids": [
+        "episodic-000012",
+        "episodic-000010",
+        "episodic-000011",
+        "episodic-000013"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2340.709,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-03",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-03, which event occurred earliest? Choose from the named events.",
+      "options": [
+        "handoff",
+        "design",
+        "audit",
+        "archive"
+      ],
+      "expected": "handoff",
+      "predicted": "design",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000012"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4076.545,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-04",
+      "axis": "temporal_ordering",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-04, which event occurred latest? Choose from the named events.",
+      "options": [
+        "launch",
+        "archive",
+        "staging",
+        "approval"
+      ],
+      "expected": "launch",
+      "predicted": "launch",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000013"
+      ],
+      "injected_cell_ids": [
+        "episodic-000012",
+        "episodic-000013",
+        "episodic-000010",
+        "episodic-000011"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 2749.254,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "temporal-timeline-04",
+      "axis": "temporal_ordering",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "For timeline TIMELINE-04, which event occurred latest? Choose from the named events.",
+      "options": [
+        "launch",
+        "archive",
+        "staging",
+        "approval"
+      ],
+      "expected": "launch",
+      "predicted": "archive",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000013"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2539.286,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-project-ax14",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What retention code belongs to PROJECT-AX14 (not the similarly named PROJECT-AX41)?",
+      "options": [
+        "birch-eagle-644",
+        "amber-fox-219",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "violet-fox-219",
+      "predicted": "violet-fox-219",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000014"
+      ],
+      "injected_cell_ids": [
+        "episodic-000014",
+        "episodic-000015",
+        "episodic-000022",
+        "episodic-000028"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1775.843,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-project-ax14",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What retention code belongs to PROJECT-AX14 (not the similarly named PROJECT-AX41)?",
+      "options": [
+        "birch-eagle-644",
+        "amber-fox-219",
+        "jade-marten-308",
+        "violet-fox-219"
+      ],
+      "expected": "violet-fox-219",
+      "predicted": "birch-eagle-644",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000014"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 6620.66,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-device-l09",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What reset phrase belongs to DEVICE-L09 (not the similarly named DEVICE-L90)?",
+      "options": [
+        "onyx-raven-857",
+        "pearl-wren-402",
+        "cedar-lantern-603",
+        "cedar-lantern-630"
+      ],
+      "expected": "cedar-lantern-603",
+      "predicted": "cedar-lantern-603",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000016"
+      ],
+      "injected_cell_ids": [
+        "episodic-000016",
+        "episodic-000017",
+        "episodic-000022",
+        "episodic-000024"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1860.551,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-device-l09",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What reset phrase belongs to DEVICE-L09 (not the similarly named DEVICE-L90)?",
+      "options": [
+        "onyx-raven-857",
+        "pearl-wren-402",
+        "cedar-lantern-603",
+        "cedar-lantern-630"
+      ],
+      "expected": "cedar-lantern-603",
+      "predicted": "cedar-lantern-603",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000016"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5964.677,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-queue-m27",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What routing label belongs to QUEUE-M27 (not the similarly named QUEUE-M72)?",
+      "options": [
+        "maple-badger-536",
+        "ruby-swallow-924",
+        "maple-badger-365",
+        "flint-hare-051"
+      ],
+      "expected": "maple-badger-365",
+      "predicted": "maple-badger-365",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000018"
+      ],
+      "injected_cell_ids": [
+        "episodic-000018",
+        "episodic-000019",
+        "episodic-000024",
+        "episodic-000025"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1884.353,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-queue-m27",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What routing label belongs to QUEUE-M27 (not the similarly named QUEUE-M72)?",
+      "options": [
+        "maple-badger-536",
+        "ruby-swallow-924",
+        "maple-badger-365",
+        "flint-hare-051"
+      ],
+      "expected": "maple-badger-365",
+      "predicted": "maple-badger-536",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000018"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 4159.71,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-vault-r36",
+      "axis": "similar_entity_interference",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "What recovery tag belongs to VAULT-R36 (not the similarly named VAULT-R63)?",
+      "options": [
+        "silver-heron-482",
+        "copper-lynx-530",
+        "indigo-tern-116",
+        "silver-heron-824"
+      ],
+      "expected": "silver-heron-482",
+      "predicted": "silver-heron-482",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000020"
+      ],
+      "injected_cell_ids": [
+        "episodic-000020",
+        "episodic-000021",
+        "episodic-000022",
+        "episodic-000024"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1514.067,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "interference-vault-r36",
+      "axis": "similar_entity_interference",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "What recovery tag belongs to VAULT-R36 (not the similarly named VAULT-R63)?",
+      "options": [
+        "silver-heron-482",
+        "copper-lynx-530",
+        "indigo-tern-116",
+        "silver-heron-824"
+      ],
+      "expected": "silver-heron-482",
+      "predicted": "silver-heron-482",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000020"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3098.433,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-01",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current zone code for UPDATE-01?",
+      "options": [
+        "teal-bison",
+        "amber-fox",
+        "retired-update-01",
+        "pending-update-01"
+      ],
+      "expected": "teal-bison",
+      "predicted": "teal-bison",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000023"
+      ],
+      "injected_cell_ids": [
+        "episodic-000022",
+        "episodic-000023",
+        "episodic-000024",
+        "episodic-000025"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1685.853,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-01",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current zone code for UPDATE-01?",
+      "options": [
+        "teal-bison",
+        "amber-fox",
+        "retired-update-01",
+        "pending-update-01"
+      ],
+      "expected": "teal-bison",
+      "predicted": "pending-update-01",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000023"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2261.613,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-02",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current routing label for UPDATE-02?",
+      "options": [
+        "route-copper",
+        "retired-update-02",
+        "pending-update-02",
+        "route-jade"
+      ],
+      "expected": "route-jade",
+      "predicted": "route-jade",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000025"
+      ],
+      "injected_cell_ids": [
+        "episodic-000024",
+        "episodic-000025",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1823.089,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-02",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current routing label for UPDATE-02?",
+      "options": [
+        "route-copper",
+        "retired-update-02",
+        "pending-update-02",
+        "route-jade"
+      ],
+      "expected": "route-jade",
+      "predicted": "pending-update-02",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000025"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3227.451,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-03",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current owner group for UPDATE-03?",
+      "options": [
+        "group-south",
+        "group-north",
+        "pending-update-03",
+        "retired-update-03"
+      ],
+      "expected": "group-south",
+      "predicted": "group-south",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000027"
+      ],
+      "injected_cell_ids": [
+        "episodic-000026",
+        "episodic-000027",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1266.036,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-03",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current owner group for UPDATE-03?",
+      "options": [
+        "group-south",
+        "group-north",
+        "pending-update-03",
+        "retired-update-03"
+      ],
+      "expected": "group-south",
+      "predicted": "pending-update-03",
+      "exact_match": false,
+      "target_cell_ids": [
+        "episodic-000027"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 8137.13,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-04",
+      "axis": "knowledge_update",
+      "condition": "memory_on",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current retention tier for UPDATE-04?",
+      "options": [
+        "tier-two",
+        "tier-seven",
+        "pending-update-04",
+        "retired-update-04"
+      ],
+      "expected": "tier-two",
+      "predicted": "tier-two",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000029"
+      ],
+      "injected_cell_ids": [
+        "episodic-000028",
+        "episodic-000029",
+        "episodic-000022",
+        "episodic-000023"
+      ],
+      "target_injected": true,
+      "injected_item_count": 4,
+      "latency_ms": 1516.91,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "update-update-04",
+      "axis": "knowledge_update",
+      "condition": "memory_off",
+      "session_scope": "same_session_recall",
+      "question": "After the 2026-09-20 update, what is the current retention tier for UPDATE-04?",
+      "options": [
+        "tier-two",
+        "tier-seven",
+        "pending-update-04",
+        "retired-update-04"
+      ],
+      "expected": "tier-two",
+      "predicted": "tier-two",
+      "exact_match": true,
+      "target_cell_ids": [
+        "episodic-000029"
+      ],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 5371.488,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-01",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What deployment token belongs to SECURE-01? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "NOT IN SESSION",
+        "quiet-ibis-205",
+        "hidden-puma-738",
+        "silver-mole-461"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1523.985,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-01",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What deployment token belongs to SECURE-01? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "NOT IN SESSION",
+        "quiet-ibis-205",
+        "hidden-puma-738",
+        "silver-mole-461"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2093.959,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-02",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What ledger tag belongs to SECURE-02? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "cinder-wren-592",
+        "NOT IN SESSION",
+        "amber-hare-183",
+        "blue-heron-740"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2137.528,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-02",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What ledger tag belongs to SECURE-02? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "cinder-wren-592",
+        "NOT IN SESSION",
+        "amber-hare-183",
+        "blue-heron-740"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 3487.699,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-03",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What recovery phrase belongs to SECURE-03? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "copper-tern-259",
+        "NOT IN SESSION",
+        "frost-otter-316",
+        "jade-fox-804"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1527.243,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-03",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What recovery phrase belongs to SECURE-03? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "copper-tern-259",
+        "NOT IN SESSION",
+        "frost-otter-316",
+        "jade-fox-804"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1274.586,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-04",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_on",
+      "session_scope": "isolated_negative_control",
+      "question": "What audit nonce belongs to SECURE-04? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "violet-badger-452",
+        "moss-raven-627",
+        "pearl-lynx-913",
+        "NOT IN SESSION"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 2899.876,
+      "error": null
+    },
+    {
+      "round": 3,
+      "case_id": "isolation-secure-04",
+      "axis": "session_isolation_and_abstention",
+      "condition": "memory_off",
+      "session_scope": "isolated_negative_control",
+      "question": "What audit nonce belongs to SECURE-04? This request is in another session. If no matching memory is visible here, choose NOT IN SESSION instead of guessing.",
+      "options": [
+        "violet-badger-452",
+        "moss-raven-627",
+        "pearl-lynx-913",
+        "NOT IN SESSION"
+      ],
+      "expected": "NOT IN SESSION",
+      "predicted": "NOT IN SESSION",
+      "exact_match": true,
+      "target_cell_ids": [],
+      "injected_cell_ids": [],
+      "target_injected": false,
+      "injected_item_count": 0,
+      "latency_ms": 1659.537,
+      "error": null
+    }
+  ]
+}

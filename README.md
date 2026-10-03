@@ -30,6 +30,8 @@ no later research lines and no internal development documents.
 | `civilization_v1/` | The Python SDK: a dependency-free HTTP client, the request/prediction/job models, the provider-agnostic runtime layer, and an in-process service host. |
 | `sdk/civilization-transformer/` | The TypeScript SDK: a zero-dependency client for decisions, memory, jobs, and export packages. |
 | `SDK.md`, `pyproject.toml` | Python packaging for `astreusn-civilization-v1`. |
+| `docs/versions/` | One baseline record per implemented version, plus recorded experiments. |
+| `docs/readme/` | This README in eight additional languages. |
 
 Over 500 tests cover the line, from the first rule-gate unit tests to the
 service, memory, and SDK contracts.
@@ -85,6 +87,13 @@ Two design rules shape everything:
 Release labels are not capability claims. The v1 line implements through
 `v0.00.07`; `v0.00.08` (Crab) is a plan, and no code in this repository
 implements it.
+
+Every implemented version has a **baseline record** — scope, capabilities added,
+the contract invariants it must hold, a verification command, and its boundary:
+[docs/versions](docs/versions/README.md). One version currently has a recorded
+measurement: `v0.00.07` Helix, via the [native memory paired
+A/B](docs/versions/v0.00.07-helix/experiments/memory-on-off-ab.md) — memory on
+vs. off on the same questions and model, 46 paired wins and 0 paired losses.
 
 ## Quick start
 

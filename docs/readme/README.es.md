@@ -85,6 +85,8 @@ Dos reglas de diseño lo atraviesan todo:
 Las etiquetas de publicación no son afirmaciones de capacidad. La línea v1 llega hasta
 `v0.00.07`; `v0.00.08` (Crab) es un plan y ningún código de este repositorio lo implementa.
 
+Cada versión implementada tiene un **registro de base** (alcance, capacidades añadidas, invariantes de contrato, comando de verificación y límites): [docs/versions](../versions/README.md). Solo una versión tiene una medición registrada, `v0.00.07` Helix: [A/B pareado de memoria nativa](../versions/v0.00.07-helix/experiments/memory-on-off-ab.md) (46 pares ganados y 0 perdidos).
+
 ## Inicio rápido
 
 ### SDK de Python

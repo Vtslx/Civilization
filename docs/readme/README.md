@@ -16,6 +16,16 @@ runtime model, the version line, quick start, testing, and the claims boundary.
 | Deutsch | [README.de.md](README.de.md) |
 | Русский | [README.ru.md](README.ru.md) |
 
+## Related documentation
+
+- **Version baselines** — one record per implemented version (scope,
+  capabilities, contract invariants, verification command, boundary) plus the
+  recorded experiments: [../versions/README.md](../versions/README.md)
+  (also in [简体中文](../versions/README.zh-CN.md)).
+- **Experiment report** — native memory paired A/B, memory on vs. off:
+  [English](../versions/v0.00.07-helix/experiments/memory-on-off-ab.md) ·
+  [简体中文](../versions/v0.00.07-helix/experiments/memory-on-off-ab.zh-CN.md).
+
 ## Translation policy
 
 - The English README is authoritative. If a translation and the English text

@@ -85,6 +85,8 @@ Zwei Entwurfsregeln prägen alles:
 Release-Labels sind keine Fähigkeitsaussagen. Die v1-Linie reicht bis `v0.00.07`;
 `v0.00.08` (Crab) ist ein Plan, und kein Code in diesem Repository implementiert ihn.
 
+Jede implementierte Version hat einen **Baseline-Datensatz** (Umfang, hinzugefügte Fähigkeiten, Vertragsinvarianten, Verifikationsbefehl, Grenzen): [docs/versions](../versions/README.md). Bislang hat nur `v0.00.07` Helix eine aufgezeichnete Messung: [gepaartes A/B des nativen Gedächtnisses](../versions/v0.00.07-helix/experiments/memory-on-off-ab.md) (46 gewonnene, 0 verlorene Paare).
+
 ## Schnellstart
 
 ### Python-SDK

@@ -85,6 +85,8 @@ Les étiquettes de publication ne sont pas des affirmations de capacité. La lig
 s'arrête à `v0.00.07` ; `v0.00.08` (Crab) est un plan et aucun code de ce dépôt ne
 l'implémente.
 
+Chaque version implémentée possède une **fiche de référence** (périmètre, capacités ajoutées, invariants de contrat, commande de vérification, limites) : [docs/versions](../versions/README.md). Une seule version dispose d'une mesure enregistrée, `v0.00.07` Helix : [A/B apparié de la mémoire native](../versions/v0.00.07-helix/experiments/memory-on-off-ab.md) (46 paires gagnées, 0 perdue).
+
 ## Démarrage rapide
 
 ### SDK Python
