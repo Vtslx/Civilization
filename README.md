@@ -84,12 +84,13 @@ Two design rules shape everything:
 
 ### Memory durability
 
-Session memory is served from memory and journaled to disk: every mutation is
-appended immediately, committed by the configured fsync policy, and replayed
-when the service restarts. A clean restart loses nothing; `kill -9` loses
-nothing that was acknowledged; a power loss loses at most the uncommitted tail.
-An optional sidecar process can own the journals instead of the service.
-Details, guarantees per failure mode, and the knobs:
+Session **and** global (cross-session) memory are served from memory and
+journaled to disk: every mutation is appended immediately, committed by the
+configured fsync policy, and replayed when the service restarts. A clean restart
+loses nothing; `kill -9` loses nothing that was acknowledged; a power loss loses
+at most the uncommitted tail. An optional sidecar process can own the journals
+instead of the service, and `civilization prune` bounds disk usage across
+sessions. Details, guarantees per failure mode, and the knobs:
 [docs/operations/session-memory-durability.md](docs/operations/session-memory-durability.md)
 (also in [简体中文](docs/operations/session-memory-durability.zh-CN.md)).
 

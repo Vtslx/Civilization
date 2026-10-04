@@ -139,11 +139,13 @@ service chain itself is unchanged.
   service bearer tokens through `bearer_token_env`. Never commit them.
 - `state_dir` holds jobs, results, exports, audit records, and memory. Back it up
   to keep them; delete it to start clean.
-- Session memory is durable by default: mutations are journaled under
-  `state_dir/sessions/` and replayed on restart. `persist_sessions=False` keeps
+- Session and global memory are durable by default: mutations are journaled
+  under `state_dir/sessions/` and replayed on restart. `persist_sessions=False` keeps
   memory in-process only; `fsync_policy="every_write"` trades write cost for the
   smallest possible loss window; `persistence_mode="sidecar"` moves the journal
-  and the commit loop into a separate process. See
+  and the commit loop into a separate process. `civilization prune` (or
+  `POST /admin/orion/memory/retention`) compacts journals and drops expired
+  sessions without touching anything the service is currently serving. See
   `docs/operations/session-memory-durability.md`.
 - `/v1/capabilities` is the contract. A text-only provider never claims hidden
   states or adapter execution, and the SDK never implies them.

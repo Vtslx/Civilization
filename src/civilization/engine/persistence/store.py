@@ -21,6 +21,7 @@ record is an idempotent upsert.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import shutil
 import threading
 import time
 from typing import Any, Mapping, Sequence
@@ -34,7 +35,14 @@ from ..stages.stage73_orion_memory_kernel import (
     MemorySystem,
     OrionMemoryStore,
 )
-from .journal import RECORD_CELL, RECORD_LINK, RECORD_TRACE, session_directory, SNAPSHOT_NAME
+from .journal import (
+    RECORD_CELL,
+    RECORD_LINK,
+    RECORD_RESET,
+    RECORD_TRACE,
+    SNAPSHOT_NAME,
+    session_directory,
+)
 from .sink import (
     MODE_NONE,
     PersistenceConfig,
@@ -108,6 +116,13 @@ def apply_records(store: OrionMemoryStore, records: Sequence[Mapping[str, Any]])
     for record in records:
         kind = record.get("t") or record.get("type")
         payload = record.get("v") or record.get("value")
+        if kind == RECORD_RESET:
+            store.cells.clear()
+            store.links.clear()
+            store.trace_events.clear()
+            link_keys.clear()
+            applied += 1
+            continue
         if not isinstance(payload, Mapping):
             continue
         if kind == RECORD_CELL:
@@ -202,6 +217,27 @@ class PersistentOrionMemoryStore(OrionMemoryStore):
             self._record_cell(cell)
         return expired
 
+    def replace_contents(self, cells: Sequence[MemoryCell], links: Sequence[MemoryLink]) -> None:
+        """Replace the whole store with the given contents, journaling the swap.
+
+        A reset record is written first so that replay cannot resurrect cells the
+        replacement removed. Used by the global store's explicit load.
+        """
+
+        self.cells.clear()
+        self.links.clear()
+        self.trace_events.clear()
+        self._persistence.record(self.session_id, {"t": RECORD_RESET})
+        for cell in cells:
+            self.cells[cell.cell_id] = cell
+            self._record_cell(cell)
+        for link in links:
+            self.links.append(link)
+            self._record_link(link)
+        next_cell, next_trace = _next_counter(list(self.cells.values()), self.trace_events)
+        self._next_cell_id = next_cell  # noqa: SLF001 - keep ids monotonic
+        self._next_event_id = max(self._next_event_id, next_trace)  # noqa: SLF001
+
 
 @dataclass
 class PersistenceStats:
@@ -280,6 +316,131 @@ class SessionPersistence:
     def flush(self) -> None:
         if self.enabled and self.sink is not None:
             self.sink.flush()
+
+    # -- retention ---------------------------------------------------------
+    def _merged_state(self, session_id: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read a session's durable state from disk without a live store."""
+
+        journal = self._journal(session_id)
+        if journal is None:
+            return [], [], []
+        store = OrionMemoryStore()
+        document = journal.load_snapshot()
+        if document:
+            apply_records(store, _records_from_snapshot(document))
+        apply_records(store, list(journal.iter_journal()))
+        return (
+            [cell.to_dict() for cell in store.cells.values()],
+            [link.to_dict() for link in store.links],
+            [event.to_dict() for event in store.trace_events],
+        )
+
+    def session_usage(self) -> list[dict[str, Any]]:
+        """Per-session disk usage and last activity, newest first."""
+
+        root = session_directory(self.config.state_dir, "_").parent
+        if not root.exists():
+            return []
+        entries: list[dict[str, Any]] = []
+        for path in sorted(root.iterdir()):
+            if not path.is_dir():
+                continue
+            files = [item for item in path.iterdir() if item.is_file()]
+            if not files:
+                continue
+            entries.append(
+                {
+                    "session": path.name,
+                    "bytes": sum(item.stat().st_size for item in files),
+                    "last_activity": max(item.stat().st_mtime for item in files),
+                    "files": sorted(item.name for item in files),
+                }
+            )
+        entries.sort(key=lambda entry: entry["last_activity"], reverse=True)
+        return entries
+
+    def compact_session(self, session_id: str) -> dict[str, Any]:
+        """Merge a session's journal into its snapshot without loading a store."""
+
+        journal = self._journal(session_id)
+        if journal is None:
+            raise RuntimeError("compaction needs the in-process journal sink")
+        before = journal.usage()
+        cells, links, traces = self._merged_state(session_id)
+        journal.write_snapshot(
+            {"session_id": session_id, "cells": cells, "links": links, "trace_events": traces}
+        )
+        with self._lock:
+            self.stats.snapshots += 1
+        return {
+            "session": session_id,
+            "cells": len(cells),
+            "links": len(links),
+            "journal_bytes_before": before["journal_bytes"],
+            "journal_bytes_after": journal.usage()["journal_bytes"],
+        }
+
+    def retention_sweep(
+        self,
+        *,
+        older_than_seconds: float | None = None,
+        keep_sessions: int | None = None,
+        compact_over_records: int | None = None,
+        skip_sessions: Sequence[str] = (),
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        """Compact large journals and drop sessions that are past their retention.
+
+        ``skip_sessions`` protects sessions that a running service currently
+        holds in memory. ``dry_run`` reports what would happen and changes
+        nothing.
+        """
+
+        skip = set(skip_sessions)
+        report: dict[str, Any] = {
+            "dry_run": dry_run,
+            "compacted": [],
+            "pruned": [],
+            "skipped": sorted(skip),
+            "bytes_freed": 0,
+        }
+
+        for entry in self.session_usage():
+            session_id = entry["session"]
+            if session_id in skip:
+                continue
+            if compact_over_records is not None:
+                journal = self._journal(session_id)
+                if journal is not None and journal.records_since_snapshot >= compact_over_records:
+                    if dry_run:
+                        report["compacted"].append({"session": session_id, "records": journal.records_since_snapshot})
+                    else:
+                        report["compacted"].append(self.compact_session(session_id))
+
+        usage = self.session_usage()
+        candidates = [entry for entry in usage if entry["session"] not in skip]
+        expired: list[dict[str, Any]] = []
+        if older_than_seconds is not None:
+            cutoff = time.time() - older_than_seconds
+            expired = [entry for entry in candidates if entry["last_activity"] < cutoff]
+        if keep_sessions is not None:
+            protected = {entry["session"] for entry in usage[: max(0, keep_sessions)]}
+            expired = [entry for entry in expired if entry["session"] not in protected]
+
+        for entry in expired:
+            if dry_run:
+                report["pruned"].append({"session": entry["session"], "bytes": entry["bytes"]})
+                continue
+            directory = session_directory(self.config.state_dir, entry["session"])
+            shutil.rmtree(directory, ignore_errors=True)
+            report["pruned"].append({"session": entry["session"], "bytes": entry["bytes"]})
+            report["bytes_freed"] += entry["bytes"]
+
+        if not dry_run:
+            report["bytes_freed"] = sum(item["bytes"] for item in report["pruned"])
+        report["sessions_before"] = len(usage)
+        report["sessions_after"] = len(self.session_usage())
+        return report
 
     def known_sessions(self) -> list[str]:
         """Session ids that have durable state on disk."""

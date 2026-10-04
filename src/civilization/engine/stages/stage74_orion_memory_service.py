@@ -24,8 +24,10 @@ from .stage69_streaming_package_delivery import Stage69StreamingConfig
 from .stage71_if_range_package_delivery import Stage71IfRangePackageService, build_stage71_real_service
 from ..persistence import (
     FSYNC_INTERVAL,
+    GLOBAL_SESSION,
     MODE_IN_PROCESS,
     PersistenceConfig,
+    PersistentOrionMemoryStore,
     SessionPersistence,
 )
 from .stage73_orion_memory_kernel import MemoryCell, MemoryLinkType, MemorySystem, OrionMemoryStore
@@ -146,7 +148,10 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
                 persist_traces=memory_config.persist_traces,
             )
         )
-        self.global_memory_store = OrionMemoryStore()
+        # Cross-session memory uses the same durability path as session memory:
+        # it is hydrated from its journal at startup and every mutation is
+        # appended, so a restart no longer depends on an explicit save.
+        self.global_memory_store = self.session_persistence.hydrate(GLOBAL_SESSION)
         self._global_router = OrionGlobalRetrievalRouter()
         super().__init__(
             runtime_factory=runtime_factory,
@@ -182,6 +187,32 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
 
         self.session_persistence.flush()
         return self.session_persistence.status()
+
+    def run_retention(
+        self,
+        *,
+        older_than_seconds: float | None = None,
+        keep_sessions: int | None = None,
+        compact_over_records: int | None = None,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        """Compact large journals and drop expired sessions.
+
+        Sessions this process currently holds in memory are never pruned: their
+        pending writes are committed first, and they are passed to the sweep as
+        protected so a live service cannot delete memory it is still serving.
+        """
+
+        self.session_persistence.flush()
+        with self._memory_lock:
+            active = sorted({*self._memory_stores, GLOBAL_SESSION})
+        return self.session_persistence.retention_sweep(
+            older_than_seconds=older_than_seconds,
+            keep_sessions=keep_sessions,
+            compact_over_records=compact_over_records,
+            skip_sessions=active,
+            dry_run=dry_run,
+        )
 
     def memory_status(self) -> dict[str, Any]:
         with self._memory_lock:
@@ -224,7 +255,13 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
                 return lifecycle.save(self.global_memory_store)
             if action == "load":
                 store, status = lifecycle.load()
-                self.global_memory_store = store
+                if isinstance(self.global_memory_store, PersistentOrionMemoryStore):
+                    # Keep the durable store object and swap its contents, so the
+                    # replacement is journaled as a reset plus upserts. Assigning a
+                    # fresh store here would silently detach durability.
+                    self.global_memory_store.replace_contents(list(store.cells.values()), list(store.links))
+                else:
+                    self.global_memory_store = store
                 self.memory_metrics.global_store_loads += 1
                 return status
             raise ValueError("unsupported global store lifecycle action")
@@ -450,6 +487,29 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
                     except Exception as error:
                         self._send_json(HTTPStatus.BAD_REQUEST, {"status": "error", "error_type": type(error).__name__, "error": str(error)})
                         return
+                if self.path == "/admin/orion/memory/retention":
+                    try:
+                        payload = self._read_json()
+                        if not isinstance(payload, dict):
+                            raise ValueError("retention payload must be an object")
+                        if not self._check_access(payload):
+                            return
+                        older_than_days = payload.get("older_than_days")
+                        report = service.run_retention(
+                            older_than_seconds=(
+                                float(older_than_days) * 86400 if older_than_days is not None else None
+                            ),
+                            keep_sessions=payload.get("keep"),
+                            compact_over_records=payload.get("compact_over_records"),
+                            dry_run=bool(payload.get("dry_run", False)),
+                        )
+                        self._send_json(HTTPStatus.OK, {"status": "ok", "retention": report})
+                    except Exception as error:
+                        self._send_json(
+                            HTTPStatus.BAD_REQUEST,
+                            {"status": "error", "error_type": type(error).__name__, "error": str(error)},
+                        )
+                    return
                 if self.path == "/admin/orion/memory/flush":
                     try:
                         if not self._check_access():

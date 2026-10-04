@@ -169,7 +169,11 @@ def test_stage94_global_store_lifecycle_admin_api_requires_token(tmp_path) -> No
         except HTTPError as error:
             assert error.code == 401
         saved = _post(url, {}, token=token)
-        service.global_memory_store = type(service.global_memory_store)()
+        # Simulate an empty global store before the explicit load. Clearing the
+        # contents keeps the durable store object in place, which is what a
+        # running service does; replacing it would detach journaling.
+        service.global_memory_store.cells.clear()
+        service.global_memory_store.links.clear()
         loaded = _post(f"http://{host}:{port}/admin/orion/global-store/load", {}, token=token)
     finally:
         service.shutdown()

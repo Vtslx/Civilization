@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import tempfile
 import threading
 import time
@@ -292,3 +293,223 @@ def test_memory_system_enum_round_trips(tmp_path: Path):
     restored = SessionPersistence(_config(tmp_path)).hydrate("s")
     assert restored.cells["working-000001"].memory_system is MemorySystem.WORKING
 
+
+
+# --------------------------------------------------------------------------- #
+# global (cross-session) memory uses the same durability path
+# --------------------------------------------------------------------------- #
+def _embedded(tmp_path: Path, **overrides) -> tuple[EmbeddedConfig, Path]:
+    state_dir = tmp_path / "state"
+    settings = {
+        "runtime": "provider",
+        "provider_base_url": "https://provider.invalid/v1",
+        "provider_model": "test-model",
+        "state_dir": str(state_dir),
+        "bearer_token_env": None,
+        "fsync_policy": FSYNC_EVERY_WRITE,
+    }
+    settings.update(overrides)
+    return EmbeddedConfig(**settings), state_dir
+
+
+def test_global_memory_survives_a_restart_without_an_explicit_save(tmp_path: Path):
+    config, _ = _embedded(tmp_path)
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        runtime.start()
+        cell = runtime._service.global_memory_store.write_cell(  # noqa: SLF001 - the store under test
+            memory_system="semantic",
+            content="Every release needs two approvals.",
+            summary="release policy",
+            source="global",
+        )
+        assert cell.cell_id
+        runtime._service.flush_session_memory()  # noqa: SLF001
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        runtime.start()
+        restored = runtime._service.global_memory_store  # noqa: SLF001
+        assert "semantic-000001" in restored.cells
+        assert restored.cells["semantic-000001"].summary == "release policy"
+
+
+def test_global_store_load_replaces_contents_and_is_journaled(tmp_path: Path):
+    config, state_dir = _embedded(tmp_path)
+    global_file = state_dir / "global-memory.json"
+    global_file.parent.mkdir(parents=True, exist_ok=True)
+    global_file.write_text(
+        json.dumps(
+            {
+                "cells": [
+                    {
+                        "cell_id": "semantic-000001",
+                        "memory_system": "semantic",
+                        "content": "loaded from the export file",
+                        "summary": "loaded",
+                        "source": "global",
+                        "confidence": 1.0,
+                        "importance": 1.0,
+                        "created_at": 1.0,
+                        "updated_at": 1.0,
+                        "time_index": 1.0,
+                        "decay_state": "active",
+                        "consolidation_state": "raw",
+                        "metadata": {},
+                    }
+                ],
+                "links": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        runtime.start()
+        store = runtime._service.global_memory_store  # noqa: SLF001
+        store.write_cell(memory_system="semantic", content="stale", summary="stale", source="global")
+        runtime._service.global_store_lifecycle("load")  # noqa: SLF001
+        assert [cell.summary for cell in store.cells.values()] == ["loaded"]
+        runtime._service.flush_session_memory()  # noqa: SLF001
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        runtime.start()
+        restored = runtime._service.global_memory_store  # noqa: SLF001
+        # The reset record prevents the pre-load cell from being replayed back in.
+        assert [cell.summary for cell in restored.cells.values()] == ["loaded"]
+
+
+def test_global_store_load_still_assigns_a_plain_store_without_persistence(tmp_path: Path):
+    config, state_dir = _embedded(tmp_path, persist_sessions=False)
+    global_file = state_dir / "global-memory.json"
+    global_file.parent.mkdir(parents=True, exist_ok=True)
+    global_file.write_text(json.dumps({"cells": [], "links": []}), encoding="utf-8")
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        runtime.start()
+        runtime._service.global_store_lifecycle("load")  # noqa: SLF001
+        assert isinstance(runtime._service.global_memory_store, OrionMemoryStore)  # noqa: SLF001
+
+
+# --------------------------------------------------------------------------- #
+# retention
+# --------------------------------------------------------------------------- #
+def _age_session(state_dir: Path, session_id: str, days: float) -> None:
+    directory = session_directory(state_dir, session_id)
+    stamp = time.time() - days * 86400
+    for item in directory.iterdir():
+        os.utime(item, (stamp, stamp))
+
+
+def test_retention_prunes_expired_sessions_and_keeps_recent_ones(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path))
+    for name in ("old-session", "recent-session"):
+        store = persistence.hydrate(name)
+        store.write_cell(memory_system="episodic", content="fact", summary="fact", source="test")
+    persistence.flush()
+    _age_session(tmp_path, "old-session", days=30)
+
+    report = persistence.retention_sweep(older_than_seconds=7 * 86400)
+
+    assert [item["session"] for item in report["pruned"]] == ["old-session"]
+    assert report["bytes_freed"] > 0
+    assert not session_directory(tmp_path, "old-session").exists()
+    assert session_directory(tmp_path, "recent-session").exists()
+    persistence.close()
+
+
+def test_retention_keeps_the_most_recent_sessions(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path))
+    for name in ("a", "b", "c"):
+        persistence.hydrate(name).write_cell(memory_system="episodic", content="x", summary="x", source="t")
+    persistence.flush()
+    for index, name in enumerate(("a", "b", "c")):
+        _age_session(tmp_path, name, days=10 + index)
+
+    report = persistence.retention_sweep(older_than_seconds=86400, keep_sessions=1)
+
+    assert [item["session"] for item in report["pruned"]] == ["b", "c"]
+    assert session_directory(tmp_path, "a").exists()
+    persistence.close()
+
+
+def test_retention_compacts_large_journals_and_preserves_state(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path, snapshot_every_records=100000))
+    store = persistence.hydrate("busy")
+    for _ in range(20):
+        store.write_cell(memory_system="episodic", content="fact", summary="fact", source="test")
+    persistence.flush()
+    journal = session_directory(tmp_path, "busy") / "journal.ndjson"
+    assert journal.stat().st_size > 0
+
+    report = persistence.retention_sweep(compact_over_records=10)
+
+    assert report["compacted"] and report["compacted"][0]["session"] == "busy"
+    assert report["compacted"][0]["journal_bytes_after"] == 0
+    persistence.close()
+
+    restored = SessionPersistence(_config(tmp_path)).hydrate("busy")
+    assert len(restored.cells) == 20
+
+
+def test_retention_dry_run_changes_nothing(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path, snapshot_every_records=100000))
+    persistence.hydrate("old").write_cell(memory_system="episodic", content="x", summary="x", source="t")
+    for _ in range(12):
+        persistence.hydrate("busy").write_cell(memory_system="episodic", content="y", summary="y", source="t")
+    persistence.flush()
+    _age_session(tmp_path, "old", days=30)
+
+    report = persistence.retention_sweep(older_than_seconds=86400, compact_over_records=5, dry_run=True)
+
+    assert report["dry_run"] is True
+    assert report["pruned"] and report["compacted"]
+    assert session_directory(tmp_path, "old").exists()
+    assert (session_directory(tmp_path, "busy") / "journal.ndjson").stat().st_size > 0
+    persistence.close()
+
+
+def test_retention_never_touches_protected_sessions(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path))
+    persistence.hydrate("live").write_cell(memory_system="episodic", content="x", summary="x", source="t")
+    persistence.flush()
+    _age_session(tmp_path, "live", days=90)
+
+    report = persistence.retention_sweep(older_than_seconds=86400, skip_sessions=["live"])
+
+    assert report["pruned"] == []
+    assert report["skipped"] == ["live"]
+    assert session_directory(tmp_path, "live").exists()
+    persistence.close()
+
+
+def test_service_retention_protects_the_sessions_it_is_serving(tmp_path: Path):
+    config, state_dir = _embedded(tmp_path)
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        client = runtime.start()
+        for name in ("live-a", "live-b"):
+            client.write_memory(session_id=name, memory_system="episodic", content="fact", summary="fact")
+        report = client._request(  # noqa: SLF001 - admin endpoint under test
+            "POST", "/admin/orion/memory/retention", {"older_than_days": 0, "dry_run": False}
+        )["retention"]
+        # Both sessions (and the global store) are loaded in memory, so none may be pruned.
+        assert report["pruned"] == []
+        assert set(report["skipped"]) >= {"live-a", "live-b", "__global__"}
+        assert client.read_memory(session_id="live-a", query="fact")
+
+
+def test_prune_cli_offline_prunes_and_reports(tmp_path: Path, capsys):
+    from civilization.cli import main
+
+    persistence = SessionPersistence(_config(tmp_path / "state"))
+    persistence.hydrate("stale").write_cell(memory_system="episodic", content="x", summary="x", source="t")
+    persistence.flush()
+    persistence.close()
+    _age_session(tmp_path / "state", "stale", days=45)
+
+    exit_code = main(["prune", "--state-dir", str(tmp_path / "state"), "--older-than-days", "30"])
+    output = capsys.readouterr().out
+
+    assert exit_code == 0
+    assert "pruned:    1" in output
+    assert not session_directory(tmp_path / "state", "stale").exists()

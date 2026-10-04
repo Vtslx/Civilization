@@ -405,6 +405,77 @@ def _command_serve(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------- #
+# prune
+# --------------------------------------------------------------------------- #
+def _command_prune(args: argparse.Namespace) -> int:
+    older_than_seconds = args.older_than_days * 86400 if args.older_than_days is not None else None
+
+    if args.base_url:
+        # Live path: the service protects the sessions it is currently serving.
+        client = CivilizationClient(
+            args.base_url,
+            token_env=args.token_env if os.environ.get(args.token_env) else None,
+            timeout=120.0,
+        )
+        payload: dict[str, Any] = {"dry_run": args.dry_run}
+        if args.older_than_days is not None:
+            payload["older_than_days"] = args.older_than_days
+        if args.keep is not None:
+            payload["keep"] = args.keep
+        if args.compact_over is not None:
+            payload["compact_over_records"] = args.compact_over
+        response = client._request("POST", "/admin/orion/memory/retention", payload)  # noqa: SLF001 - admin endpoint
+        report = response.get("retention", {})
+        _print(
+            json.dumps(report, ensure_ascii=False, indent=2)
+            if args.json
+            else _format_retention(report, prefix=f"{args.base_url} "),
+            as_json=False,
+        )
+        return 0
+
+    # Offline path: operate on the files directly, so the service must be stopped.
+    _require_engine()
+    from .engine.persistence import PersistenceConfig, SessionPersistence
+
+    persistence = SessionPersistence(
+        PersistenceConfig(mode="in_process", state_dir=args.state_dir, fsync="never")
+    )
+    try:
+        report = persistence.retention_sweep(
+            older_than_seconds=older_than_seconds,
+            keep_sessions=args.keep,
+            compact_over_records=args.compact_over,
+            dry_run=args.dry_run,
+        )
+    finally:
+        persistence.close()
+
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(_format_retention(report))
+    if not args.dry_run and report["pruned"]:
+        print("run with --base-url against a live service to have it protect active sessions")
+    return 0
+
+
+def _format_retention(report: dict[str, Any], *, prefix: str = "") -> str:
+    lines = [
+        f"{prefix}sessions: {report.get('sessions_before')} -> {report.get('sessions_after')}",
+        f"compacted: {len(report.get('compacted', []))}",
+        f"pruned:    {len(report.get('pruned', []))} ({report.get('bytes_freed', 0)} bytes freed)",
+    ]
+    if report.get("dry_run"):
+        lines.append("dry run: nothing was changed")
+    for item in report.get("compacted", [])[:10]:
+        lines.append(f"  compacted {item.get('session')}: {item.get('records', item.get('cells'))}")
+    for item in report.get("pruned", [])[:10]:
+        lines.append(f"  pruned    {item.get('session')} ({item.get('bytes')} bytes)")
+    return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------- #
 # persist-sidecar
 # --------------------------------------------------------------------------- #
 def _command_persist_sidecar(args: argparse.Namespace) -> int:
@@ -558,6 +629,34 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--sidecar-socket", default=None, help="unix socket of `civilization persist-sidecar`")
     serve.add_argument("--persist-traces", action="store_true", help="also journal memory trace events")
     serve.set_defaults(func=_command_serve)
+
+    prune = subparsers.add_parser(
+        "prune",
+        help="compact large session journals and drop expired sessions",
+    )
+    prune.add_argument("--state-dir", default="var/state", help="directory holding session journals")
+    prune.add_argument(
+        "--older-than-days",
+        type=float,
+        default=None,
+        help="drop sessions whose last write is older than this many days",
+    )
+    prune.add_argument("--keep", type=int, default=None, help="always keep the N most recently active sessions")
+    prune.add_argument(
+        "--compact-over",
+        type=int,
+        default=None,
+        help="compact any session whose journal holds at least this many records",
+    )
+    prune.add_argument("--dry-run", action="store_true", help="report what would happen and change nothing")
+    prune.add_argument(
+        "--base-url",
+        default=None,
+        help="ask a running service to run the sweep instead of touching files directly",
+    )
+    prune.add_argument("--token-env", default="CIVILIZATION_API_TOKEN", help="bearer token environment variable")
+    prune.add_argument("--json", action="store_true", help="machine-readable output")
+    prune.set_defaults(func=_command_prune)
 
     sidecar = subparsers.add_parser(
         "persist-sidecar",

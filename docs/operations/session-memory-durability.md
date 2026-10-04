@@ -131,7 +131,13 @@ Automated coverage (`tests/engine/test_session_persistence.py`):
 - the sidecar receives records, drains them when the service dies abruptly, and
   the state is recovered from the files afterwards;
 - an unreachable sidecar degrades to local writing instead of failing writes;
-- hostile session ids cannot escape the state directory.
+- hostile session ids cannot escape the state directory;
+- global (cross-session) memory written without an explicit save is present after
+  a restart, and a global-store load replaces contents without replay
+  resurrecting what it removed;
+- retention prunes expired sessions, always keeps the N most recent, compacts
+  journals past a threshold without losing cells, honours `dry_run`, and never
+  touches protected sessions — including through the live endpoint.
 
 End-to-end crash test, run against a service with `fsync=interval`
 (0.1 s interval):
@@ -141,14 +147,50 @@ End-to-end crash test, run against a service with `fsync=interval`
 3. a new service process starts on the same state directory;
 4. `read_memory` returns all 3 cells, with the same `cell_id`s.
 
+## Retention and compaction
+
+Journals are compacted automatically (`snapshot_every_records`, default 512), so
+the journal stays small; the snapshot is proportional to *live* state, not to
+history. Two ways to bound disk usage across many sessions:
+
+```bash
+# offline: operate on the files directly (stop the service first)
+civilization prune --state-dir var/state --older-than-days 30 --keep 50 --dry-run
+civilization prune --state-dir var/state --older-than-days 30 --compact-over 200
+
+# live: the service protects the sessions it is currently serving
+civilization prune --base-url http://127.0.0.1:8765 --older-than-days 30 --keep 50
+```
+
+Or call the endpoint directly:
+
+```bash
+curl -s -X POST localhost:8765/admin/orion/memory/retention \
+  -d '{"older_than_days": 30, "keep": 50, "compact_over_records": 200}' | jq
+```
+
+| Setting | Meaning |
+|---|---|
+| `older_than_days` | drop sessions whose last write is older than this |
+| `keep` | always keep the N most recently active sessions, whatever their age |
+| `compact_over_records` | merge any session whose journal holds at least this many records |
+| `dry_run` | report what would happen and change nothing |
+
+The live path never prunes a session the service is holding in memory (including
+the global store), and it commits pending writes before deciding. The offline
+path has no such knowledge — run it with the service stopped, or use the live
+path.
+
 ## Limits and non-goals
 
 - **No replication.** Durability here means "survives a restart or a crash on
   this machine", not "survives losing the disk". Point `state_dir` at a volume
   that has its own redundancy if you need that.
-- **Global store keeps its explicit lifecycle.** `POST
-  /admin/orion/global-store/save|load` still writes and reads its own file
-  deliberately; the journal covers session memory.
+- **Global (cross-session) memory uses the same journal.** It is hydrated at
+  startup and every mutation is appended, so it no longer depends on an explicit
+  save. `POST /admin/orion/global-store/save|load` remains as export/import: a
+  load replaces the contents and is journaled as a reset plus upserts, so replay
+  cannot resurrect what the load removed.
 - **Traces are off by default.** Cells and links are the state that matters for
   decisions; the diagnostic trace stream is opt-in (`persist_traces`).
 - **One writer per state directory.** Two services sharing a directory would

@@ -32,6 +32,9 @@ FORMAT_VERSION = 1
 RECORD_CELL = "cell"
 RECORD_LINK = "link"
 RECORD_TRACE = "trace"
+# Clears the store before the records that follow it. Used when a session's
+# contents are replaced wholesale (for example a global-store load).
+RECORD_RESET = "reset"
 
 
 def session_directory(root: str | Path, session_id: str) -> Path:

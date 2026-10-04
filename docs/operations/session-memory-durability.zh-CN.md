@@ -107,7 +107,9 @@ civilization serve --fsync every_write --provider-base-url <url> --provider-mode
 - `every_write` 与 `interval` 两种策略最终都能达到 `pending_records == 0`；
 - sidecar 能接收记录，在服务被异常杀死后排空并落盘，之后可从文件恢复状态；
 - sidecar 不可达时降级为本地写入，而不是让写入失败；
-- 恶意 session id 无法逃出 state 目录。
+- 恶意 session id 无法逃出 state 目录；
+- 未调用显式 save 的 global（跨会话）记忆在重启后仍存在；global store 的 load 会替换内容，且重放不会复活被移除的内容；
+- 保留策略会清理过期会话、始终保留最近 N 个、在达到阈值时压缩 journal 且不丢单元、遵守 `dry_run`，并且从不触碰受保护的会话——通过在线端点同样如此。
 
 端到端崩溃测试（服务使用 `fsync=interval`，间隔 0.1 秒）：
 
@@ -116,10 +118,39 @@ civilization serve --fsync every_write --provider-base-url <url> --provider-mode
 3. 新的服务进程使用同一个 state 目录启动；
 4. `read_memory` 返回全部 3 条记忆，`cell_id` 完全一致。
 
+## 保留与压缩
+
+journal 会自动压缩（`snapshot_every_records`，默认 512），因此 journal 始终很小；快照大小与**存活状态**成正比，而不是与历史成正比。要限制多会话下的磁盘占用，有两种方式：
+
+```bash
+# 离线：直接操作文件（先停服务）
+civilization prune --state-dir var/state --older-than-days 30 --keep 50 --dry-run
+civilization prune --state-dir var/state --older-than-days 30 --compact-over 200
+
+# 在线：服务会保护它当前正在服务的会话
+civilization prune --base-url http://127.0.0.1:8765 --older-than-days 30 --keep 50
+```
+
+也可以直接调用端点：
+
+```bash
+curl -s -X POST localhost:8765/admin/orion/memory/retention \
+  -d '{"older_than_days": 30, "keep": 50, "compact_over_records": 200}' | jq
+```
+
+| 参数 | 含义 |
+|---|---|
+| `older_than_days` | 丢弃最后写入早于该天数的会话 |
+| `keep` | 无论多老，始终保留最近活跃的 N 个会话 |
+| `compact_over_records` | journal 记录数达到该值的会话执行合并 |
+| `dry_run` | 只报告将要发生什么，不做任何修改 |
+
+在线路径**不会**清理服务内存中持有的会话（包括 global store），并在决策前先提交待写入记录。离线路径没有这些信息——请在服务停止时运行，或改用在线路径。
+
 ## 边界与非目标
 
 - **没有副本。** 这里的持久化是指"在这台机器上能挺过重启或崩溃"，不是"丢盘也能恢复"。需要后者请把 `state_dir` 指向自带冗余的卷。
-- **global store 保持显式生命周期。** `POST /admin/orion/global-store/save|load` 依旧按其自身文件显式读写；journal 覆盖的是 session 记忆。
+- **global（跨会话）记忆走同一套 journal。** 它在启动时水合，每次变更都会追加，因此不再依赖显式 save。`POST /admin/orion/global-store/save|load` 保留为导出/导入：load 会替换内容，并记录为一条 reset 加若干 upsert，因此重放不会把被 load 移除的内容复活。
 - **trace 默认不持久化。** 决策真正依赖的状态是单元与链接；诊断用的 trace 流需显式开启（`persist_traces`）。
 - **同一 state 目录只允许一个写入者。** 两个服务共享目录会交错写入 journal。请改用 sidecar 模式或分开目录。
 - **暂无压缩与保留策略。** journal 随写入增长；快照界定的是**重放**代价，不是字节数。对历史会话做保留清理属于后续工作。
