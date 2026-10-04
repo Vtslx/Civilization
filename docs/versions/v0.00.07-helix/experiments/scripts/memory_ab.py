@@ -35,7 +35,7 @@ import statistics
 import time
 from uuid import uuid4
 
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 SEED = 20261004
 DEFAULT_ROUNDS = 3

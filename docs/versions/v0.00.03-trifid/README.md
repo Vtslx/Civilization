@@ -7,8 +7,8 @@
 | Stages | 101–121 |
 | Theme | Episodic fast binding, cue and time disambiguation, controlled replay |
 | Status | implemented |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage101…stage121` |
-| Contract tests | 20 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage101 … stage121) |
+| Contract tests | 20 test files under `tests/engine` |
 
 ## Capabilities added
 
@@ -45,7 +45,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage10 or stage11 or stage12"
+pytest -q -k "stage10 or stage11 or stage12"
 ```
 
 ## Boundary

@@ -1,65 +1,80 @@
-# AstreusN Civilization v1 Python SDK
+# AstreusN Civilization v1
 
-`astreusn-civilization-v1` provides a stable application-facing API over the
-Civilization v1 service chain. Production inference always uses the `full`
-control mode. Offline ablation controls remain internal experiment tools and
-are intentionally absent from this SDK.
+`astreusn-civilization-v1` is the Python package behind the Civilization
+decision service: a dependency-free client, a provider-agnostic runtime layer,
+an in-process service host, and a command line that starts a working service in
+one command.
 
-The framework is provider-agnostic: the decision backend is selected by runtime
-kind, and each runtime declares what it can actually do instead of the SDK
-assuming a model family. `GET /v1/capabilities` reports the same declaration
-over HTTP.
-
-| runtime kind | backend | hidden states | adapter execution |
-|---|---|---|---|
-| `provider` | any OpenAI-compatible Chat Completions endpoint | no | no |
-| `local_transformers` | any local Hugging Face causal LM | no | no |
-| `local_adapter` | the audited Civilization Adapter over pinned local weights | yes | yes |
-
-```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig, ProviderRuntimeConfig
-
-service = EmbeddedCivilization(
-    EmbeddedConfig(
-        runtime="provider",
-        provider_base_url="https://provider.example.com/v1",
-        provider_model="any-chat-model",
-        provider_api_key_env="PROVIDER_API_KEY",
-        provider_headers={"x-provider-session": "deployment-42"},
-        provider_extra_body={"reasoning_effort": "none"},  # provider-specific knobs
-    )
-)
-print(service.capabilities.to_dict())
-```
-
-Register an additional backend with `register_runtime(RuntimeKind(...))`; the
-service chain itself is unchanged. TypeScript consumers use
-`@astreusn/civilization-transformer` from the internal npm registry.
+Production decisions always use the validated `full` control mode. Offline
+ablation controls stay in the engine as internal tooling and are intentionally
+absent from the public API.
 
 ## Install
 
-Remote HTTP clients need only the standard library:
+| Goal | Command | What you get |
+|---|---|---|
+| Talk to a running service | `pip install astreusn-civilization-v1` | client + CLI, standard library only |
+| Host the service | `pip install 'astreusn-civilization-v1[embedded]'` | engine, service chain, local model support |
+| Run the test suite | `pip install -e '.[test]'` | engine plus the analysis and test dependencies |
+
+From a checkout, install the package itself so `import civilization` and the
+`civilization` command resolve to this tree:
 
 ```bash
-python -m pip install .
+python -m pip install -e '.[embedded]'
 ```
 
-Install the optional embedded runtime dependencies when the application will
-host the Stage49-74 service in its own process:
+## Verify the install in one command
+
+The demo hosts the real service chain, so install the engine tier first:
 
 ```bash
-python -m pip install '.[embedded]'
+pip install 'astreusn-civilization-v1[embedded]'
+civilization demo
 ```
+
+The demo runs the complete path — request validation, memory write, retrieval,
+context injection, and an auditable trace — against a deterministic offline
+runtime. No model, no API key, no network. Follow it with:
+
+```bash
+civilization doctor     # what this machine can run, and what is missing
+```
+
+## Command line
+
+```bash
+# host the service (prints the bound URL and declared capabilities)
+civilization serve \
+  --provider-base-url https://provider.example.com/v1 \
+  --provider-model any-chat-model
+
+# host with a local model instead — backends are configuration, not code
+civilization serve --runtime local_transformers --local-model-path /path/to/model
+
+# send one decision to a running service
+civilization predict --text "Choose the supported operation." --options approve,reject
+civilization predict --text "..." --options approve,reject --json
+```
+
+`serve` exposes `/health`, `/ready`, `/metrics`, `/v1/capabilities`,
+`/v1/predict`, `/v1/batch`, `/v1/jobs` (submit, poll, results, retention),
+`/v1/jobs/export` (create, package, download with Range and `If-Range`), and the
+`/admin/orion/*` memory endpoints.
 
 ## Remote client
 
 ```python
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 client = CivilizationClient(
     "https://civilization.example.com",
     token_env="CIVILIZATION_API_TOKEN",
 )
+
+print(client.ready())
+print(client.capabilities())          # what the deployment can actually do
+
 result = client.predict(
     CivilizationRequest(
         text="Choose the deployment action.",
@@ -74,32 +89,62 @@ result = client.predict(
 print(result.option_id, result.option_text, result.memory_trace)
 ```
 
-The same client exposes explicit Orion memory operations, asynchronous jobs,
-exports, package delivery, health, readiness, and metrics. Pass secrets through
-environment variables; do not commit provider keys or service bearer tokens.
+The same client exposes the Orion memory operations, asynchronous jobs, exports,
+package delivery, health, readiness, and metrics.
 
 ## Embedded service
 
 ```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig
+from civilization import EmbeddedCivilization, EmbeddedConfig
 
 config = EmbeddedConfig(
+    runtime="provider",
     provider_base_url="https://provider.example.com/v1",
     provider_model="provider-model-name",
     provider_api_key_env="PROVIDER_API_KEY",
+    provider_headers={"x-provider-session": "deployment-42"},
+    provider_extra_body={"reasoning_effort": "none"},   # provider-specific knobs
     bearer_token_env="CIVILIZATION_API_TOKEN",
-    state_dir="~/.my-application/civilization-v1",
+    state_dir="~/.my-application/civilization",
 )
 
 with EmbeddedCivilization(config) as runtime:
     client = runtime.start()
     assert client.ready()["ready"] is True
+    print(runtime.capabilities.to_dict())
 ```
 
-Embedded mode hosts the validated Stage49-74 production path: request
-validation, access control, queueing, async jobs, persistence, exports,
-resumable-capable package endpoints, and Orion session memory. The configured
-OpenAI-compatible provider supplies the decision backend. Such providers do
-not expose Qwen hidden states, so this mode does not claim local adapter or
-hidden-state execution. Trifid and later version modules remain independently
-validated components and are not implicitly inserted into this online path.
+Embedded mode hosts the full production path in your process: request
+validation, access control, queueing, async jobs with persistence, exports and
+resumable package delivery, and Orion session memory. All mutable files live
+under `state_dir`.
+
+## Runtime kinds and capabilities
+
+The backend is configuration. Each runtime declares what it can and cannot do,
+and `GET /v1/capabilities` reports the same declaration over HTTP.
+
+| Runtime kind | Backend | Hidden states | Adapter execution |
+|---|---|---|---|
+| `provider` | any OpenAI-compatible Chat Completions endpoint | no | no |
+| `local_transformers` | any local Hugging Face causal LM | no | no |
+| `local_adapter` | the audited Civilization Adapter over pinned local weights | yes | yes |
+
+Register an additional backend with `register_runtime(RuntimeKind(...))`; the
+service chain itself is unchanged.
+
+## Operational notes
+
+- Secrets come from the environment: provider keys through `provider_api_key_env`,
+  service bearer tokens through `bearer_token_env`. Never commit them.
+- `state_dir` holds jobs, results, exports, audit records, and memory. Back it up
+  to keep them; delete it to start clean.
+- `/v1/capabilities` is the contract. A text-only provider never claims hidden
+  states or adapter execution, and the SDK never implies them.
+- A completed job can still contain a failed row: check
+  `job_result(...)["result"]["rows"][*]["status"]` before consuming results.
+
+## Related
+
+- Repository, examples, and version baselines: <https://github.com/Vtslx/Civilization>
+- TypeScript SDK: `sdk/civilization-transformer` (`@astreusn/civilization-transformer`)

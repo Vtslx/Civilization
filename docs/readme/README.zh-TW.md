@@ -18,10 +18,10 @@ v1 線把一個小型語言模型**凍結**，在其上訓練 Civilization Adapt
 
 | 路徑 | 說明 |
 |---|---|
-| `experiments/civilization_transformer/` | 第一個可執行試驗台：NumPy 實作的類 Transformer 核心，含 memory / state / rule 向量與融合的 CivilizationBlock。 |
-| `experiments/civilization_transformer_torch/` | PyTorch 後端線：邏輯資料集、codebook、消融設定，以及後續各階段使用的訓練與評測框架。 |
-| `experiments/civilization_transformer_qwen3/` | 凍結底座線，Stage 44–160：hidden-state 基線、Civilization Adapter、memory/state/rule 路徑訓練，以及常駐服務鏈。 |
-| `civilization_v1/` | Python SDK：零依賴 HTTP 客戶端、請求/預測/任務模型、與 provider 無關的 runtime 層，以及行程內服務宿主。 |
+| `src/civilization/research/prototype/` | 第一個可執行試驗台：NumPy 實作的類 Transformer 核心，含 memory / state / rule 向量與融合的 CivilizationBlock。 |
+| `src/civilization/research/torch_line/` | PyTorch 後端線：邏輯資料集、codebook、消融設定，以及後續各階段使用的訓練與評測框架。 |
+| `src/civilization/engine/` | 凍結底座線，Stage 44–160：hidden-state 基線、Civilization Adapter、memory/state/rule 路徑訓練，以及常駐服務鏈。 |
+| `src/civilization/` | Python SDK：零依賴 HTTP 客戶端、請求/預測/任務模型、與 provider 無關的 runtime 層，以及行程內服務宿主。 |
 | `sdk/civilization-transformer/` | TypeScript SDK：零依賴客戶端，涵蓋決策、記憶、非同步任務與匯出包。 |
 | `SDK.md`、`pyproject.toml` | `astreusn-civilization-v1` 的 Python 打包設定。 |
 
@@ -88,7 +88,7 @@ python -m pip install .
 ```
 
 ```python
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 client = CivilizationClient("https://civilization.example.com", token_env="CIVILIZATION_API_TOKEN")
 prediction = client.predict(
@@ -115,7 +115,7 @@ python -m pip install '.[embedded]'
 ```
 
 ```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig
+from civilization import EmbeddedCivilization, EmbeddedConfig
 
 service = EmbeddedCivilization(
     EmbeddedConfig(
@@ -162,30 +162,35 @@ const prediction = await client.predict({
 
 ```text
 .
-├── civilization_v1/                     Python SDK
-│   ├── client.py                        零依賴 HTTP 客戶端
-│   ├── models.py                        請求 / 預測 / 任務模型
-│   ├── runtimes.py                      runtime 類型、能力宣告、註冊表
-│   └── embedded.py                      行程內服務宿主
-├── experiments/
-│   ├── civilization_transformer/        最早的 NumPy 試驗台
-│   ├── civilization_transformer_torch/  PyTorch 後端線
-│   └── civilization_transformer_qwen3/  凍結底座線，Stage 44–160
-│       ├── adapter/                     Civilization Adapter
-│       ├── backend/                     Qwen3 後端與 provider runtime
-│       ├── analysis/                    各階段執行腳本與服務鏈
-│       ├── tests/                       每個階段的合約測試
-│       └── model_paths.py               模型路徑解析（見下節）
-├── sdk/civilization-transformer/        TypeScript SDK
-├── SDK.md                               Python SDK 指南
-└── pyproject.toml                       astreusn-civilization-v1 打包設定
+├── src/civilization/                     已安裝的套件
+│   ├── __init__.py                       公開 API
+│   ├── client.py                         零依賴 HTTP 客戶端
+│   ├── models.py                         請求 / 預測 / 任務模型
+│   ├── runtimes.py                       runtime 類型、能力宣告、註冊表
+│   ├── embedded.py                       行程內服務宿主
+│   ├── cli.py                            `civilization` 命令列
+│   ├── engine/                           決策引擎（需要 engine extras）
+│   │   ├── model_paths.py                可選本地 checkpoint 解析
+│   │   ├── adapter/                      可訓練的 Civilization Adapter
+│   │   ├── backend/                      本地 / provider / adapter runtime
+│   │   └── stages/                       版本化服務鏈，Stage 44–160
+│   └── research/                         早期研究線，僅為溯源保留
+│       ├── prototype/                    最早的 NumPy 試驗台
+│       └── torch_line/                   PyTorch 後端線
+├── tests/                                engine / torch_line / prototype 測試
+├── examples/                             可執行範例
+├── docs/versions/                        每個版本的基線記錄與實驗
+├── docs/readme/                          本 README 的八種語言版本
+├── sdk/civilization-transformer/         TypeScript SDK
+├── SDK.md                                Python SDK 指南
+└── pyproject.toml                        astreusn-civilization-v1 打包設定
 ```
 
 ## 測試
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments -q
+pytest
 ```
 
 大部分測試不需要任何模型權重：服務鏈、記憶策略、任務與匯出合約、兩個 SDK 都可以
@@ -196,7 +201,7 @@ pytest experiments -q
 `CIVILIZATION_MODEL_PATH` 指向它：
 
 ```bash
-CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest experiments -q
+CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest
 ```
 
 各階段執行腳本把輸出寫到 `experiments/*/artifacts/`，該目錄已被 git 忽略；

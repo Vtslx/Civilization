@@ -7,7 +7,7 @@
 | Stage | 151–160 |
 | 主题 | 可学习检索路径权重，含恢复与校准门 |
 | 状态 | 已实现（当前线） |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage151…stage160` |
+| 模块 | `civilization.engine.stages`（stage151 … stage160） |
 | 合同测试 | 10 个测试文件 |
 | 实验 | [原生记忆配对 A/B](experiments/memory-on-off-ab.zh-CN.md) |
 
@@ -49,7 +49,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage15 or stage160"
+pytest -q -k "stage15 or stage160"
 ```
 
 ## 边界

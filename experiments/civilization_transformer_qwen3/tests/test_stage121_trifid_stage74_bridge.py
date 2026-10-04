@@ -1,5 +1,0 @@
-from experiments.civilization_transformer_qwen3.analysis.stage121_trifid_stage74_bridge import run_stage121_trifid_stage74_bridge_smoke
-
-
-def test_stage121_binds_stage74_episodic_trace_without_service_mutation(tmp_path) -> None:
-    assert run_stage121_trifid_stage74_bridge_smoke(output_dir=tmp_path)["passes_stage_gate"]

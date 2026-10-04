@@ -23,10 +23,10 @@ ultérieures et sans documents internes de développement.
 
 | Chemin | Description |
 |---|---|
-| `experiments/civilization_transformer/` | Premier banc d'essai exécutable : cœur de type Transformer en NumPy avec vecteurs mémoire/état/règles et un CivilizationBlock fusionné. |
-| `experiments/civilization_transformer_torch/` | Ligne backend PyTorch : jeux de données logiques, codebooks, configurations d'ablation et les harnais d'entraînement/évaluation de toutes les étapes suivantes. |
-| `experiments/civilization_transformer_qwen3/` | Ligne à base gelée, Stages 44–160 : références de hidden states, Civilization Adapter, entraînement des chemins memory/state/rule et chaîne de service persistante. |
-| `civilization_v1/` | SDK Python : client HTTP sans dépendance, modèles requête/prédiction/tâche, couche runtime agnostique du fournisseur et hôte de service en processus. |
+| `src/civilization/research/prototype/` | Premier banc d'essai exécutable : cœur de type Transformer en NumPy avec vecteurs mémoire/état/règles et un CivilizationBlock fusionné. |
+| `src/civilization/research/torch_line/` | Ligne backend PyTorch : jeux de données logiques, codebooks, configurations d'ablation et les harnais d'entraînement/évaluation de toutes les étapes suivantes. |
+| `src/civilization/engine/` | Ligne à base gelée, Stages 44–160 : références de hidden states, Civilization Adapter, entraînement des chemins memory/state/rule et chaîne de service persistante. |
+| `src/civilization/` | SDK Python : client HTTP sans dépendance, modèles requête/prédiction/tâche, couche runtime agnostique du fournisseur et hôte de service en processus. |
 | `sdk/civilization-transformer/` | SDK TypeScript : client sans dépendance pour décisions, mémoire, tâches et paquets d'export. |
 | `SDK.md`, `pyproject.toml` | Empaquetage Python de `astreusn-civilization-v1`. |
 
@@ -98,7 +98,7 @@ python -m pip install .
 ```
 
 ```python
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 client = CivilizationClient("https://civilization.example.com", token_env="CIVILIZATION_API_TOKEN")
 prediction = client.predict(
@@ -126,7 +126,7 @@ python -m pip install '.[embedded]'
 ```
 
 ```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig
+from civilization import EmbeddedCivilization, EmbeddedConfig
 
 service = EmbeddedCivilization(
     EmbeddedConfig(
@@ -173,30 +173,35 @@ const prediction = await client.predict({
 
 ```text
 .
-├── civilization_v1/                     SDK Python
-│   ├── client.py                        client HTTP sans dépendance
-│   ├── models.py                        modèles requête / prédiction / tâche
-│   ├── runtimes.py                      types de runtime, capacités, registre
-│   └── embedded.py                      hôte de service en processus
-├── experiments/
-│   ├── civilization_transformer/        premier banc d'essai NumPy
-│   ├── civilization_transformer_torch/  ligne backend PyTorch
-│   └── civilization_transformer_qwen3/  ligne à base gelée, Stages 44–160
-│       ├── adapter/                     Civilization Adapter
-│       ├── backend/                     backend Qwen3 et runtimes fournisseur
-│       ├── analysis/                    exécuteurs d'étape et chaîne de service
-│       ├── tests/                       contrats de chaque étape
-│       └── model_paths.py               résolution du checkpoint (voir Tests)
-├── sdk/civilization-transformer/        SDK TypeScript
-├── SDK.md                               guide du SDK Python
-└── pyproject.toml                       empaquetage de astreusn-civilization-v1
+├── src/civilization/                     le paquet installé
+│   ├── __init__.py                       API publique
+│   ├── client.py                         client HTTP sans dépendance
+│   ├── models.py                         modèles requête / prédiction / tâche
+│   ├── runtimes.py                       types de runtime, capacités, registre
+│   ├── embedded.py                       hôte de service en processus
+│   ├── cli.py                            ligne de commande `civilization`
+│   ├── engine/                           moteur de décision (extras engine requis)
+│   │   ├── model_paths.py                résolution optionnelle du checkpoint local
+│   │   ├── adapter/                      le Civilization Adapter entraînable
+│   │   ├── backend/                      runtimes local / fournisseur / adapter
+│   │   └── stages/                       chaîne de service versionnée, Stages 44–160
+│   └── research/                         lignes antérieures, conservées pour la traçabilité
+│       ├── prototype/                    premier banc d'essai NumPy
+│       └── torch_line/                   ligne backend PyTorch
+├── tests/                                suites engine, torch_line et prototype
+├── examples/                             exemples exécutables
+├── docs/versions/                        fiche de référence par version et expériences
+├── docs/readme/                          ce README en huit langues
+├── sdk/civilization-transformer/         SDK TypeScript
+├── SDK.md                                guide du SDK Python
+└── pyproject.toml                        empaquetage de astreusn-civilization-v1
 ```
 
 ## Tests
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments -q
+pytest
 ```
 
 La majeure partie de la suite ne nécessite aucun poids de modèle : la chaîne de service,
@@ -208,7 +213,7 @@ absent. Le checkpoint n'est pas distribué avec ce dépôt ; obtenez-le puis pla
 `Models/Qwen3-0.6B` ou pointez `CIVILIZATION_MODEL_PATH` vers lui :
 
 ```bash
-CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest experiments -q
+CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest
 ```
 
 Les exécuteurs d'étape écrivent leurs sorties dans `experiments/*/artifacts/`, ignoré par

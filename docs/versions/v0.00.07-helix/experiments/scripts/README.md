@@ -9,7 +9,7 @@ The script is self-contained. It embeds the 25 synthetic question fixtures and
 needs only:
 
 - a reachable Civilization service (`GET /ready` must report ready), and
-- the `civilization_v1` SDK importable (from this repository or installed).
+- the `civilization` SDK importable (from this repository or installed).
 
 ```bash
 # from the repository root

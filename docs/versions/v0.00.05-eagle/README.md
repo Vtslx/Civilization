@@ -7,8 +7,8 @@
 | Stages | 133–138 |
 | Theme | Task traces and approved procedural memory |
 | Status | implemented |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage133…stage138` |
-| Contract tests | 6 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage133 … stage138) |
+| Contract tests | 6 test files under `tests/engine` |
 
 ## Capabilities added
 
@@ -36,7 +36,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage13"
+pytest -q -k "stage13"
 ```
 
 ## Boundary

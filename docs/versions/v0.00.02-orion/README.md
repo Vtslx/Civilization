@@ -7,8 +7,8 @@
 | Stages | 73–100 |
 | Theme | Multi-system memory (working / episodic / semantic / procedural) |
 | Status | implemented |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage73…stage99` |
-| Contract tests | 19 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage73 … stage99) |
+| Contract tests | 19 test files under `tests/engine` |
 
 ## Capabilities added
 
@@ -48,7 +48,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage7 or stage8 or stage9"
+pytest -q -k "stage7 or stage8 or stage9"
 ```
 
 ## Boundary

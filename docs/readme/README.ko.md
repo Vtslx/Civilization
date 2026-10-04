@@ -20,10 +20,10 @@ v1 라인은 작은 언어 모델을 **동결**하고 그 위에 Civilization Ad
 
 | 경로 | 내용 |
 |---|---|
-| `experiments/civilization_transformer/` | 최초의 실행 가능한 테스트 벤치. NumPy 기반 Transformer 유사 코어, memory / state / rule 벡터, 결합된 CivilizationBlock. |
-| `experiments/civilization_transformer_torch/` | PyTorch 백엔드 라인. 논리 데이터셋, codebook, 소거 설정, 이후 모든 단계가 쓰는 학습·평가 하네스. |
-| `experiments/civilization_transformer_qwen3/` | 동결 베이스 라인, Stage 44–160. hidden-state 베이스라인, Civilization Adapter, memory/state/rule 경로 학습, 상주 서비스 체인. |
-| `civilization_v1/` | Python SDK. 의존성 없는 HTTP 클라이언트, 요청/예측/작업 모델, provider 비종속 runtime 계층, 프로세스 내 서비스 호스트. |
+| `src/civilization/research/prototype/` | 최초의 실행 가능한 테스트 벤치. NumPy 기반 Transformer 유사 코어, memory / state / rule 벡터, 결합된 CivilizationBlock. |
+| `src/civilization/research/torch_line/` | PyTorch 백엔드 라인. 논리 데이터셋, codebook, 소거 설정, 이후 모든 단계가 쓰는 학습·평가 하네스. |
+| `src/civilization/engine/` | 동결 베이스 라인, Stage 44–160. hidden-state 베이스라인, Civilization Adapter, memory/state/rule 경로 학습, 상주 서비스 체인. |
+| `src/civilization/` | Python SDK. 의존성 없는 HTTP 클라이언트, 요청/예측/작업 모델, provider 비종속 runtime 계층, 프로세스 내 서비스 호스트. |
 | `sdk/civilization-transformer/` | TypeScript SDK. 결정·기억·작업·내보내기를 다루는 의존성 없는 클라이언트. |
 | `SDK.md`, `pyproject.toml` | `astreusn-civilization-v1` Python 패키징. |
 
@@ -93,7 +93,7 @@ python -m pip install .
 ```
 
 ```python
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 client = CivilizationClient("https://civilization.example.com", token_env="CIVILIZATION_API_TOKEN")
 prediction = client.predict(
@@ -120,7 +120,7 @@ python -m pip install '.[embedded]'
 ```
 
 ```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig
+from civilization import EmbeddedCivilization, EmbeddedConfig
 
 service = EmbeddedCivilization(
     EmbeddedConfig(
@@ -167,30 +167,35 @@ const prediction = await client.predict({
 
 ```text
 .
-├── civilization_v1/                     Python SDK
-│   ├── client.py                        의존성 없는 HTTP 클라이언트
-│   ├── models.py                        요청 / 예측 / 작업 모델
-│   ├── runtimes.py                      runtime 종류, 능력, 레지스트리
-│   └── embedded.py                      프로세스 내 서비스 호스트
-├── experiments/
-│   ├── civilization_transformer/        최초의 NumPy 테스트 벤치
-│   ├── civilization_transformer_torch/  PyTorch 백엔드 라인
-│   └── civilization_transformer_qwen3/  동결 베이스 라인, Stage 44–160
-│       ├── adapter/                     Civilization Adapter
-│       ├── backend/                     Qwen3 백엔드와 provider runtime
-│       ├── analysis/                    단계 실행 스크립트와 서비스 체인
-│       ├── tests/                       각 단계의 계약 테스트
-│       └── model_paths.py               체크포인트 경로 해석(아래 참조)
-├── sdk/civilization-transformer/        TypeScript SDK
-├── SDK.md                               Python SDK 가이드
-└── pyproject.toml                       astreusn-civilization-v1 패키징
+├── src/civilization/                     설치되는 패키지
+│   ├── __init__.py                       공개 API
+│   ├── client.py                         의존성 없는 HTTP 클라이언트
+│   ├── models.py                         요청 / 예측 / 작업 모델
+│   ├── runtimes.py                       runtime 종류, 능력, 레지스트리
+│   ├── embedded.py                       프로세스 내 서비스 호스트
+│   ├── cli.py                            `civilization` 명령줄
+│   ├── engine/                           결정 엔진(engine extras 필요)
+│   │   ├── model_paths.py                선택적 로컬 체크포인트 경로 해석
+│   │   ├── adapter/                      학습되는 Civilization Adapter
+│   │   ├── backend/                      로컬 / provider / adapter runtime
+│   │   └── stages/                       버전 관리되는 서비스 체인, Stage 44–160
+│   └── research/                         이전 연구 라인(계보 보존)
+│       ├── prototype/                    최초의 NumPy 테스트 벤치
+│       └── torch_line/                   PyTorch 백엔드 라인
+├── tests/                                engine / torch_line / prototype 테스트
+├── examples/                             실행 가능한 예제
+├── docs/versions/                        버전별 베이스라인 기록과 실험
+├── docs/readme/                          이 README의 8개 언어판
+├── sdk/civilization-transformer/         TypeScript SDK
+├── SDK.md                                Python SDK 가이드
+└── pyproject.toml                        astreusn-civilization-v1 패키징
 ```
 
 ## 테스트
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments -q
+pytest
 ```
 
 대부분의 테스트는 모델 가중치가 필요 없습니다. 서비스 체인, 기억 정책, 작업·내보내기
@@ -201,7 +206,7 @@ pytest experiments -q
 `CIVILIZATION_MODEL_PATH`로 지정하십시오.
 
 ```bash
-CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest experiments -q
+CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest
 ```
 
 단계 실행 스크립트의 출력은 `experiments/*/artifacts/`에 기록되며 git에서 제외됩니다.

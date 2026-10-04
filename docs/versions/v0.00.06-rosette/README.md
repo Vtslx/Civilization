@@ -7,8 +7,8 @@
 | Stages | 139–150 |
 | Theme | Typed context packets, conflict budgets, multi-scale honeycomb graph |
 | Status | implemented |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage139…stage150` |
-| Contract tests | 12 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage139 … stage150) |
+| Contract tests | 12 test files under `tests/engine` |
 
 ## Capabilities added
 
@@ -38,7 +38,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage14 or stage150"
+pytest -q -k "stage14 or stage150"
 ```
 
 ## Boundary

@@ -101,7 +101,7 @@
 
 ## 6. 复现方式
 
-复现脚本是自包含的：它内嵌 25 道题的 fixture，除可访问的服务与 `civilization_v1` SDK 外不需要任何外部文件。
+复现脚本是自包含的：它内嵌 25 道题的 fixture，除可访问的服务与 `civilization` SDK 外不需要任何外部文件。
 
 ```bash
 cd docs/versions/v0.00.07-helix/experiments/scripts

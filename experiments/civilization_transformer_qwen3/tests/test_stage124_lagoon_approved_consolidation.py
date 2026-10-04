@@ -1,5 +1,0 @@
-from experiments.civilization_transformer_qwen3.analysis.stage124_lagoon_approved_consolidation import run_stage124_lagoon_approved_consolidation_smoke
-
-
-def test_stage124_approves_one_lagoon_semantic_consolidation(tmp_path) -> None:
-    assert run_stage124_lagoon_approved_consolidation_smoke(output_dir=tmp_path)["passes_stage_gate"]

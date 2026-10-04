@@ -22,10 +22,10 @@ Civilization Adapter и диагностические считывания. П�
 
 | Путь | Описание |
 |---|---|
-| `experiments/civilization_transformer/` | Первый исполняемый стенд: ядро в стиле Transformer на NumPy с векторами памяти/состояния/правил и объединённым CivilizationBlock. |
-| `experiments/civilization_transformer_torch/` | Линия бэкенда PyTorch: логические наборы данных, codebook, конфигурации аблаций и стенды обучения/оценки всех последующих стадий. |
-| `experiments/civilization_transformer_qwen3/` | Линия с замороженной базой, Stages 44–160: базовые линии hidden states, Civilization Adapter, обучение путей memory/state/rule и постоянная сервисная цепочка. |
-| `civilization_v1/` | Python SDK: HTTP-клиент без зависимостей, модели запроса/предсказания/задачи, независимый от провайдера слой runtime и внутрипроцессный хост сервиса. |
+| `src/civilization/research/prototype/` | Первый исполняемый стенд: ядро в стиле Transformer на NumPy с векторами памяти/состояния/правил и объединённым CivilizationBlock. |
+| `src/civilization/research/torch_line/` | Линия бэкенда PyTorch: логические наборы данных, codebook, конфигурации аблаций и стенды обучения/оценки всех последующих стадий. |
+| `src/civilization/engine/` | Линия с замороженной базой, Stages 44–160: базовые линии hidden states, Civilization Adapter, обучение путей memory/state/rule и постоянная сервисная цепочка. |
+| `src/civilization/` | Python SDK: HTTP-клиент без зависимостей, модели запроса/предсказания/задачи, независимый от провайдера слой runtime и внутрипроцессный хост сервиса. |
 | `sdk/civilization-transformer/` | TypeScript SDK: клиент без зависимостей для решений, памяти, задач и пакетов экспорта. |
 | `SDK.md`, `pyproject.toml` | Упаковка Python для `astreusn-civilization-v1`. |
 
@@ -98,7 +98,7 @@ python -m pip install .
 ```
 
 ```python
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 client = CivilizationClient("https://civilization.example.com", token_env="CIVILIZATION_API_TOKEN")
 prediction = client.predict(
@@ -125,7 +125,7 @@ python -m pip install '.[embedded]'
 ```
 
 ```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig
+from civilization import EmbeddedCivilization, EmbeddedConfig
 
 service = EmbeddedCivilization(
     EmbeddedConfig(
@@ -172,30 +172,35 @@ const prediction = await client.predict({
 
 ```text
 .
-├── civilization_v1/                     Python SDK
-│   ├── client.py                        HTTP-клиент без зависимостей
-│   ├── models.py                        модели запроса / предсказания / задачи
-│   ├── runtimes.py                      типы runtime, возможности, реестр
-│   └── embedded.py                      внутрипроцессный хост сервиса
-├── experiments/
-│   ├── civilization_transformer/        первый стенд на NumPy
-│   ├── civilization_transformer_torch/  линия бэкенда PyTorch
-│   └── civilization_transformer_qwen3/  линия с замороженной базой, Stages 44–160
-│       ├── adapter/                     Civilization Adapter
-│       ├── backend/                     бэкенд Qwen3 и runtime провайдеров
-│       ├── analysis/                    запускатели стадий и сервисная цепочка
-│       ├── tests/                       контракты каждой стадии
-│       └── model_paths.py               разрешение пути к чекпоинту (см. Тесты)
-├── sdk/civilization-transformer/        TypeScript SDK
-├── SDK.md                               руководство по Python SDK
-└── pyproject.toml                       упаковка astreusn-civilization-v1
+├── src/civilization/                     устанавливаемый пакет
+│   ├── __init__.py                       публичный API
+│   ├── client.py                         HTTP-клиент без зависимостей
+│   ├── models.py                         модели запроса / предсказания / задачи
+│   ├── runtimes.py                       типы runtime, возможности, реестр
+│   ├── embedded.py                       внутрипроцессный хост сервиса
+│   ├── cli.py                            командная строка `civilization`
+│   ├── engine/                           движок решений (нужны engine extras)
+│   │   ├── model_paths.py                необязательное разрешение локального чекпоинта
+│   │   ├── adapter/                      обучаемый Civilization Adapter
+│   │   ├── backend/                      локальный / провайдерный / adapter runtime
+│   │   └── stages/                       версионированная сервисная цепочка, Stages 44–160
+│   └── research/                         прежние линии, сохранены для прослеживаемости
+│       ├── prototype/                    первый стенд на NumPy
+│       └── torch_line/                   линия бэкенда PyTorch
+├── tests/                                наборы тестов engine, torch_line, prototype
+├── examples/                             исполняемые примеры
+├── docs/versions/                        базовая запись по версиям и эксперименты
+├── docs/readme/                          этот README на восьми языках
+├── sdk/civilization-transformer/         TypeScript SDK
+├── SDK.md                                руководство по Python SDK
+└── pyproject.toml                        упаковка astreusn-civilization-v1
 ```
 
 ## Тесты
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments -q
+pytest
 ```
 
 Большая часть набора не требует весов модели: сервисная цепочка, политики памяти,
@@ -207,7 +212,7 @@ runtime.
 `Models/Qwen3-0.6B` либо укажите `CIVILIZATION_MODEL_PATH`:
 
 ```bash
-CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest experiments -q
+CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest
 ```
 
 Запускатели стадий пишут результаты в `experiments/*/artifacts/`, который игнорируется

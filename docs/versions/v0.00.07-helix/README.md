@@ -7,8 +7,8 @@
 | Stages | 151–160 |
 | Theme | Learned retrieval-path weights, with recovery and calibration gates |
 | Status | implemented (current line) |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage151…stage160` |
-| Contract tests | 10 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage151 … stage160) |
+| Contract tests | 10 test files under `tests/engine` |
 | Experiments | [native memory paired A/B](experiments/memory-on-off-ab.md) |
 
 ## Capabilities added
@@ -64,7 +64,7 @@ benchmark score and not a claim of general superiority.
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage15 or stage160"
+pytest -q -k "stage15 or stage160"
 ```
 
 ## Boundary

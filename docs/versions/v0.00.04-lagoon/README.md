@@ -7,8 +7,8 @@
 | Stages | 122–132 |
 | Theme | Cross-episode schema consolidation, provenance, conflict review |
 | Status | implemented |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage122…stage132` |
-| Contract tests | 11 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage122 … stage132) |
+| Contract tests | 11 test files under `tests/engine` |
 
 ## Capabilities added
 
@@ -44,7 +44,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage12 or stage13"
+pytest -q -k "stage12 or stage13"
 ```
 
 ## Boundary

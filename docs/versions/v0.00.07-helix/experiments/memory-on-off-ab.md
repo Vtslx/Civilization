@@ -145,7 +145,7 @@ with no cross-session leakage, 4/4 correct abstentions, and 0 API errors.
 ## 6. Reproducing
 
 The reproduction script is self-contained: it embeds the 25 question fixtures
-and needs only a reachable service and the `civilization_v1` SDK.
+and needs only a reachable service and the `civilization` SDK.
 
 ```bash
 cd docs/versions/v0.00.07-helix/experiments/scripts

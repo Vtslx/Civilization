@@ -7,7 +7,7 @@
 | Stage | 73–100 |
 | 主题 | 多系统记忆（工作 / 情景 / 语义 / 程序性） |
 | 状态 | 已实现 |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage73…stage99` |
+| 模块 | `civilization.engine.stages`（stage73 … stage99） |
 | 合同测试 | 19 个测试文件 |
 
 ## 新增能力
@@ -30,7 +30,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage7 or stage8 or stage9"
+pytest -q -k "stage7 or stage8 or stage9"
 ```
 
 ## 边界

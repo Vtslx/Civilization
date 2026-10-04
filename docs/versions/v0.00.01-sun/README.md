@@ -7,8 +7,8 @@
 | Stages | 44–72 |
 | Theme | Frozen-base inference, structured Adapter, runnable service |
 | Status | implemented |
-| Modules | `experiments/civilization_transformer_qwen3/analysis/stage45…stage72` |
-| Contract tests | 32 test files under `experiments/civilization_transformer_qwen3/tests` |
+| Modules | `civilization.engine.stages` (stage45 … stage72) |
+| Contract tests | 32 test files under `tests/engine` |
 
 ## Capabilities added
 
@@ -44,7 +44,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage4 or stage5 or stage6 or stage7"
+pytest -q -k "stage4 or stage5 or stage6 or stage7"
 ```
 
 ## Boundary

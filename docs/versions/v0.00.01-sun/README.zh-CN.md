@@ -7,8 +7,8 @@
 | Stage | 44–72 |
 | 主题 | 冻结底座推理、结构化 Adapter、可运行服务 |
 | 状态 | 已实现 |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage45…stage72` |
-| 合同测试 | 32 个测试文件（位于 `experiments/civilization_transformer_qwen3/tests`） |
+| 模块 | `civilization.engine.stages`（stage45 … stage72） |
+| 合同测试 | 32 个测试文件（位于 `src/civilization/engine/tests`） |
 
 ## 新增能力
 
@@ -30,7 +30,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage4 or stage5 or stage6 or stage7"
+pytest -q -k "stage4 or stage5 or stage6 or stage7"
 ```
 
 ## 边界

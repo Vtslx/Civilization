@@ -23,10 +23,10 @@ Forschungslinien und ohne interne Entwicklungsdokumente.
 
 | Pfad | Beschreibung |
 |---|---|
-| `experiments/civilization_transformer/` | Erste ausführbare Testbank: Transformer-ähnlicher Kern in NumPy mit Gedächtnis-/Zustands-/Regelvektoren und fusioniertem CivilizationBlock. |
-| `experiments/civilization_transformer_torch/` | PyTorch-Backend-Linie: Logik-Datensätze, Codebooks, Ablationskonfigurationen und die Trainings-/Evaluationsumgebung aller späteren Stufen. |
-| `experiments/civilization_transformer_qwen3/` | Linie mit eingefrorener Basis, Stages 44–160: Hidden-State-Baselines, Civilization Adapter, Training der memory/state/rule-Pfade und die persistente Dienstkette. |
-| `civilization_v1/` | Python-SDK: abhängigkeitsfreier HTTP-Client, Request-/Prediction-/Job-Modelle, anbieterunabhängige Runtime-Schicht und In-Prozess-Diensthost. |
+| `src/civilization/research/prototype/` | Erste ausführbare Testbank: Transformer-ähnlicher Kern in NumPy mit Gedächtnis-/Zustands-/Regelvektoren und fusioniertem CivilizationBlock. |
+| `src/civilization/research/torch_line/` | PyTorch-Backend-Linie: Logik-Datensätze, Codebooks, Ablationskonfigurationen und die Trainings-/Evaluationsumgebung aller späteren Stufen. |
+| `src/civilization/engine/` | Linie mit eingefrorener Basis, Stages 44–160: Hidden-State-Baselines, Civilization Adapter, Training der memory/state/rule-Pfade und die persistente Dienstkette. |
+| `src/civilization/` | Python-SDK: abhängigkeitsfreier HTTP-Client, Request-/Prediction-/Job-Modelle, anbieterunabhängige Runtime-Schicht und In-Prozess-Diensthost. |
 | `sdk/civilization-transformer/` | TypeScript-SDK: abhängigkeitsfreier Client für Entscheidungen, Gedächtnis, Jobs und Exportpakete. |
 | `SDK.md`, `pyproject.toml` | Python-Paketierung für `astreusn-civilization-v1`. |
 
@@ -98,7 +98,7 @@ python -m pip install .
 ```
 
 ```python
-from civilization_v1 import CivilizationClient, CivilizationRequest
+from civilization import CivilizationClient, CivilizationRequest
 
 client = CivilizationClient("https://civilization.example.com", token_env="CIVILIZATION_API_TOKEN")
 prediction = client.predict(
@@ -125,7 +125,7 @@ python -m pip install '.[embedded]'
 ```
 
 ```python
-from civilization_v1 import EmbeddedCivilization, EmbeddedConfig
+from civilization import EmbeddedCivilization, EmbeddedConfig
 
 service = EmbeddedCivilization(
     EmbeddedConfig(
@@ -172,30 +172,35 @@ const prediction = await client.predict({
 
 ```text
 .
-├── civilization_v1/                     Python-SDK
-│   ├── client.py                        abhängigkeitsfreier HTTP-Client
-│   ├── models.py                        Request-/Prediction-/Job-Modelle
-│   ├── runtimes.py                      Runtime-Typen, Fähigkeiten, Registry
-│   └── embedded.py                      In-Prozess-Diensthost
-├── experiments/
-│   ├── civilization_transformer/        erste NumPy-Testbank
-│   ├── civilization_transformer_torch/  PyTorch-Backend-Linie
-│   └── civilization_transformer_qwen3/  Linie mit eingefrorener Basis, Stages 44–160
-│       ├── adapter/                     Civilization Adapter
-│       ├── backend/                     Qwen3-Backend und Provider-Runtimes
-│       ├── analysis/                    Stage-Runner und Dienstkette
-│       ├── tests/                       Verträge jeder Stufe
-│       └── model_paths.py               Checkpoint-Auflösung (siehe Tests)
-├── sdk/civilization-transformer/        TypeScript-SDK
-├── SDK.md                               Python-SDK-Leitfaden
-└── pyproject.toml                       Paketierung von astreusn-civilization-v1
+├── src/civilization/                     das installierte Paket
+│   ├── __init__.py                       öffentliche API
+│   ├── client.py                         abhängigkeitsfreier HTTP-Client
+│   ├── models.py                         Request-/Prediction-/Job-Modelle
+│   ├── runtimes.py                       Runtime-Typen, Fähigkeiten, Registry
+│   ├── embedded.py                       In-Prozess-Diensthost
+│   ├── cli.py                            `civilization`-Kommandozeile
+│   ├── engine/                           Entscheidungs-Engine (engine extras nötig)
+│   │   ├── model_paths.py                optionale Auflösung des lokalen Checkpoints
+│   │   ├── adapter/                      der trainierbare Civilization Adapter
+│   │   ├── backend/                      lokale / Provider- / Adapter-Runtimes
+│   │   └── stages/                       versionierte Dienstkette, Stages 44–160
+│   └── research/                         frühere Linien, zur Nachvollziehbarkeit erhalten
+│       ├── prototype/                    erste NumPy-Testbank
+│       └── torch_line/                   PyTorch-Backend-Linie
+├── tests/                                Testsuites für engine, torch_line, prototype
+├── examples/                             ausführbare Beispiele
+├── docs/versions/                        Baseline-Datensatz je Version und Experimente
+├── docs/readme/                          dieses README in acht Sprachen
+├── sdk/civilization-transformer/         TypeScript-SDK
+├── SDK.md                                Python-SDK-Leitfaden
+└── pyproject.toml                        Paketierung von astreusn-civilization-v1
 ```
 
 ## Tests
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments -q
+pytest
 ```
 
 Der Großteil der Suite benötigt keine Modellgewichte: Dienstkette, Gedächtnisrichtlinien,
@@ -207,7 +212,7 @@ und legen Sie ihn unter `Models/Qwen3-0.6B` ab oder zeigen Sie mit
 `CIVILIZATION_MODEL_PATH` darauf:
 
 ```bash
-CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest experiments -q
+CIVILIZATION_MODEL_PATH=/path/to/Qwen3-0.6B pytest
 ```
 
 Stage-Runner schreiben ihre Ausgaben nach `experiments/*/artifacts/`, das von git

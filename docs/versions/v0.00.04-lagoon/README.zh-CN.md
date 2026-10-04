@@ -7,7 +7,7 @@
 | Stage | 122–132 |
 | 主题 | 跨情景 schema 巩固、来源链、冲突复核 |
 | 状态 | 已实现 |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage122…stage132` |
+| 模块 | `civilization.engine.stages`（stage122 … stage132） |
 | 合同测试 | 11 个测试文件 |
 
 ## 新增能力
@@ -31,7 +31,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage12 or stage13"
+pytest -q -k "stage12 or stage13"
 ```
 
 ## 边界

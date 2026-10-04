@@ -7,7 +7,7 @@
 | Stage | 133–138 |
 | 主题 | 任务轨迹与经批准的程序性记忆 |
 | 状态 | 已实现 |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage133…stage138` |
+| 模块 | `civilization.engine.stages`（stage133 … stage138） |
 | 合同测试 | 6 个测试文件 |
 
 ## 新增能力
@@ -30,7 +30,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage13"
+pytest -q -k "stage13"
 ```
 
 ## 边界

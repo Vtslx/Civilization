@@ -1,5 +1,0 @@
-from experiments.civilization_transformer_qwen3.analysis.stage118_trifid_checkpoint_retention import run_stage118_trifid_checkpoint_retention_smoke
-
-
-def test_stage118_retains_latest_valid_checkpoint_and_preserves_corrupt_generation(tmp_path) -> None:
-    assert run_stage118_trifid_checkpoint_retention_smoke(output_dir=tmp_path)["passes_stage_gate"]

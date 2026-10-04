@@ -7,7 +7,7 @@
 | Stage | 139–150 |
 | 主题 | 类型化上下文包、冲突预算、多尺度蜂窝图谱 |
 | 状态 | 已实现 |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage139…stage150` |
+| 模块 | `civilization.engine.stages`（stage139 … stage150） |
 | 合同测试 | 12 个测试文件 |
 
 ## 新增能力
@@ -29,7 +29,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage14 or stage150"
+pytest -q -k "stage14 or stage150"
 ```
 
 ## 边界

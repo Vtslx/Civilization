@@ -7,7 +7,7 @@
 | Stage | 101–121 |
 | 主题 | 情景快速绑定、线索与时间消歧、受控 replay |
 | 状态 | 已实现 |
-| 模块 | `experiments/civilization_transformer_qwen3/analysis/stage101…stage121` |
+| 模块 | `civilization.engine.stages`（stage101 … stage121） |
 | 合同测试 | 20 个测试文件 |
 
 ## 新增能力
@@ -31,7 +31,7 @@
 
 ```bash
 python -m pip install '.[test]'
-pytest experiments/civilization_transformer_qwen3/tests -q -k "stage10 or stage11 or stage12"
+pytest -q -k "stage10 or stage11 or stage12"
 ```
 
 ## 边界
