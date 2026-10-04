@@ -69,7 +69,15 @@ processes are on the same machine, so a power loss behaves the same way.
 If the sidecar is unreachable (not started, crashed, socket path too long), the
 service **does not fail memory writes**: it degrades to local in-process
 journaling in the same state directory and reports `degraded: true` with the
-reason in the status payload. Re-attaching requires a service restart.
+reason and the time it started.
+
+The client **re-attaches on its own** once the sidecar is reachable again: the
+next write tries a connection, a background probe retries every
+`sidecar_reconnect_interval_seconds` (default 5 s), and the handover is safe
+because only one writer holds the journal files at a time — the local sink is
+committed and closed before the socket takes over, and both append to the same
+files, so nothing written while degraded is lost. `reconnects` in the status
+payload counts the handovers.
 
 ## Configuration
 
@@ -83,6 +91,7 @@ reason in the status payload. Re-attaching requires a service restart.
 | `fsync_interval_seconds` | `--fsync-interval` | `0.25` | commit interval |
 | `snapshot_every_records` | `--snapshot-every` | `512` | journal compaction threshold |
 | `sidecar_socket` | `--sidecar-socket` | none | sidecar endpoint, required in sidecar mode |
+| `sidecar_reconnect_interval_seconds` | — | `5.0` | how often a degraded client retries the sidecar |
 | `persist_traces` | `--persist-traces` | `False` | also journal memory trace events |
 
 Layout under the state directory:
@@ -135,6 +144,11 @@ Automated coverage (`tests/engine/test_session_persistence.py`):
 - global (cross-session) memory written without an explicit save is present after
   a restart, and a global-store load replaces contents without replay
   resurrecting what it removed;
+- records written inside a request scope reach the journal before the scope
+  exits, nested scopes share one buffer, and buffered records still trigger
+  compaction;
+- a client whose sidecar disappeared re-attaches by itself (no service restart)
+  and keeps the records written while it was degraded;
 - retention prunes expired sessions, always keeps the N most recent, compacts
   journals past a threshold without losing cells, honours `dry_run`, and never
   touches protected sessions — including through the live endpoint.
@@ -146,6 +160,22 @@ End-to-end crash test, run against a service with `fsync=interval`
 2. the process is killed with `kill -9` — no clean shutdown, no flush call;
 3. a new service process starts on the same state directory;
 4. `read_memory` returns all 3 cells, with the same `cell_id`s.
+
+## Write cost
+
+A decision request writes several cells and links (working, episodic,
+procedural, the links between them, and any replay consolidation). Those records
+are coalesced: the service buffers them inside the request and issues one
+append per session when the request finishes, so durability is unchanged — the
+records are on disk before the response is sent, and a crash mid-request loses
+only work that had not been acknowledged.
+
+Measured on this implementation, three decisions with replay consolidation
+enabled produced 21 records in 4 appends (5.25 records per append) instead of 21
+separate writes: an 81% reduction in journal write calls. `POST
+/admin/orion/memory` reports `records_written`, `appends`, and
+`records_per_append` per session, so the ratio is observable in production
+rather than assumed.
 
 ## Retention and compaction
 

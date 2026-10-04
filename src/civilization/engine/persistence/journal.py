@@ -80,6 +80,7 @@ class SessionJournal:
         self.snapshot_path = self.directory / SNAPSHOT_NAME
         self._fd: int | None = None
         self.records_written = 0
+        self.appends = 0
         self.records_since_snapshot = 0
         self.records_fsynced = 0
         self.last_fsync_at: float | None = None
@@ -106,6 +107,7 @@ class SessionJournal:
         """Append one record; the bytes leave the process immediately."""
 
         os.write(self.fd, encode_record(record))
+        self.appends += 1
         self.records_written += 1
         self.records_since_snapshot += 1
         self._dirty = True
@@ -117,6 +119,7 @@ class SessionJournal:
         if not payload:
             return
         os.write(self.fd, payload)
+        self.appends += 1
         count = payload.count(b"\n")
         self.records_written += count
         self.records_since_snapshot += count
@@ -213,6 +216,10 @@ class SessionJournal:
             "journal_bytes": journal_bytes,
             "snapshot_bytes": snapshot_bytes,
             "records_written": self.records_written,
+            "appends": self.appends,
+            "records_per_append": (
+                round(self.records_written / self.appends, 2) if self.appends else None
+            ),
             "records_since_snapshot": self.records_since_snapshot,
             "pending_records": self.pending_records,
             "last_fsync_at": self.last_fsync_at,

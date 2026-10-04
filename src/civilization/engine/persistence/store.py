@@ -20,11 +20,12 @@ record is an idempotent upsert.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import dataclass
 import shutil
 import threading
 import time
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterator, Mapping, Sequence
 
 from ..stages.stage73_orion_memory_kernel import (
     MemoryCell,
@@ -256,6 +257,10 @@ class SessionPersistence:
         self.sink = sink if sink is not None else build_sink(config)
         self.stats = PersistenceStats()
         self._lock = threading.RLock()
+        # Per-thread append buffer used by request_scope(): a request that writes
+        # several cells becomes a single journal append.
+        self._buffer_state = threading.local()
+        self._buffer_limit = 256
 
     # -- store lifecycle ---------------------------------------------------
     def hydrate(self, session_id: str, *, now_fn: Any = time.time) -> PersistentOrionMemoryStore:
@@ -285,8 +290,44 @@ class SessionPersistence:
 
     # -- recording ---------------------------------------------------------
     def record(self, session_id: str, record: Mapping[str, Any]) -> None:
-        if self.enabled and self.sink is not None:
+        if not (self.enabled and self.sink is not None):
+            return
+        buffer = getattr(self._buffer_state, "records", None)
+        if buffer is None:
             self.sink.append(session_id, record)
+            return
+        bucket = buffer.setdefault(session_id, [])
+        bucket.append(dict(record))
+        if len(bucket) >= self._buffer_limit:
+            self.sink.append_many(session_id, bucket)
+            bucket.clear()
+
+    def _buffered_count(self, session_id: str) -> int:
+        buffer = getattr(self._buffer_state, "records", None)
+        return len(buffer.get(session_id, ())) if buffer is not None else 0
+
+    @contextmanager
+    def request_scope(self) -> Iterator[None]:
+        """Coalesce this request's journal records into one append per session.
+
+        Durability is unchanged for anything the caller was told about: records
+        are written before the scope exits, so a crash mid-request loses only
+        work that had not been acknowledged yet.
+        """
+
+        existing = getattr(self._buffer_state, "records", None)
+        if not self.enabled or self.sink is None or existing is not None:
+            yield
+            return
+        self._buffer_state.records = {}
+        try:
+            yield
+        finally:
+            pending = self._buffer_state.records
+            self._buffer_state.records = None
+            for session_id, records in pending.items():
+                if records:
+                    self.sink.append_many(session_id, records)
 
     def after_record(self, session_id: str, store: OrionMemoryStore) -> None:
         """Compact when a session has accumulated enough journal records."""
@@ -294,9 +335,11 @@ class SessionPersistence:
         if not self.enabled or self.sink is None:
             return
         counter = getattr(self.sink, "records_since_snapshot", None)
-        if not callable(counter):
-            return
-        if counter(session_id) >= self.config.snapshot_every_records:
+        written = counter(session_id) if callable(counter) else 0
+        if written + self._buffered_count(session_id) >= self.config.snapshot_every_records:
+            # Buffered records are part of the store's in-memory state already, so
+            # snapshotting now captures them; replay of the same records is
+            # idempotent.
             self.snapshot(session_id, store)
 
     def snapshot(self, session_id: str, store: OrionMemoryStore) -> None:

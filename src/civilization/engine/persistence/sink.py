@@ -60,6 +60,7 @@ class PersistenceConfig:
     fsync_interval_seconds: float = 0.25
     snapshot_every_records: int = 512
     sidecar_socket: str | None = None
+    sidecar_reconnect_interval_seconds: float = 5.0
     persist_traces: bool = False
 
     def __post_init__(self) -> None:
@@ -73,6 +74,8 @@ class PersistenceConfig:
             raise ValueError("snapshot_every_records must be >= 1")
         if self.mode == MODE_SIDECAR and not (self.sidecar_socket or "").strip():
             raise ValueError("the sidecar mode needs sidecar_socket")
+        if self.sidecar_reconnect_interval_seconds <= 0:
+            raise ValueError("sidecar_reconnect_interval_seconds must be > 0")
 
 
 class PersistenceSink(Protocol):
@@ -177,8 +180,12 @@ class SidecarClient:
         self._socket: socket.socket | None = None
         self._lock = threading.RLock()
         self._degraded_reason: str | None = None
+        self._degraded_since: float | None = None
         self._fallback: InProcessSink | None = None
+        self._probe: threading.Thread | None = None
+        self._closed = False
         self.sent_records = 0
+        self.reconnects = 0
 
     # -- connection --------------------------------------------------------
     def _connect(self) -> socket.socket:
@@ -187,35 +194,87 @@ class SidecarClient:
         connection.connect(str(self.socket_path))
         return connection
 
-    def _connection(self) -> socket.socket | None:
+    def _new_fallback(self) -> InProcessSink:
+        return InProcessSink(
+            PersistenceConfig(
+                mode=MODE_IN_PROCESS,
+                state_dir=self.config.state_dir,
+                fsync=self.config.fsync,
+                fsync_interval_seconds=self.config.fsync_interval_seconds,
+                snapshot_every_records=self.config.snapshot_every_records,
+                persist_traces=self.config.persist_traces,
+            )
+        )
+
+    def _attach(self) -> bool:
+        """Try to attach to the sidecar. Returns True when the socket is usable."""
+
         with self._lock:
             if self._socket is not None:
-                return self._socket
-            if self._fallback is not None:
-                return None
+                return True
             try:
-                self._socket = self._connect()
-                self._degraded_reason = None
+                connection = self._connect()
             except (OSError, ValueError) as error:
                 # A missing, refused, or unusable socket must not stop memory
                 # writes: fall back to local journaling and report the reason.
                 self._degrade(f"sidecar unreachable ({error})")
-                return None
+                return False
+            # Only one writer may hold the journal files: commit and release the
+            # local sink before handing ownership to the sidecar. Records written
+            # while degraded are already in the same files, so the switch loses
+            # nothing.
+            self._release_fallback()
+            self._socket = connection
+            if self._degraded_reason is not None:
+                self.reconnects += 1
+            self._degraded_reason = None
+            self._degraded_since = None
+            return True
+
+    def _release_fallback(self) -> None:
+        fallback = self._fallback
+        self._fallback = None
+        if fallback is not None:
+            try:
+                fallback.close()
+            except Exception:  # noqa: BLE001 - best-effort handover
+                pass
+
+    def _connection(self) -> socket.socket | None:
+        if self._socket is not None:
             return self._socket
+        if not self._attach():
+            return None
+        return self._socket
 
     def _degrade(self, reason: str) -> None:
         if self._fallback is None:
-            self._fallback = InProcessSink(
-                PersistenceConfig(
-                    mode=MODE_IN_PROCESS,
-                    state_dir=self.config.state_dir,
-                    fsync=self.config.fsync,
-                    fsync_interval_seconds=self.config.fsync_interval_seconds,
-                    snapshot_every_records=self.config.snapshot_every_records,
-                    persist_traces=self.config.persist_traces,
-                )
-            )
+            self._fallback = self._new_fallback()
+            self._degraded_since = time.time()
         self._degraded_reason = reason
+        self._ensure_probe()
+
+    def _ensure_probe(self) -> None:
+        """Start the background thread that re-attaches when the sidecar returns."""
+
+        if self._probe is not None or self._closed:
+            return
+        with self._lock:
+            if self._probe is not None or self._closed:
+                return
+            self._probe = threading.Thread(target=self._probe_loop, name="civilization-sidecar-probe", daemon=True)
+            self._probe.start()
+
+    def _probe_loop(self) -> None:
+        while not self._closed:
+            time.sleep(self.config.sidecar_reconnect_interval_seconds)
+            if self._closed:
+                return
+            if self._socket is None and self._fallback is not None:
+                try:
+                    self._attach()
+                except Exception:  # noqa: BLE001 - a probe must never kill the service
+                    continue
 
     def _send(self, frame: Mapping[str, Any]) -> bool:
         payload = (json.dumps(frame, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
@@ -269,8 +328,11 @@ class SidecarClient:
                 "socket": str(self.socket_path),
                 "attached": False,
                 "sent_records": self.sent_records,
+                "reconnects": self.reconnects,
+                "reconnect_interval_seconds": self.config.sidecar_reconnect_interval_seconds,
                 "degraded": True,
                 "degraded_reason": self._degraded_reason,
+                "degraded_since": self._degraded_since,
             }
         return {
             "mode": MODE_SIDECAR,
@@ -279,10 +341,14 @@ class SidecarClient:
             "fsync": self.config.fsync,
             "attached": self._socket is not None,
             "sent_records": self.sent_records,
-            "degraded": False,
+            "reconnects": self.reconnects,
+            "reconnect_interval_seconds": self.config.sidecar_reconnect_interval_seconds,
+            "degraded": self._degraded_reason is not None,
+            "degraded_reason": self._degraded_reason,
         }
 
     def close(self) -> None:
+        self._closed = True
         self.flush()
         with self._lock:
             if self._socket is not None:
@@ -291,8 +357,11 @@ class SidecarClient:
                 except OSError:
                     pass
                 self._socket = None
-        if self._fallback is not None:
-            self._fallback.close()
+        self._release_fallback()
+        probe = self._probe
+        if probe is not None and probe.is_alive() and probe is not threading.current_thread():
+            probe.join(timeout=1.0)
+        self._probe = None
 
 
 class SidecarServer:

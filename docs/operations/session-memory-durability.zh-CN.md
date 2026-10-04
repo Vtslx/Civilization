@@ -50,7 +50,9 @@
 
 它**不**带来的：额外的数据安全。数据安全来自 journal 加 fsync 策略，而不是"由哪个进程写"。两个进程在同一台机器上，断电行为一致。
 
-如果 sidecar 不可达（没启动、崩溃、socket 路径过长），服务**不会让记忆写入失败**：它会降级为同一 state 目录下的本地进程内 journal，并在状态里报告 `degraded: true` 与原因。要重新挂接需要重启服务。
+如果 sidecar 不可达（没启动、崩溃、socket 路径过长），服务**不会让记忆写入失败**：它会降级为同一 state 目录下的本地进程内 journal，并在状态里报告 `degraded: true`、原因以及降级起始时间。
+
+sidecar 恢复后客户端会**自动重新挂接**：下一次写入会尝试连接，后台探测线程每 `sidecar_reconnect_interval_seconds`（默认 5 秒）重试一次。交接是安全的——同一时刻只有一个写入者持有 journal 文件：本地 sink 会先提交并关闭，socket 才接管；两者追加的是同一批文件，因此降级期间写入的内容不会丢失。状态里的 `reconnects` 记录交接次数。
 
 ## 配置
 
@@ -64,6 +66,7 @@
 | `fsync_interval_seconds` | `--fsync-interval` | `0.25` | 提交间隔 |
 | `snapshot_every_records` | `--snapshot-every` | `512` | journal 压缩阈值 |
 | `sidecar_socket` | `--sidecar-socket` | 无 | sidecar 端点，sidecar 模式必填 |
+| `sidecar_reconnect_interval_seconds` | — | `5.0` | 降级后重试 sidecar 的间隔 |
 | `persist_traces` | `--persist-traces` | `False` | 是否同时持久化记忆 trace 事件 |
 
 state 目录下的布局：
@@ -109,6 +112,8 @@ civilization serve --fsync every_write --provider-base-url <url> --provider-mode
 - sidecar 不可达时降级为本地写入，而不是让写入失败；
 - 恶意 session id 无法逃出 state 目录；
 - 未调用显式 save 的 global（跨会话）记忆在重启后仍存在；global store 的 load 会替换内容，且重放不会复活被移除的内容；
+- 请求作用域内写入的记录在作用域退出前已进入 journal，嵌套作用域共享同一缓冲，且缓冲中的记录同样触发压缩；
+- sidecar 消失后客户端会自动重新挂接（无需重启服务），并保留降级期间写入的记录；
 - 保留策略会清理过期会话、始终保留最近 N 个、在达到阈值时压缩 journal 且不丢单元、遵守 `dry_run`，并且从不触碰受保护的会话——通过在线端点同样如此。
 
 端到端崩溃测试（服务使用 `fsync=interval`，间隔 0.1 秒）：
@@ -117,6 +122,12 @@ civilization serve --fsync every_write --provider-base-url <url> --provider-mode
 2. 用 `kill -9` 杀掉进程——没有正常关闭，没有调用 flush；
 3. 新的服务进程使用同一个 state 目录启动；
 4. `read_memory` 返回全部 3 条记忆，`cell_id` 完全一致。
+
+## 写入代价
+
+一次决策请求会写入多个单元与链接（工作、情景、程序性记忆，它们之间的链接，以及可能触发的 replay 巩固）。这些记录会被合并：服务在请求内缓冲，请求结束时对每个会话只发一次 append。持久性不变——记录在响应发出前已经落盘，请求中途崩溃只会丢失尚未确认的工作。
+
+在本实现上的实测：开启 replay 巩固的 3 次决策产生 21 条记录、仅 4 次 append（每次 append 5.25 条），相比每条记录单独写入**减少了 81% 的 journal 写调用**。`POST /admin/orion/memory` 会按会话报告 `records_written`、`appends` 与 `records_per_append`，因此这个比例在生产中可观测，而不是靠假设。
 
 ## 保留与压缩
 

@@ -339,7 +339,9 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
         working: MemoryCell | None = None
         episodic: MemoryCell | None = None
         procedural: MemoryCell | None = None
-        with self._memory_lock:
+        # One request writes several cells and links; coalesce them into a single
+        # journal append while keeping the write-before-respond guarantee.
+        with self.session_persistence.request_scope(), self._memory_lock:
             if self.memory_config.write_working_memory:
                 working = store.write_cell(
                     memory_system=MemorySystem.WORKING,
@@ -383,7 +385,7 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
             }
         )
         if self.memory_config.replay_after_request and episodic is not None:
-            with self._memory_lock:
+            with self.session_persistence.request_scope(), self._memory_lock:
                 trace["replay"] = self._replay_policy.apply(store, source=source, task_name=task_name).to_dict()
         return trace
 

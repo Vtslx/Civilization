@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from civilization import EmbeddedCivilization, EmbeddedConfig
+from civilization import CivilizationRequest, EmbeddedCivilization, EmbeddedConfig
 from civilization.engine.persistence import (
     FSYNC_EVERY_WRITE,
     MODE_IN_PROCESS,
@@ -513,3 +513,142 @@ def test_prune_cli_offline_prunes_and_reports(tmp_path: Path, capsys):
     assert exit_code == 0
     assert "pruned:    1" in output
     assert not session_directory(tmp_path / "state", "stale").exists()
+
+
+# --------------------------------------------------------------------------- #
+# write coalescing
+# --------------------------------------------------------------------------- #
+def test_request_scope_coalesces_appends_and_writes_before_returning(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path, snapshot_every_records=100000))
+    store = persistence.hydrate("s")
+
+    with persistence.request_scope():
+        for index in range(5):
+            store.write_cell(memory_system="episodic", content=f"fact {index}", summary=f"fact {index}", source="t")
+        # Inside the scope the journal has not been written yet...
+        journal_path = session_directory(tmp_path, "s") / "journal.ndjson"
+        assert not journal_path.exists() or journal_path.stat().st_size == 0
+
+    usage = persistence.status()["sink"]["journals"]["s"]
+    assert usage["records_written"] == 5
+    assert usage["appends"] == 1
+    # ...and after the scope exits everything is on disk, so anything the caller
+    # was told about is durable.
+    assert journal_path.stat().st_size > 0
+    assert len(list(persistence._journal("s").iter_journal())) == 5  # noqa: SLF001
+    persistence.close()
+
+
+def test_nested_request_scopes_share_one_buffer(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path, snapshot_every_records=100000))
+    store = persistence.hydrate("s")
+
+    with persistence.request_scope():
+        store.write_cell(memory_system="episodic", content="outer", summary="outer", source="t")
+        with persistence.request_scope():  # inner scopes must not flush early
+            store.write_cell(memory_system="episodic", content="inner", summary="inner", source="t")
+
+    usage = persistence.status()["sink"]["journals"]["s"]
+    assert usage["records_written"] == 2
+    assert usage["appends"] == 1
+    persistence.close()
+
+
+def test_buffered_records_still_trigger_compaction(tmp_path: Path):
+    persistence = SessionPersistence(_config(tmp_path, snapshot_every_records=3))
+    store = persistence.hydrate("s")
+
+    with persistence.request_scope():
+        for index in range(3):
+            store.write_cell(memory_system="episodic", content=f"f{index}", summary=f"f{index}", source="t")
+
+    snapshot_path = session_directory(tmp_path, "s") / "snapshot.json"
+    assert snapshot_path.exists(), "buffered records must count towards the snapshot threshold"
+    restored = SessionPersistence(_config(tmp_path)).hydrate("s")
+    assert len(restored.cells) == 3
+    persistence.close()
+
+
+def test_a_service_request_coalesces_its_memory_writes(tmp_path: Path):
+    config, state_dir = _embedded(tmp_path)
+
+    with EmbeddedCivilization(config, runtime_factory=lambda: Stage60SlowFakeRuntime(0.0)) as runtime:
+        client = runtime.start()
+        runtime._service.memory_store("coalesce")  # noqa: SLF001 - hydrate before the request
+        client.predict(
+            CivilizationRequest(
+                text="The canary passed. Choose.",
+                answer_options=("approve", "reject"),
+                session_id="coalesce",
+                task_name="coalesce_test",
+            )
+        )
+        usage = runtime._service.session_persistence.status()["sink"]["journals"]["coalesce"]  # noqa: SLF001
+
+    # A decision writes several cells and links; they leave in far fewer appends.
+    assert usage["records_written"] >= 3
+    assert usage["appends"] <= 2
+    assert usage["records_per_append"] >= 2.0
+
+
+# --------------------------------------------------------------------------- #
+# sidecar reconnection
+# --------------------------------------------------------------------------- #
+def test_sidecar_reconnects_after_it_returns(tmp_path: Path):
+    socket_dir = Path(tempfile.mkdtemp(prefix="civ-reconnect-"))
+    socket_path = socket_dir / "s.sock"
+
+    client = SessionPersistence(
+        PersistenceConfig(
+            mode=MODE_SIDECAR,
+            state_dir=str(tmp_path / "state"),
+            sidecar_socket=str(socket_path),
+            fsync=FSYNC_EVERY_WRITE,
+            sidecar_reconnect_interval_seconds=0.2,
+        )
+    )
+
+    # No sidecar yet: writes degrade to local journaling rather than failing.
+    store = client.hydrate("s")
+    store.write_cell(memory_system="episodic", content="written while degraded", summary="degraded", source="t")
+    assert client.status()["sink"]["degraded"] is True
+    assert client.status()["sink"]["attached"] is False
+
+    # The sidecar appears; the client re-attaches on its own.
+    server = SidecarServer(
+        PersistenceConfig(
+            mode=MODE_IN_PROCESS,
+            state_dir=str(tmp_path / "state"),
+            fsync=FSYNC_EVERY_WRITE,
+            sidecar_socket=str(socket_path),
+        )
+    )
+    ready = threading.Event()
+    thread = threading.Thread(
+        target=server.serve_forever, kwargs={"on_ready": lambda _path: ready.set()}, daemon=True
+    )
+    thread.start()
+    assert ready.wait(5.0)
+
+    deadline = time.time() + 5.0
+    while time.time() < deadline and not client.status()["sink"]["attached"]:
+        time.sleep(0.1)
+
+    status = client.status()["sink"]
+    assert status["attached"] is True, "the client must re-attach without a service restart"
+    assert status["degraded"] is False
+    assert status["reconnects"] >= 1
+
+    # New writes go through the sidecar, and the records written while degraded
+    # are still part of the same durable state.
+    before = status["sent_records"]
+    store.write_cell(memory_system="semantic", content="written after reattach", summary="reattached", source="t")
+    client.flush()
+    assert client.status()["sink"]["sent_records"] > before
+
+    server.stop()
+    thread.join(timeout=5.0)
+    client.close()
+
+    restored = SessionPersistence(_config(tmp_path / "state")).hydrate("s")
+    assert len(restored.cells) == 2, "state written in both phases must survive"
