@@ -64,6 +64,15 @@ class EmbeddedConfig:
     max_tokens: int = 512
     replay_after_request: bool = True
     replay_min_episodes: int = 2
+    # Session memory durability. Reads always come from memory; writes are
+    # journaled under state_dir and replayed when the service restarts.
+    persist_sessions: bool = True
+    persistence_mode: str = "in_process"
+    fsync_policy: str = "interval"
+    fsync_interval_seconds: float = 0.25
+    snapshot_every_records: int = 512
+    sidecar_socket: str | None = None
+    persist_traces: bool = False
 
     def __post_init__(self) -> None:
         if self.runtime not in runtime_kinds():
@@ -200,6 +209,13 @@ def _build_service(
             replay_after_request=config.replay_after_request,
             replay_min_episodes=config.replay_min_episodes,
             global_store_path=str(state / "global-memory.json"),
+            session_persistence_dir=str(state) if config.persist_sessions else None,
+            session_persistence_mode=config.persistence_mode,
+            session_fsync=config.fsync_policy,
+            session_fsync_interval_seconds=config.fsync_interval_seconds,
+            session_snapshot_every_records=config.snapshot_every_records,
+            session_sidecar_socket=config.sidecar_socket,
+            persist_traces=config.persist_traces,
         ),
     )
 

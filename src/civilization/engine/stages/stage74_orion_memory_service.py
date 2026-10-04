@@ -22,6 +22,12 @@ from .stage67_export_lifecycle import Stage67ExportLifecycleConfig
 from .stage68_export_package_delivery import Stage68PackageConfig
 from .stage69_streaming_package_delivery import Stage69StreamingConfig
 from .stage71_if_range_package_delivery import Stage71IfRangePackageService, build_stage71_real_service
+from ..persistence import (
+    FSYNC_INTERVAL,
+    MODE_IN_PROCESS,
+    PersistenceConfig,
+    SessionPersistence,
+)
 from .stage73_orion_memory_kernel import MemoryCell, MemoryLinkType, MemorySystem, OrionMemoryStore
 from .stage75_orion_adapter_context_bridge import OrionAdapterContextBridge
 from .stage76_orion_replay_consolidation import OrionReplayConsolidationPolicy, Stage76ReplayConfig
@@ -51,6 +57,16 @@ class Stage74MemoryConfig:
     replay_after_request: bool = False
     replay_min_episodes: int = 2
     global_store_path: str | None = None
+    # Session memory durability: when a directory is configured, every session
+    # mutation is journaled, committed by the fsync policy, and replayed on the
+    # next startup.
+    session_persistence_dir: str | None = None
+    session_persistence_mode: str = MODE_IN_PROCESS
+    session_fsync: str = FSYNC_INTERVAL
+    session_fsync_interval_seconds: float = 0.25
+    session_snapshot_every_records: int = 512
+    session_sidecar_socket: str | None = None
+    persist_traces: bool = False
 
 
 @dataclass
@@ -119,6 +135,17 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
         self.memory_metrics = Stage74MemoryMetrics()
         self._memory_lock = threading.RLock()
         self._memory_stores: dict[str, OrionMemoryStore] = {}
+        self.session_persistence = SessionPersistence(
+            PersistenceConfig(
+                mode=memory_config.session_persistence_mode if memory_config.session_persistence_dir else "none",
+                state_dir=memory_config.session_persistence_dir or "var/state",
+                fsync=memory_config.session_fsync,
+                fsync_interval_seconds=memory_config.session_fsync_interval_seconds,
+                snapshot_every_records=memory_config.session_snapshot_every_records,
+                sidecar_socket=memory_config.session_sidecar_socket,
+                persist_traces=memory_config.persist_traces,
+            )
+        )
         self.global_memory_store = OrionMemoryStore()
         self._global_router = OrionGlobalRetrievalRouter()
         super().__init__(
@@ -142,7 +169,19 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
         if not _valid_session_id(session_id):
             raise ValueError("session_id must use 1-128 letters, digits, '.', '_', ':' or '-'")
         with self._memory_lock:
-            return self._memory_stores.setdefault(session_id, OrionMemoryStore())
+            store = self._memory_stores.get(session_id)
+            if store is None:
+                # First touch of this session in this process: rebuild it from the
+                # durable snapshot and journal tail, then keep serving from memory.
+                store = self.session_persistence.hydrate(session_id)
+                self._memory_stores[session_id] = store
+            return store
+
+    def flush_session_memory(self) -> dict[str, Any]:
+        """Commit pending journal records to stable storage."""
+
+        self.session_persistence.flush()
+        return self.session_persistence.status()
 
     def memory_status(self) -> dict[str, Any]:
         with self._memory_lock:
@@ -152,7 +191,14 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
             "metrics": self.memory_metrics.snapshot(),
             "session_count": len(sessions),
             "sessions": sessions,
+            "persistence": self.session_persistence.status(),
         }
+
+    def shutdown(self) -> None:  # type: ignore[override]
+        try:
+            self.session_persistence.close()
+        finally:
+            super().shutdown()
 
     def health(self) -> dict[str, Any]:
         payload = super().health()
@@ -404,6 +450,17 @@ class Stage74OrionMemoryService(Stage71IfRangePackageService):
                     except Exception as error:
                         self._send_json(HTTPStatus.BAD_REQUEST, {"status": "error", "error_type": type(error).__name__, "error": str(error)})
                         return
+                if self.path == "/admin/orion/memory/flush":
+                    try:
+                        if not self._check_access():
+                            return
+                        self._send_json(HTTPStatus.OK, {"status": "ok", "persistence": service.flush_session_memory()})
+                    except Exception as error:
+                        self._send_json(
+                            HTTPStatus.BAD_REQUEST,
+                            {"status": "error", "error_type": type(error).__name__, "error": str(error)},
+                        )
+                    return
                 if self.path in {"/admin/orion/memory/write", "/admin/orion/memory/read", "/admin/orion/memory/consolidate"}:
                     try:
                         payload = self._read_json()

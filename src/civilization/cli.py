@@ -136,6 +136,13 @@ def _embedded_config(args: argparse.Namespace) -> Any:
         bearer_token_env=getattr(args, "token_env", "CIVILIZATION_API_TOKEN"),
         provider_timeout_seconds=getattr(args, "timeout", 120.0),
         max_tokens=getattr(args, "max_tokens", 512),
+        persist_sessions=getattr(args, "persist_sessions", True),
+        persistence_mode=getattr(args, "persistence_mode", "in_process"),
+        fsync_policy=getattr(args, "fsync", "interval"),
+        fsync_interval_seconds=getattr(args, "fsync_interval", 0.25),
+        snapshot_every_records=getattr(args, "snapshot_every", 512),
+        sidecar_socket=getattr(args, "sidecar_socket", None),
+        persist_traces=getattr(args, "persist_traces", False),
     )
 
 
@@ -398,6 +405,47 @@ def _command_serve(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------- #
+# persist-sidecar
+# --------------------------------------------------------------------------- #
+def _command_persist_sidecar(args: argparse.Namespace) -> int:
+    _require_engine()
+    from .engine.persistence import PersistenceConfig, SidecarServer
+
+    config = PersistenceConfig(
+        mode="in_process",
+        state_dir=args.state_dir,
+        fsync=args.fsync,
+        fsync_interval_seconds=args.fsync_interval,
+        snapshot_every_records=args.snapshot_every,
+        # The server needs the socket path it should listen on; it is the same
+        # path the service passes as --sidecar-socket.
+        sidecar_socket=args.socket,
+    )
+    server = SidecarServer(config)
+    print(f"{PROGRAM} persistence sidecar")
+    print(f"state dir:  {Path(args.state_dir).expanduser().resolve()}")
+    print(f"socket:     {args.socket}")
+    print(f"commit:     {args.fsync} (interval {args.fsync_interval}s)")
+    print("the service survives restarts while this process keeps the durable stream open")
+    print("press Ctrl-C to stop")
+
+    stop = threading.Event()
+
+    def _handle_signal(*_: Any) -> None:
+        stop.set()
+        server.stop()
+
+    signal.signal(signal.SIGINT, _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
+    try:
+        server.serve_forever(on_ready=lambda path: print(f"listening on {path}", flush=True))
+    finally:
+        stop.set()
+    print(f"\nstopped (connections served: {server.connections}, records received: {server.received_records})")
+    return 0
+
+
+# --------------------------------------------------------------------------- #
 # predict
 # --------------------------------------------------------------------------- #
 def _command_predict(args: argparse.Namespace) -> int:
@@ -487,7 +535,45 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--token-env", default="CIVILIZATION_API_TOKEN", help="environment variable holding the bearer token")
     serve.add_argument("--timeout", type=float, default=120.0, help="provider request timeout in seconds")
     serve.add_argument("--max-tokens", type=int, default=512, help="provider completion budget")
+    serve.add_argument(
+        "--persist-sessions",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="journal session memory to state_dir and replay it on restart (default: on)",
+    )
+    serve.add_argument(
+        "--persistence-mode",
+        choices=["in_process", "sidecar"],
+        default="in_process",
+        help="where the journal is written and committed (default: in_process)",
+    )
+    serve.add_argument(
+        "--fsync",
+        choices=["every_write", "interval", "never"],
+        default="interval",
+        help="commit policy: every_write is safest, interval bounds the loss window, never is fastest",
+    )
+    serve.add_argument("--fsync-interval", type=float, default=0.25, help="commit interval in seconds")
+    serve.add_argument("--snapshot-every", type=int, default=512, help="compact the journal into a snapshot every N records")
+    serve.add_argument("--sidecar-socket", default=None, help="unix socket of `civilization persist-sidecar`")
+    serve.add_argument("--persist-traces", action="store_true", help="also journal memory trace events")
     serve.set_defaults(func=_command_serve)
+
+    sidecar = subparsers.add_parser(
+        "persist-sidecar",
+        help="run the persistence process that owns the session journals",
+    )
+    sidecar.add_argument("--state-dir", default="var/state", help="directory holding session journals")
+    sidecar.add_argument("--socket", required=True, help="unix socket the service connects to")
+    sidecar.add_argument(
+        "--fsync",
+        choices=["every_write", "interval", "never"],
+        default="interval",
+        help="commit policy for the journals this process owns",
+    )
+    sidecar.add_argument("--fsync-interval", type=float, default=0.25, help="commit interval in seconds")
+    sidecar.add_argument("--snapshot-every", type=int, default=512, help="compact every N records")
+    sidecar.set_defaults(func=_command_persist_sidecar)
 
     predict = subparsers.add_parser("predict", help="send one decision to a running service")
     predict.add_argument("--text", required=True, help="the decision question")
