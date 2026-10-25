@@ -1,0 +1,70 @@
+# Orion Memory Accuracy and Recovery Plan
+
+**Goal:** Improve evidence retrieval and memory recovery while measuring every claim against a reproducible acceptance set and the full LongMemEval result.
+
+**Architecture:** Keep the in-memory Orion API and durable journal as the production path. Add a replaceable, dependency-free retrieval strategy with observable score components; preserve the existing Helix approved-weight signal. Keep session isolation and global-memory opt-in as policy boundaries. Extend persistence with verifiable backup and restore artifacts rather than changing journal replay semantics.
+
+**Tech Stack:** Python 3.10+, standard library, pytest, existing Orion persistence and benchmark interfaces.
+
+---
+
+## Baseline and acceptance
+
+- Reference LongMemEval baseline: 349/500 (69.8%) at Top-20, with answer evidence in Top-20 for 413/500 (82.6%) and in Top-200 for 478/500 (95.6%). The answerer still failed 93 questions when the expected source conversation was in Top-20.
+- Keep the same dataset, model, answerer, judge, write adapter, and Top-20 cutoff when comparing a new full run. Record retrieval coverage, MRR, answer accuracy, question type, API errors, and run parameters separately.
+- Report the 97% target only if the same 500-question protocol measures at least 485 correct answers. Synthetic retrieval fixtures are regression gates, not substitutes for that result.
+- Run targeted unit and service tests for each module, then the full repository suite when its engine dependencies are available. Validate backup restore in a separate temporary state directory.
+- Preserve source data and credentials outside the repository. Never write private endpoint configuration or API keys into plans, fixtures, logs, or commits.
+
+## Module 1: Fielded relevance ranking
+
+**Files:**
+- Create: `src/civilization/engine/stages/stage161_orion_relevance_ranking.py`
+- Modify: `src/civilization/engine/stages/stage73_orion_memory_kernel.py`
+- Test: `tests/engine/test_stage161_orion_relevance_ranking.py`
+- Document: this plan and the active Orion retrieval design note
+
+**Work:** Replace set-overlap scoring with deterministic fielded BM25 ranking over summary, content, and source. Add an explicit recency tie-break only when the query asks for current/latest information. Keep importance, confidence, and approved Helix link weights bounded so they cannot outweigh strong query evidence. Keep existing `read()` parameters and trace fields compatible, and expose enough score diagnostics to explain why a cell ranked.
+
+**Acceptance:** Verify exact and paraphrased query fixtures, long irrelevant assistant text, duplicate/common terms, empty queries, filters, explicit recency, stable ordering, and learned-weight compatibility. Measure precision@20, recall@20, and MRR on a fixed set; do not label it LongMemEval.
+
+**Commit:** `feat: add fielded relevance ranking for Orion memory`
+
+## Module 2: Cross-tier evidence ranking
+
+**Files:**
+- Modify: `src/civilization/engine/stages/stage79_orion_global_retrieval.py`
+- Test: `tests/engine/test_stage79_orion_global_retrieval.py`
+- Document: `docs/versions/v0.00.07-helix/README.md` and its Chinese counterpart
+
+**Work:** Compare session and opted-in global results on the same relevance scale, with tier priority only as a deterministic tie-break. Keep global retrieval opt-in, session IDs isolated, resolved-global policy enforced, and all retrieval choices auditable.
+
+**Acceptance:** Include strong-global/weak-session and strong-session/weak-global fixtures, disabled-global isolation, conflict-policy exclusions, and deterministic tie cases. Re-run the Orion service integration tests.
+
+**Commit:** `fix: rank opted-in global evidence by relevance`
+
+## Module 3: Disaster recovery
+
+**Files:**
+- Create: a versioned backup bundle and verifier under `src/civilization/engine/persistence/`
+- Modify: persistence CLI/service integration and `docs/operations/session-memory-durability.md` plus the Chinese translation
+- Test: persistence export, corruption detection, atomic restore, and interrupted-restore cases
+
+**Work:** Export a consistent snapshot of session and global stores with a versioned manifest and cryptographic checksums. Verify the complete bundle before restore; stage restore into a temporary location and atomically promote it. Retain the existing local journal as the fast crash-recovery path and document that disaster recovery still requires an independent backup destination.
+
+**Acceptance:** Verify round-trip cell/link/metadata equality, corrupted and truncated artifact rejection, safe handling of unknown format versions, and recovery after an interrupted promotion. Do not claim disk-loss protection until an independent copy has been configured and tested.
+
+**Commit:** `feat: add verified Orion memory backup and restore`
+
+## Module 4: Full-score evaluation and release gate
+
+**Files:**
+- Create or extend the benchmark runner under `src/civilization/engine/stages/`
+- Test: deterministic metric calculations and failure-row handling
+- Document: the measured baseline, exact run protocol, category results, and remaining limits
+
+**Work:** Add an auditable scorecard for full-data runs that separates answer accuracy from evidence recall, ranking quality, abstention, latency, and service errors. Compare each release candidate to the fixed 500-question baseline without changing prompt, model, data, or cutoff mid-run.
+
+**Acceptance:** A release may claim 97% only at 485/500 or better on the same full benchmark; otherwise publish the measured score and error breakdown and keep the target open.
+
+**Commit:** `test: add reproducible Orion memory accuracy scorecard`

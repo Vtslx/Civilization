@@ -94,6 +94,11 @@ sessions. Details, guarantees per failure mode, and the knobs:
 [docs/operations/session-memory-durability.md](docs/operations/session-memory-durability.md)
 (also in [简体中文](docs/operations/session-memory-durability.zh-CN.md)).
 
+Orion retrieval uses fielded BM25F ranking with bounded priors and explicit
+recency tie-breaking. Its scoring signals, compatibility guarantees, and
+limits are documented in [English](docs/operations/orion-relevance-ranking.md)
+and [简体中文](docs/operations/orion-relevance-ranking.zh-CN.md).
+
 ## Version line
 
 | Version | Codename | Stages | Theme | Status |

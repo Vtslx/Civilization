@@ -4,9 +4,10 @@ from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 import json
 from pathlib import Path
-import re
 import time
 from typing import Any
+
+from .stage161_orion_relevance_ranking import OrionRelevanceRanker, tokenize
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage73_orion_memory_kernel")
@@ -97,6 +98,7 @@ class MemoryReadResult:
     score: float
     matched_terms: tuple[str, ...]
     link_score: float
+    score_breakdown: dict[str, float] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -104,6 +106,7 @@ class MemoryReadResult:
             "score": self.score,
             "matched_terms": list(self.matched_terms),
             "link_score": self.link_score,
+            "score_breakdown": dict(self.score_breakdown),
         }
 
 
@@ -116,12 +119,13 @@ def _coerce_link_type(link_type: MemoryLinkType | str) -> MemoryLinkType:
 
 
 def _terms(text: str) -> set[str]:
-    return {term for term in re.findall(r"[a-zA-Z0-9_\u4e00-\u9fff]+", text.lower()) if term}
+    return set(tokenize(text))
 
 
 class OrionMemoryStore:
-    def __init__(self, *, now_fn=time.time) -> None:
+    def __init__(self, *, now_fn=time.time, ranker: OrionRelevanceRanker | None = None) -> None:
         self._now_fn = now_fn
+        self._ranker = ranker or OrionRelevanceRanker()
         self.cells: dict[str, MemoryCell] = {}
         self.links: list[MemoryLink] = []
         self.trace_events: list[MemoryTraceEvent] = []
@@ -289,28 +293,30 @@ class OrionMemoryStore:
         self.expire_working_memory()
         system = _coerce_system(memory_system) if memory_system is not None else None
         query_terms = _terms(query)
-        results: list[MemoryReadResult] = []
-        for cell in self.cells.values():
-            if system is not None and cell.memory_system != system:
-                continue
-            if source is not None and cell.source != source:
-                continue
-            if not include_expired and cell.decay_state != "active":
-                continue
-            cell_terms = _terms(f"{cell.summary} {cell.content} {cell.source}")
-            matched = tuple(sorted(query_terms & cell_terms))
-            link_score = self._link_score(cell.cell_id)
-            lexical = len(matched) / max(len(query_terms), 1)
-            system_score = 0.15 if system is not None and cell.memory_system == system else 0.0
-            score = lexical + system_score + 0.2 * cell.importance + 0.2 * cell.confidence + link_score
-            if not query_terms or matched or system is not None or source is not None:
-                results.append(MemoryReadResult(cell=cell, score=score, matched_terms=matched, link_score=link_score))
-        results.sort(key=lambda item: (-item.score, item.cell.time_index, item.cell.cell_id))
+        candidates = [
+            cell
+            for cell in self.cells.values()
+            if (system is None or cell.memory_system == system)
+            and (source is None or cell.source == source)
+            and (include_expired or cell.decay_state == "active")
+        ]
+        ranked = self._ranker.rank(query, candidates, link_score_for=self._link_score)
+        results = [
+            MemoryReadResult(
+                cell=item.cell,
+                score=item.score,
+                matched_terms=item.matched_terms,
+                link_score=item.link_score,
+                score_breakdown=item.score_breakdown,
+            )
+            for item in ranked
+            if not query_terms or item.matched_terms or system is not None or source is not None
+        ]
         selected = results[:limit]
         self._trace(
             MemoryTraceAction.READ,
             tuple(result.cell.cell_id for result in selected),
-            {"query": query, "memory_system": system.value if system else None, "source": source, "result_count": len(selected)},
+            {"query": query, "memory_system": system.value if system else None, "source": source, "result_count": len(selected), "ranking_version": "stage161_bm25f"},
         )
         return selected
 
