@@ -126,3 +126,16 @@
 **Commit:** `feat: improve temporal evidence reasoning`
 
 **Observed full result:** Stage166 scored 414/500 (82.8%). Temporal reasoning improved by 2 answers to 95/133 (71.4%), but the total fell by 2 answers versus Stage165; 97% remains unmet.
+
+## Module 9: Resolve event-relative intervals and anchor counts
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/prompts.py` and `run.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_prompts.py`
+- Evidence: `docs/operations/data/longmemeval-stage168-temporal-top20-2026-10-25.json`
+
+**Work:** Resolve “N days ago” from the event named in the question clause and the question date, calculate event-to-event month intervals when both dates are explicit, and remove anchor/later events from before/after counts. Keep approximate or unknown dates unresolved; do not substitute a contextual event's date for the requested event.
+
+**Acceptance:** Cover event-vs-context date selection, missing/approximate dates, yearless month/day intervals, before/after anchors, and non-temporal regressions. Run the full 500-question Top-20 gate after implementation.
+
+**Observed full result:** Stage168 scored 426/500 (85.2%), 59 answers below the target. Although the 470 annotated answer-source sessions all appeared in Top-20, only 401 of those questions were correct; multi-session and temporal reasoning remain the next accuracy bottleneck.

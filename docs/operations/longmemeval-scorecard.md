@@ -96,6 +96,17 @@ gate. Temporal-reasoning increased from 93/133 to 95/133 (71.4%), while the
 overall score fell by two answers and remains below Stage163. The candidate-only
 card is [longmemeval-stage166-temporal-top20-2026-10-25.json](data/longmemeval-stage166-temporal-top20-2026-10-25.json).
 
+Stage168 added event-date interval resolution and before/after anchor filtering.
+The full Top-20 run scored **426/500 (85.2%)**, 59 answers short of the gate;
+that is 10 answers above Stage165 and 2 above Stage163, but it is not a
+prompt-identical paired comparison. Temporal-reasoning was 102/133 (76.7%),
+multi-session 104/133 (78.2%), knowledge-update 70/78 (89.7%),
+single-session-assistant 55/56 (98.2%), single-session-preference 25/30
+(83.3%), and single-session-user 70/70 (100%). All 470 annotated answer-source
+sessions appeared in Top-20, but only 401 of those questions were answered
+correctly. The candidate-only card is
+[longmemeval-stage168-temporal-top20-2026-10-25.json](data/longmemeval-stage168-temporal-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
