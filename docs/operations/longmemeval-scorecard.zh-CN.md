@@ -136,6 +136,9 @@ Stage203 的消息对诊断显示，Top-20 命中 867/883 个带答案标记的�
 Stage213 为带角色标记的记忆增加个人计数来源校验：assistant 单方陈述不能证明用户拥有某物、有某项订阅或已完成某项动作；关于 assistant 建议和假设金额的题目保留原有路径。针对 Stage203 的一题 NYT 订阅问题进行子集回放时，校验器移除了 assistant 单方声称的订阅，并按两项用户原话支持的订阅重算。500 行合成成绩为 **442/500（88.4%）**，距离门槛还差 43 题；与 Stage174 配对后，32 题仅本轮答对、16 题仅基线答对。成绩卡将回放范围标记为 `assistant_only_personal_count`，不代表全量重新生成：
 [longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json](data/longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json)。
 
+Stage216 让带有“今年”“三月”“过去两周”等明确时间窗的多会话计数题也提取事件日期。19 道时间窗题子集重放为 18/19，相对 Stage203 的 17/19 有 1 题转对、0 题回退。与 Stage213 其他题目合成后为 **443/500（88.6%）**，距离发布门槛还差 42 题。成绩卡将范围标记为 `relative_count_window`，不是全量重新生成：
+[longmemeval-stage216-time-window-subset-top20-2026-10-25.json](data/longmemeval-stage216-time-window-subset-top20-2026-10-25.json)。
+
 69.8% 是历史基线，不代表当前代码。只有当两份结果来自同一套 500 题数据集且评测
 协议未变时，成绩差值才有意义。基线的答题器和裁判使用同一个模型，因此存在裁判
 自我偏差。检索精度、证据覆盖、答案准确率和成绩卡完整性是不同指标，不能相互

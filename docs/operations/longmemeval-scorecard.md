@@ -240,6 +240,15 @@ correct answers. Its provenance scope is `assistant_only_personal_count`; it
 is not a fresh all-500 run:
 [longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json](data/longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json).
 
+Stage216 makes count questions with explicit windows such as “this year,” “in
+March,” or “in the past two weeks” use temporal event fields even when their
+benchmark category is multi-session. The 19-question time-window subset scored
+18/19 versus 17/19 in Stage203 (1 gain, no regression). Composing it with the
+other Stage213 rows yields **443/500 (88.6%)**, 42 answers short of the gate.
+The scorecard marks the replay scope as `relative_count_window`; this is not a
+fresh all-500 generation run:
+[longmemeval-stage216-time-window-subset-top20-2026-10-25.json](data/longmemeval-stage216-time-window-subset-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
