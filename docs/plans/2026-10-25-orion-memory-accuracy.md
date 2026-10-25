@@ -124,3 +124,5 @@
 **Acceptance:** Add matched fixtures for event-relative intervals, inclusive windows, update-vs-history questions, and ambiguous/missing dates. Re-run all 500 LongMemEval questions at Top-20 and record a new scorecard; the target remains 485/500.
 
 **Commit:** `feat: improve temporal evidence reasoning`
+
+**Observed full result:** Stage166 scored 414/500 (82.8%). Temporal reasoning improved by 2 answers to 95/133 (71.4%), but the total fell by 2 answers versus Stage165; 97% remains unmet.

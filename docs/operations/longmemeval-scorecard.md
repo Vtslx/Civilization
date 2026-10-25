@@ -90,6 +90,12 @@ count-completeness review; it is not a prompt-identical paired comparison with
 Stage163. The candidate-only scorecard, including dataset and result hashes, is
 [longmemeval-stage165-reranked-top20-2026-10-25.json](data/longmemeval-stage165-reranked-top20-2026-10-25.json).
 
+Stage166 added temporal-event evidence fields and anchor-relation checks. Its
+full conditional Top-20 run scored **414/500 (82.8%)**, 71 answers short of the
+gate. Temporal-reasoning increased from 93/133 to 95/133 (71.4%), while the
+overall score fell by two answers and remains below Stage163. The candidate-only
+card is [longmemeval-stage166-temporal-top20-2026-10-25.json](data/longmemeval-stage166-temporal-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
