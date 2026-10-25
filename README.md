@@ -93,6 +93,9 @@ instead of the service, and `civilization prune` bounds disk usage across
 sessions. Details, guarantees per failure mode, and the knobs:
 [docs/operations/session-memory-durability.md](docs/operations/session-memory-durability.md)
 (also in [简体中文](docs/operations/session-memory-durability.zh-CN.md)).
+`civilization backup`, `civilization verify-backup`, and `civilization restore`
+provide an offline, checksummed memory backup path; a verified copy must be
+stored outside the source disk to cover disk loss.
 
 Orion retrieval uses fielded BM25F ranking with bounded priors and explicit
 recency tie-breaking. Its scoring signals, compatibility guarantees, and

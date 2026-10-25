@@ -211,11 +211,47 @@ the global store), and it commits pending writes before deciding. The offline
 path has no such knowledge — run it with the service stopped, or use the live
 path.
 
+## Offline memory backup and restore
+
+Journal replay protects against process and host restarts. A second copy in an
+independent failure domain is still required for disk loss. These commands
+operate offline: stop the service and persistence sidecar before creating a
+bundle so the journal set cannot change during the copy.
+
+```bash
+# Create and verify a mode-0600 tar bundle outside the live state directory.
+civilization backup --state-dir var/state --output /secure-backups/orion-2026-10-25.tar
+
+# Verify the manifest, paths, sizes, and SHA-256 checksums without extracting.
+civilization verify-backup --backup /secure-backups/orion-2026-10-25.tar
+
+# Restore into a new directory. Existing destinations are refused.
+civilization restore --backup /secure-backups/orion-2026-10-25.tar --destination var/state-restored
+
+# Start the service against the recovered directory after checking the result.
+civilization serve --state-dir var/state-restored --provider-base-url <url> --provider-model <model>
+```
+
+The bundle contains `sessions/*/snapshot.json`, `sessions/*/journal.ndjson`,
+and `global-memory.json` when present. It does not contain job queues, job
+results, audit logs, exports, provider configuration, or model files. The
+manifest stores relative paths, byte counts, and SHA-256 checksums. Restore
+rejects unknown versions, path traversal, links, unexpected files, and checksum
+mismatches, then promotes the verified staging directory atomically. The target
+path must not already exist.
+
+Checksums detect accidental corruption; they do not authenticate an archive
+against a malicious rewrite, and the bundle is not encrypted. Memory can contain
+private user data. Store backups outside the source volume in an
+access-controlled, encrypted backup destination, keep versions according to an
+operational retention policy, and run restore drills against a disposable
+directory. A backup on the same disk is not disaster recovery.
+
 ## Limits and non-goals
 
-- **No replication.** Durability here means "survives a restart or a crash on
-  this machine", not "survives losing the disk". Point `state_dir` at a volume
-  that has its own redundancy if you need that.
+- **No automated replication.** Journals and snapshots survive restarts on this
+  machine. The backup command creates a portable copy but does not schedule or
+  transfer it to another failure domain.
 - **Global (cross-session) memory uses the same journal.** It is hydrated at
   startup and every mutation is appended, so it no longer depends on an explicit
   save. `POST /admin/orion/global-store/save|load` remains as export/import: a
@@ -225,6 +261,6 @@ path.
   decisions; the diagnostic trace stream is opt-in (`persist_traces`).
 - **One writer per state directory.** Two services sharing a directory would
   interleave journals. Use the sidecar mode or separate directories.
-- **No compression or retention policy yet.** Journals grow with writes; the
-  snapshot bounds the *replay* cost, not the byte count. A retention pass over
-  old sessions is future work.
+- **No archive compression.** Journals are compacted into snapshots and old
+  sessions can be removed with `civilization prune`; backup tar files are
+  uncompressed and the command does not back up job/export data.

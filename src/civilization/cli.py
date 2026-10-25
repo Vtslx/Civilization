@@ -476,6 +476,56 @@ def _format_retention(report: dict[str, Any], *, prefix: str = "") -> str:
 
 
 # --------------------------------------------------------------------------- #
+# memory backup / restore
+# --------------------------------------------------------------------------- #
+def _command_backup(args: argparse.Namespace) -> int:
+    from .engine.persistence import create_memory_backup
+
+    try:
+        report = create_memory_backup(args.state_dir, args.output)
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"memory backup failed: {error}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"memory backup verified: {Path(args.output).expanduser().resolve()}")
+        print(f"sessions: {report['session_count']}; entries: {report['entry_count']}; bytes: {report['total_bytes']}")
+    return 0
+
+
+def _command_verify_backup(args: argparse.Namespace) -> int:
+    from .engine.persistence import verify_memory_backup
+
+    try:
+        report = verify_memory_backup(args.backup)
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"memory backup verification failed: {error}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"backup verified: {Path(args.backup).expanduser().resolve()}")
+        print(f"sessions: {report['session_count']}; entries: {report['entry_count']}; bytes: {report['total_bytes']}")
+    return 0
+
+
+def _command_restore_backup(args: argparse.Namespace) -> int:
+    from .engine.persistence import restore_memory_backup
+
+    try:
+        report = restore_memory_backup(args.backup, args.destination)
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"memory backup restore failed: {error}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"memory restored and verified: {report['restored_to']}")
+        if report["global_store_path"]:
+            print(f"global memory snapshot: {report['global_store_path']}")
+        print(f"sessions: {report['session_count']}; entries: {report['entry_count']}; bytes: {report['total_bytes']}")
+    return 0
+
+
+# --------------------------------------------------------------------------- #
 # persist-sidecar
 # --------------------------------------------------------------------------- #
 def _command_persist_sidecar(args: argparse.Namespace) -> int:
@@ -657,6 +707,29 @@ def build_parser() -> argparse.ArgumentParser:
     prune.add_argument("--token-env", default="CIVILIZATION_API_TOKEN", help="bearer token environment variable")
     prune.add_argument("--json", action="store_true", help="machine-readable output")
     prune.set_defaults(func=_command_prune)
+
+    backup = subparsers.add_parser(
+        "backup",
+        help="create and verify an offline Orion memory backup (stop service and sidecar first)",
+    )
+    backup.add_argument("--state-dir", default="var/state", help="memory state directory")
+    backup.add_argument("--output", required=True, help="new backup tar file, outside state-dir")
+    backup.add_argument("--json", action="store_true", help="machine-readable output")
+    backup.set_defaults(func=_command_backup)
+
+    verify_backup = subparsers.add_parser("verify-backup", help="verify a memory backup without restoring it")
+    verify_backup.add_argument("--backup", required=True, help="backup tar file")
+    verify_backup.add_argument("--json", action="store_true", help="machine-readable output")
+    verify_backup.set_defaults(func=_command_verify_backup)
+
+    restore_backup = subparsers.add_parser(
+        "restore",
+        help="restore a verified memory backup into a new state directory",
+    )
+    restore_backup.add_argument("--backup", required=True, help="backup tar file")
+    restore_backup.add_argument("--destination", required=True, help="new state directory; must not already exist")
+    restore_backup.add_argument("--json", action="store_true", help="machine-readable output")
+    restore_backup.set_defaults(func=_command_restore_backup)
 
     sidecar = subparsers.add_parser(
         "persist-sidecar",

@@ -158,10 +158,41 @@ curl -s -X POST localhost:8765/admin/orion/memory/retention \
 
 在线路径**不会**清理服务内存中持有的会话（包括 global store），并在决策前先提交待写入记录。离线路径没有这些信息——请在服务停止时运行，或改用在线路径。
 
+## 离线记忆备份与恢复
+
+日志重放可恢复进程和主机重启，但磁盘丢失还需要独立故障域中的第二份副本。
+备份命令离线运行：创建归档前需停止服务及持久化 sidecar，避免复制期间日志
+集合发生变化。
+
+```bash
+# 在实时状态目录之外创建并验证权限为 0600 的 tar 归档。
+civilization backup --state-dir var/state --output /secure-backups/orion-2026-10-25.tar
+
+# 不解压，检查清单、路径、文件大小和 SHA-256 校验和。
+civilization verify-backup --backup /secure-backups/orion-2026-10-25.tar
+
+# 恢复到新目录；已存在的目标目录会被拒绝。
+civilization restore --backup /secure-backups/orion-2026-10-25.tar --destination var/state-restored
+
+# 检查恢复结果后，再以恢复目录启动服务。
+civilization serve --state-dir var/state-restored --provider-base-url <url> --provider-model <model>
+```
+
+归档包含 `sessions/*/snapshot.json`、`sessions/*/journal.ndjson`，以及存在时的
+`global-memory.json`。它不包含任务队列、任务结果、审计日志、导出文件、服务商
+配置或模型文件。清单保存相对路径、字节数和 SHA-256 校验和。恢复会拒绝未知
+版本、路径穿越、链接、意外文件和校验不匹配，并在原子提升已验证的暂存目录后
+完成。目标路径必须不存在。
+
+校验和用于发现意外损坏，不能鉴别恶意改写；归档本身也未加密。记忆可能含有
+用户隐私数据。请将备份保存到源卷之外、受访问控制且加密的备份目标中，按运维
+保留策略保留多个版本，并在临时目录中定期演练恢复。同一块磁盘上的备份不属于
+容灾副本。
+
 ## 边界与非目标
 
-- **没有副本。** 这里的持久化是指"在这台机器上能挺过重启或崩溃"，不是"丢盘也能恢复"。需要后者请把 `state_dir` 指向自带冗余的卷。
+- **没有自动复制。** 日志与快照能在本机重启后恢复。备份命令可生成可迁移副本，但不会自动调度或将它传到其他故障域。
 - **global（跨会话）记忆走同一套 journal。** 它在启动时水合，每次变更都会追加，因此不再依赖显式 save。`POST /admin/orion/global-store/save|load` 保留为导出/导入：load 会替换内容，并记录为一条 reset 加若干 upsert，因此重放不会把被 load 移除的内容复活。
 - **trace 默认不持久化。** 决策真正依赖的状态是单元与链接；诊断用的 trace 流需显式开启（`persist_traces`）。
 - **同一 state 目录只允许一个写入者。** 两个服务共享目录会交错写入 journal。请改用 sidecar 模式或分开目录。
-- **暂无压缩与保留策略。** journal 随写入增长；快照界定的是**重放**代价，不是字节数。对历史会话做保留清理属于后续工作。
+- **归档不压缩。** 日志会合并到快照，旧会话可通过 `civilization prune` 清理；备份 tar 未压缩，命令也不备份任务或导出数据。
