@@ -9,6 +9,7 @@ from typing import Any, Iterable
 
 from .stage161_orion_relevance_ranking import OrionRelevanceRanker, tokenize
 from .stage163_orion_role_aware_ranking import OrionRoleAwareRanker
+from .stage164_orion_temporal_coverage import reorder_for_temporal_coverage
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage73_orion_memory_kernel")
@@ -321,6 +322,7 @@ class OrionMemoryStore:
             for item in ranked
             if not query_terms or item.matched_terms or system is not None or source is not None
         ]
+        results, temporal_coverage_applied = reorder_for_temporal_coverage(results, query)
         selected = results[:limit]
         self._trace(
             MemoryTraceAction.READ,
@@ -331,6 +333,7 @@ class OrionMemoryStore:
                 "source": source,
                 "result_count": len(selected),
                 "ranking_version": getattr(effective_ranker, "version", "stage161_bm25f"),
+                "temporal_coverage_applied": temporal_coverage_applied,
             },
         )
         return selected

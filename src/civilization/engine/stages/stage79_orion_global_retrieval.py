@@ -8,6 +8,7 @@ from pathlib import Path
 from .stage73_orion_memory_kernel import MemoryReadResult, OrionMemoryStore
 from .stage161_orion_relevance_ranking import OrionRelevanceRanker, has_recency_intent, tokenize
 from .stage163_orion_role_aware_ranking import OrionRoleAwareRanker
+from .stage164_orion_temporal_coverage import reorder_for_temporal_coverage
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage79_orion_global_retrieval")
@@ -61,6 +62,7 @@ class OrionGlobalRetrievalRouter:
             return (-item.result.score, temporal_key, item.tier != "session", item.result.cell.cell_id)
 
         ordered = sorted([*session, *global_results], key=order_key)
+        ordered, _ = reorder_for_temporal_coverage(ordered, query)
         return ordered[:limit]
 
 

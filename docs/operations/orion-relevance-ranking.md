@@ -32,6 +32,13 @@ explicit question about an assistant suggestion reverses those weights.
 Unstructured cells keep the neutral BM25F path. Ranking never edits the stored
 cell or removes its original speaker text.
 
+For temporal, sequence, or multi-event questions, the reader first chooses the
+BM25F-ranked candidate set and then places the best cell from each observation
+date before same-date repeats. When metadata has no observation date, it falls
+back to the cell timestamp. Queries asking for the latest/current value retain
+newest-first ranking instead of date diversification. Session/global fusion
+applies this rule after the shared-corpus ranking.
+
 The final score includes the BM25F relevance score, a small exact-phrase bonus,
 bounded confidence and importance priors (at most 0.05 each), and the existing
 link score. Approved Helix weights remain effective. A query that explicitly

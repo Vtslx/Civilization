@@ -84,16 +84,16 @@
 
 **Commit:** `feat: rank conversational memory by speaker provenance`
 
-## Module 5: Speaker-aware evidence ranking
+## Module 6: Temporal source-session coverage
 
 **Files:**
-- Create: `src/civilization/engine/stages/stage163_orion_role_aware_ranking.py`
-- Modify: `src/civilization/engine/stages/stage161_orion_relevance_ranking.py`, `stage73_orion_memory_kernel.py`, and `stage79_orion_global_retrieval.py`
-- Test: `tests/engine/test_stage163_orion_role_aware_ranking.py`
+- Create: `src/civilization/engine/stages/stage164_orion_temporal_coverage.py`
+- Modify: `src/civilization/engine/stages/stage73_orion_memory_kernel.py` and `stage79_orion_global_retrieval.py`
+- Test: `tests/engine/test_stage164_orion_temporal_coverage.py` and the Stage79 integration test
 - Document: `docs/operations/orion-relevance-ranking.md` and its Chinese counterpart
 
-**Work:** When conversation cells preserve speaker labels or typed speaker metadata, index user and assistant text as separate fields. First-person personal questions prefer user statements; explicit assistant-recommendation questions prefer assistant turns. Unstructured cells keep the neutral BM25F ranking. Preserve the raw memory and source metadata; ranking only changes candidate order.
+**Work:** For sequence, temporal, or multi-event queries, preserve the BM25-selected candidate set but place the highest-relevance cell from each observation date before same-date repeats. Non-temporal and latest/current queries keep their existing order. Apply the same coverage rule after session/global fusion when global memory is enabled.
 
-**Acceptance:** Cover user fact vs. assistant advice, assistant recommendation queries, metadata-only speaker labels, unstructured fallback, deterministic ties, Helix weights, and the full native memory regression slice. Run a fresh, complete Top-20 scorecard before retaining any claimed accuracy gain.
+**Acceptance:** Verify date coverage, relevance fallback, latest-first behavior, cross-tier handling, resolved-global policy, and full service regression. Run a full Top-20 scorecard before retaining any accuracy claim.
 
-**Commit:** `feat: rank conversational memory by speaker provenance`
+**Commit:** `feat: diversify temporal memory evidence by date`
