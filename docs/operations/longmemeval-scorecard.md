@@ -107,6 +107,28 @@ sessions appeared in Top-20, but only 401 of those questions were answered
 correctly. The candidate-only card is
 [longmemeval-stage168-temporal-top20-2026-10-25.json](data/longmemeval-stage168-temporal-top20-2026-10-25.json).
 
+Stage169 introduced a separate count-inventory pass in the benchmark adapter.
+Its first full run scored **409/500 (81.8%)**, 76 answers short of the gate.
+On the same Stage168 ranked evidence, 18 questions changed from wrong to right
+and 35 changed from right to wrong. The initial adapter over-counted cumulative
+snapshots and routed some scalar questions through item enumeration. Its card is
+[longmemeval-stage169-count-inventory-initial-top20-2026-10-25.json](data/longmemeval-stage169-count-inventory-initial-top20-2026-10-25.json).
+
+Stage171 narrowed inventory routing to enumerative count questions, treated
+cumulative snapshots as updates, and kept arithmetic, rate, and identifier
+questions on the answerer path. With the Stage168 ranked Top-200 candidate lists
+preserved, the full run scored **418/500 (83.6%)**, 67 answers short of the
+485-answer gate. The paired comparison against Stage168 was 16 candidate-only
+correct and 24 baseline-only correct, a net **−8 answers (−1.6 percentage
+points)**. The initial inventory run scored 409/500, so this refinement was
+9 answers higher there; that is a different prompt revision, not a new 97% pass.
+Per-type scores were knowledge-update 67/78 (85.9%), multi-session 100/133
+(75.2%), single-session-assistant 56/56 (100%), single-session-preference
+25/30 (83.3%), single-session-user 69/70 (98.6%), and temporal-reasoning
+101/133 (75.9%). The inventory route scored 135/159 on its selected questions;
+multi-session remains the largest gap. See
+[longmemeval-stage171-count-inventory-top20-2026-10-25.json](data/longmemeval-stage171-count-inventory-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
