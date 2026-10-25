@@ -127,6 +127,9 @@ Stage195 为偏好题增加独立核对：答题器使用带引用的用户偏�
 Stage196 只在显式合计行与至少两个同单位增量分项精确相等时，才移除重复合计，避免重复计数；分项缺失或按件金额仍走直接答题路径。冻结 Stage195 输出后重放得到 **439/500（87.8%）**，距离发布门槛还差 46 题。与 Stage195 配对后，2 题从错变对、0 题回退；修正了手袋加护肤品、车罩加清洁喷雾两处重复合计。与 Stage174 比较时，32 题仅本轮答对、19 题仅基线答对。成绩卡记录 `explicit_total_deduplication_enabled` 和回放来源：
 [longmemeval-stage196-explicit-total-dedup-top20-2026-10-25.json](data/longmemeval-stage196-explicit-total-dedup-top20-2026-10-25.json)。该结果仍是冻结答案回放，并非重新生成全部 500 题。
 
+Stage203 为实体数量题增加了条件化提示，明确区分对象数与动作次数。固定候选 runner 在 12 题子集上重跑两次，均为 7/12，对照 Stage196 的 5/12（3 题转对、1 题转错）。与 Stage196 其他题目合成后得到 **441/500（88.2%）**，距离门槛还差 44 题。与 Stage174 配对后，31 题仅本轮答对，16 题仅基线答对。成绩卡将范围标记为 `multi-session` / `physical_entity_count`；500 行结果是子集回放组合，不是全量重新生成：
+[longmemeval-stage203-entity-count-subset-top20-2026-10-25.json](data/longmemeval-stage203-entity-count-subset-top20-2026-10-25.json)。
+
 69.8% 是历史基线，不代表当前代码。只有当两份结果来自同一套 500 题数据集且评测
 协议未变时，成绩差值才有意义。基线的答题器和裁判使用同一个模型，因此存在裁判
 自我偏差。检索精度、证据覆盖、答案准确率和成绩卡完整性是不同指标，不能相互

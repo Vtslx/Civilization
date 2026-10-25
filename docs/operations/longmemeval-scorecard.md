@@ -210,6 +210,16 @@ candidate-only correct and 19 baseline-only correct. The scorecard records
 [longmemeval-stage196-explicit-total-dedup-top20-2026-10-25.json](data/longmemeval-stage196-explicit-total-dedup-top20-2026-10-25.json).
 This remains a frozen-response replay, not a fresh all-500 generation run.
 
+Stage203 adds a conditional entity-count instruction for physical-object
+questions. A 12-question fixed-candidate runner replay scored 7/12 versus 5/12
+in Stage196 (3 gains, 1 loss) in two repeats with the same aggregate score.
+Composing that subset with Stage196's other rows gives **441/500 (88.2%)**, 44
+short of the gate. Against Stage174, the scorecard has 31 candidate-only and 16
+baseline-only correct answers. Its provenance identifies the replay scope as
+`multi-session` / `physical_entity_count`; the 500-row result is not a fresh
+full generation run:
+[longmemeval-stage203-entity-count-subset-top20-2026-10-25.json](data/longmemeval-stage203-entity-count-subset-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

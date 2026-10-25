@@ -295,6 +295,7 @@ def _load_and_aggregate(
             "preference_verification_enabled",
             "temporal_event_resolution_enabled",
             "explicit_total_deduplication_enabled",
+            "entity_count_prompt_enabled",
         )
         if isinstance(metadata.get(key), bool)
     }
@@ -324,6 +325,12 @@ def _load_and_aggregate(
     subset_source_run = metadata.get("subset_replay_source_run")
     if isinstance(subset_source_run, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", subset_source_run):
         result_provenance["subset_replay_source_run"] = subset_source_run
+    subset_scope = metadata.get("subset_replay_scope")
+    if isinstance(subset_scope, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", subset_scope):
+        result_provenance["subset_replay_scope"] = subset_scope
+    frozen_base_run = metadata.get("frozen_base_source_run")
+    if isinstance(frozen_base_run, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", frozen_base_run):
+        result_provenance["frozen_base_source_run"] = frozen_base_run
     if result_provenance:
         report["result_provenance"] = result_provenance
     return report, row_index

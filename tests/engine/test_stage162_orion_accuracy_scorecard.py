@@ -100,11 +100,14 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
             "count_inventory_policy": "skip_multi_session",
             "temporal_event_resolution_enabled": True,
             "explicit_total_deduplication_enabled": True,
+            "entity_count_prompt_enabled": True,
             "postprocessor_replay_only": True,
             "postprocessor_source_run": "Stage184",
             "subset_replay_only": True,
             "subset_replay_question_type": "single-session-preference",
             "subset_replay_source_run": "Stage188",
+            "subset_replay_scope": "physical_entity_count",
+            "frozen_base_source_run": "Stage188",
         },
     )
 
@@ -117,6 +120,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
         "count_inventory_policy": "skip_multi_session",
         "temporal_event_resolution_enabled": True,
         "explicit_total_deduplication_enabled": True,
+        "entity_count_prompt_enabled": True,
     }
     assert scorecard["candidate"]["result_provenance"] == {
         "postprocessor_replay_only": True,
@@ -124,6 +128,8 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
         "subset_replay_only": True,
         "subset_replay_question_type": "single-session-preference",
         "subset_replay_source_run": "Stage188",
+        "subset_replay_scope": "physical_entity_count",
+        "frozen_base_source_run": "Stage188",
     }
 
 
