@@ -24,7 +24,14 @@ _STOPWORDS = frozenset(
 )
 _RECENCY_MARKERS = frozenset({"current", "currently", "latest", "newest", "recent", "recently", "now"})
 _CJK_RECENCY_MARKERS = ("当前", "目前", "现在", "最新", "最近")
-_FIELD_WEIGHTS = {"summary": 2.0, "content": 1.0, "source": 0.2}
+_FIELD_WEIGHTS = {
+    "summary": 2.0,
+    "content": 1.0,
+    "source": 0.2,
+    "user_content": 1.0,
+    "assistant_content": 1.0,
+    "other_content": 0.5,
+}
 
 
 def tokenize(text: str) -> tuple[str, ...]:
@@ -66,6 +73,7 @@ class _IndexedCell:
     term_counts: dict[str, Counter[str]]
     term_sets: dict[str, frozenset[str]]
     all_terms: frozenset[str]
+    has_role_fields: bool
 
 
 class OrionRelevanceRanker:
@@ -106,6 +114,8 @@ class OrionRelevanceRanker:
         if not query_terms:
             query_terms = tuple(dict.fromkeys(query_tokens))
         recency_intent = has_recency_intent(query, query_tokens)
+        role_aware_corpus = any(document.has_role_fields for document in documents)
+        field_weights = self._field_weights_for_query(query, query_tokens) if role_aware_corpus else dict(_FIELD_WEIGHTS)
         document_count = len(documents)
         field_averages = {
             name: max(1.0, sum(len(document.fields[name]) for document in documents) / document_count)
@@ -118,7 +128,14 @@ class OrionRelevanceRanker:
         ranked: list[RankedMemoryCell] = []
         for document in candidates:
             matched_terms = tuple(sorted(set(query_tokens) & document.all_terms))
-            bm25f = self._bm25f_score(document, query_terms, document_count, document_frequency, field_averages)
+            bm25f = self._bm25f_score(
+                document,
+                query_terms,
+                document_count,
+                document_frequency,
+                field_averages,
+                field_weights,
+            )
             phrase = self._phrase_match(query_terms, document) if len(query_terms) > 1 else False
             phrase_component = self.phrase_bonus if phrase else 0.0
             importance = self._bounded_prior(getattr(document.cell, "importance", 0.0)) * 0.05
@@ -137,6 +154,8 @@ class OrionRelevanceRanker:
                         "importance_prior": importance,
                         "confidence_prior": confidence,
                         "link": link_score,
+                        "user_role_weight": field_weights["user_content"],
+                        "assistant_role_weight": field_weights["assistant_content"],
                     },
                 )
             )
@@ -144,13 +163,22 @@ class OrionRelevanceRanker:
         ranked.sort(key=lambda item: self._sort_key(item, recency_intent))
         return ranked
 
-    @staticmethod
-    def _index_cell(cell: Any) -> _IndexedCell:
-        fields = {
+    def _fields_for_cell(self, cell: Any) -> dict[str, tuple[str, ...]]:
+        return {
             "summary": tokenize(str(getattr(cell, "summary", ""))),
             "content": tokenize(str(getattr(cell, "content", ""))),
             "source": tokenize(str(getattr(cell, "source", ""))),
+            "user_content": (),
+            "assistant_content": (),
+            "other_content": (),
         }
+
+    @staticmethod
+    def _field_weights_for_query(query: str, query_tokens: tuple[str, ...]) -> dict[str, float]:
+        return dict(_FIELD_WEIGHTS)
+
+    def _index_cell(self, cell: Any) -> _IndexedCell:
+        fields = self._fields_for_cell(cell)
         term_counts = {name: Counter(tokens) for name, tokens in fields.items()}
         term_sets = {name: frozenset(tokens) for name, tokens in fields.items()}
         return _IndexedCell(
@@ -159,6 +187,7 @@ class OrionRelevanceRanker:
             term_counts=term_counts,
             term_sets=term_sets,
             all_terms=frozenset().union(*term_sets.values()),
+            has_role_fields=bool(term_sets["user_content"] or term_sets["assistant_content"]),
         )
 
     def _bm25f_score(
@@ -168,11 +197,12 @@ class OrionRelevanceRanker:
         document_count: int,
         document_frequency: Counter[str],
         field_averages: dict[str, float],
+        field_weights: dict[str, float],
     ) -> float:
         score = 0.0
         for term in query_terms:
             weighted_frequency = 0.0
-            for field_name, field_weight in _FIELD_WEIGHTS.items():
+            for field_name, field_weight in field_weights.items():
                 tokens = document.fields[field_name]
                 frequency = document.term_counts[field_name].get(term, 0)
                 if frequency == 0:
@@ -190,7 +220,7 @@ class OrionRelevanceRanker:
     def _phrase_match(query_terms: tuple[str, ...], document: _IndexedCell) -> bool:
         if len(query_terms) < 2:
             return False
-        for field_name in ("summary", "content"):
+        for field_name in document.fields:
             tokens = document.fields[field_name]
             width = len(query_terms)
             if any(tokens[offset : offset + width] == query_terms for offset in range(len(tokens) - width + 1)):

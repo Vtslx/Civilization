@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .stage73_orion_memory_kernel import MemoryReadResult, OrionMemoryStore
 from .stage161_orion_relevance_ranking import OrionRelevanceRanker, has_recency_intent, tokenize
+from .stage163_orion_role_aware_ranking import OrionRoleAwareRanker
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage79_orion_global_retrieval")
@@ -23,7 +24,7 @@ class OrionTieredReadResult:
 
 class OrionGlobalRetrievalRouter:
     def __init__(self, *, ranker: OrionRelevanceRanker | None = None) -> None:
-        self._ranker = ranker if ranker is not None else OrionRelevanceRanker()
+        self._ranker = ranker if ranker is not None else OrionRoleAwareRanker()
 
     def read(self, session_store: OrionMemoryStore, global_store: OrionMemoryStore, *, query: str, include_global: bool = False, limit: int = 4) -> list[OrionTieredReadResult]:
         if limit < 1:

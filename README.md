@@ -99,8 +99,8 @@ stored outside the source disk to cover disk loss.
 `civilization scorecard` checks full LongMemEval answerer results against the
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 
-Orion retrieval uses fielded BM25F ranking with bounded priors and explicit
-recency tie-breaking. Its scoring signals, compatibility guarantees, and
+Orion retrieval uses fielded BM25F ranking with bounded priors, explicit
+recency tie-breaking, and speaker-aware ranking for labeled conversation turns. Its scoring signals, compatibility guarantees, and
 limits are documented in [English](docs/operations/orion-relevance-ranking.md)
 and [简体中文](docs/operations/orion-relevance-ranking.zh-CN.md).
 

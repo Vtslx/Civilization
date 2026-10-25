@@ -19,6 +19,19 @@ distinguish one memory from the rest of the candidate set. English words and
 numbers are normalized; contiguous CJK text is tokenized into character
 bigrams.
 
+For conversation cells with explicit `user:` / `assistant:` labels or typed
+speaker metadata, Orion indexes the turns separately. First-person personal
+questions boost user statements and lower assistant advice; explicit questions
+about an assistant recommendation reverse those weights. Unstructured cells
+retain the neutral BM25F path, and ranking never changes the stored content.
+
+If a cell preserves `user:` / `assistant:` turn labels or typed speaker
+metadata, the default ranker keeps those turns in separate fields. A personal
+first-person query gives user statements more weight than assistant advice; an
+explicit question about an assistant suggestion reverses those weights.
+Unstructured cells keep the neutral BM25F path. Ranking never edits the stored
+cell or removes its original speaker text.
+
 The final score includes the BM25F relevance score, a small exact-phrase bonus,
 bounded confidence and importance priors (at most 0.05 each), and the existing
 link score. Approved Helix weights remain effective. A query that explicitly
@@ -32,7 +45,8 @@ is enabled. The existing task policy still decides whether a resolved global
 winner can enter the injected context.
 
 Every `MemoryReadResult` includes a `score_breakdown` with BM25F, phrase,
-importance, confidence, and link components. The service can expose that result
+importance, confidence, link, and applied speaker-field weights. The service
+can expose that result
 for diagnostics. Session/global selection and authorization remain the
 responsibility of the existing router and task policy.
 

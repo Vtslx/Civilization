@@ -8,6 +8,7 @@ import time
 from typing import Any, Iterable
 
 from .stage161_orion_relevance_ranking import OrionRelevanceRanker, tokenize
+from .stage163_orion_role_aware_ranking import OrionRoleAwareRanker
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage73_orion_memory_kernel")
@@ -125,7 +126,7 @@ def _terms(text: str) -> set[str]:
 class OrionMemoryStore:
     def __init__(self, *, now_fn=time.time, ranker: OrionRelevanceRanker | None = None) -> None:
         self._now_fn = now_fn
-        self._ranker = ranker or OrionRelevanceRanker()
+        self._ranker = ranker if ranker is not None else OrionRoleAwareRanker()
         self.cells: dict[str, MemoryCell] = {}
         self.links: list[MemoryLink] = []
         self.trace_events: list[MemoryTraceEvent] = []
@@ -324,7 +325,13 @@ class OrionMemoryStore:
         self._trace(
             MemoryTraceAction.READ,
             tuple(result.cell.cell_id for result in selected),
-            {"query": query, "memory_system": system.value if system else None, "source": source, "result_count": len(selected), "ranking_version": "stage161_bm25f"},
+            {
+                "query": query,
+                "memory_system": system.value if system else None,
+                "source": source,
+                "result_count": len(selected),
+                "ranking_version": getattr(effective_ranker, "version", "stage161_bm25f"),
+            },
         )
         return selected
 

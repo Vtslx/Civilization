@@ -10,7 +10,7 @@
 
 ## Baseline and acceptance
 
-- Reference LongMemEval baseline: 349/500 (69.8%) at Top-20, with answer evidence in Top-20 for 413/500 (82.6%) and in Top-200 for 478/500 (95.6%). The answerer still failed 93 questions when the expected source conversation was in Top-20.
+- Reference LongMemEval baseline: 349/500 (69.8%) at Top-20. The reproducible scorecard measures source-session chunk recall separately from answer accuracy; do not describe session presence as proof that the exact answer fact was retrieved.
 - Keep the same dataset, model, answerer, judge, write adapter, and Top-20 cutoff when comparing a new full run. Record retrieval coverage, MRR, answer accuracy, question type, API errors, and run parameters separately.
 - Report the 97% target only if the same 500-question protocol measures at least 485 correct answers. Synthetic retrieval fixtures are regression gates, not substitutes for that result.
 - Run targeted unit and service tests for each module, then the full repository suite when its engine dependencies are available. Validate backup restore in a separate temporary state directory.
@@ -69,3 +69,31 @@
 **Acceptance:** A release may claim 97% only at 485/500 or better on the same full benchmark; otherwise publish the measured score and error breakdown and keep the target open.
 
 **Commit:** `test: add reproducible Orion memory accuracy scorecard`
+
+## Module 5: Speaker-aware evidence ranking
+
+**Files:**
+- Create: `src/civilization/engine/stages/stage163_orion_role_aware_ranking.py`
+- Modify: `src/civilization/engine/stages/stage161_orion_relevance_ranking.py`, `stage73_orion_memory_kernel.py`, and `stage79_orion_global_retrieval.py`
+- Test: `tests/engine/test_stage163_orion_role_aware_ranking.py`
+- Document: `docs/operations/orion-relevance-ranking.md` and its Chinese counterpart
+
+**Work:** When conversation cells preserve speaker labels or typed speaker metadata, index user and assistant text as separate fields. First-person personal questions prefer user statements; explicit assistant-recommendation questions prefer assistant turns. Unstructured cells keep neutral BM25F ranking. Preserve the raw memory and source metadata; ranking only changes candidate order.
+
+**Acceptance:** Cover user fact vs. assistant advice, assistant recommendation queries, metadata-only speaker labels, unstructured fallback, Helix weights, and the full native memory regression slice. Run a fresh full Top-20 scorecard before retaining any claimed accuracy gain.
+
+**Commit:** `feat: rank conversational memory by speaker provenance`
+
+## Module 5: Speaker-aware evidence ranking
+
+**Files:**
+- Create: `src/civilization/engine/stages/stage163_orion_role_aware_ranking.py`
+- Modify: `src/civilization/engine/stages/stage161_orion_relevance_ranking.py`, `stage73_orion_memory_kernel.py`, and `stage79_orion_global_retrieval.py`
+- Test: `tests/engine/test_stage163_orion_role_aware_ranking.py`
+- Document: `docs/operations/orion-relevance-ranking.md` and its Chinese counterpart
+
+**Work:** When conversation cells preserve speaker labels or typed speaker metadata, index user and assistant text as separate fields. First-person personal questions prefer user statements; explicit assistant-recommendation questions prefer assistant turns. Unstructured cells keep the neutral BM25F ranking. Preserve the raw memory and source metadata; ranking only changes candidate order.
+
+**Acceptance:** Cover user fact vs. assistant advice, assistant recommendation queries, metadata-only speaker labels, unstructured fallback, deterministic ties, Helix weights, and the full native memory regression slice. Run a fresh, complete Top-20 scorecard before retaining any claimed accuracy gain.
+
+**Commit:** `feat: rank conversational memory by speaker provenance`
