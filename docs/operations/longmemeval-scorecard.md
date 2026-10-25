@@ -65,6 +65,16 @@ The paired Top-20 comparison is in
 and the Top-200 diagnostic is in
 [longmemeval-stage162-top200-2026-10-25.json](data/longmemeval-stage162-top200-2026-10-25.json).
 
+The Stage163 speaker-aware rerun scored **424/500 (84.8%)** at Top-20, a further
+2.0 percentage-point gain over Stage162, with 27 candidate-only wins and 17
+baseline-only wins. It had source-session chunks in 458/470 Top-20 lists; the
+answerer still missed 65 of those 458 questions. It remains 61 answers below
+the 485-answer gate. The paired result and per-type changes are in
+[longmemeval-stage163-top20-2026-10-25.json](data/longmemeval-stage163-top20-2026-10-25.json).
+The same role-aware build scored **454/500 (90.8%)** in the Top-200 diagnostic,
+only 3 answers above Stage162 Top-200 and still 31 below 485; see
+[longmemeval-stage163-top200-2026-10-25.json](data/longmemeval-stage163-top200-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
