@@ -220,6 +220,18 @@ baseline-only correct answers. Its provenance identifies the replay scope as
 full generation run:
 [longmemeval-stage203-entity-count-subset-top20-2026-10-25.json](data/longmemeval-stage203-entity-count-subset-top20-2026-10-25.json).
 
+Stage213 validates evidence roles for personal count items in role-marked
+memories: assistant-only claims cannot establish the user's ownership,
+subscription, or completed action. It leaves assistant-output questions and
+hypothetical amount calculations on their existing path. A one-question replay
+of the NYT subscription citation over the Stage203 composite removes the
+assistant-only item and recomputes the count from two user-supported
+subscriptions. The 500-row composition scores **442/500 (88.4%)**, 43 short of
+the gate; compared with Stage174, it has 32 candidate-only and 16 baseline-only
+correct answers. Its provenance scope is `assistant_only_personal_count`; it
+is not a fresh all-500 run:
+[longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json](data/longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

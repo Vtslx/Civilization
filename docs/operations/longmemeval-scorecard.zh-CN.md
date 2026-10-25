@@ -130,6 +130,9 @@ Stage196 只在显式合计行与至少两个同单位增量分项精确相等�
 Stage203 为实体数量题增加了条件化提示，明确区分对象数与动作次数。固定候选 runner 在 12 题子集上重跑两次，均为 7/12，对照 Stage196 的 5/12（3 题转对、1 题转错）。与 Stage196 其他题目合成后得到 **441/500（88.2%）**，距离门槛还差 44 题。与 Stage174 配对后，31 题仅本轮答对，16 题仅基线答对。成绩卡将范围标记为 `multi-session` / `physical_entity_count`；500 行结果是子集回放组合，不是全量重新生成：
 [longmemeval-stage203-entity-count-subset-top20-2026-10-25.json](data/longmemeval-stage203-entity-count-subset-top20-2026-10-25.json)。
 
+Stage213 为带角色标记的记忆增加个人计数来源校验：assistant 单方陈述不能证明用户拥有某物、有某项订阅或已完成某项动作；关于 assistant 建议和假设金额的题目保留原有路径。针对 Stage203 的一题 NYT 订阅问题进行子集回放时，校验器移除了 assistant 单方声称的订阅，并按两项用户原话支持的订阅重算。500 行合成成绩为 **442/500（88.4%）**，距离门槛还差 43 题；与 Stage174 配对后，32 题仅本轮答对、16 题仅基线答对。成绩卡将回放范围标记为 `assistant_only_personal_count`，不代表全量重新生成：
+[longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json](data/longmemeval-stage213-user-authored-count-subset-top20-2026-10-25.json)。
+
 69.8% 是历史基线，不代表当前代码。只有当两份结果来自同一套 500 题数据集且评测
 协议未变时，成绩差值才有意义。基线的答题器和裁判使用同一个模型，因此存在裁判
 自我偏差。检索精度、证据覆盖、答案准确率和成绩卡完整性是不同指标，不能相互

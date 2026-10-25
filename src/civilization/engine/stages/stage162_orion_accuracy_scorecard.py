@@ -297,6 +297,7 @@ def _load_and_aggregate(
             "temporal_event_resolution_enabled",
             "explicit_total_deduplication_enabled",
             "entity_count_prompt_enabled",
+            "user_authored_count_evidence_validation_enabled",
         )
         if isinstance(metadata.get(key), bool)
     }
