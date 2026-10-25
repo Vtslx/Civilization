@@ -153,6 +153,20 @@ the default stays enabled; keep the CLI switch for repeatable A/B analysis. The
 scorecard records the feature flag in `adapter_features`:
 [longmemeval-stage178-no-count-inventory-top20-2026-10-25.json](data/longmemeval-stage178-no-count-inventory-top20-2026-10-25.json).
 
+Stage184 added an explicit adapter policy that skips the pre-answer count
+inventory for multi-session count questions while retaining direct cited
+answering and count-completeness review. The policy is recorded in the result
+and scorecard metadata, and `--count-inventory-policy all` restores the prior
+route. Replaying all 500 questions with Stage168's fixed ranked Top-200
+candidates scored **429/500 (85.8%)**, 56 answers short of the gate. Against
+Stage174, 28 questions were candidate-only correct and 25 baseline-only
+correct, a net gain of 3 answers (+0.6 percentage points). On the 95
+multi-session count questions, the candidate scored 74/95 versus 70/95 in
+Stage174 (12 gains, 8 losses). Multi-session overall reached 105/133 (78.9%),
+while preference was 24/30 (80.0%). This is a small measured gain; it does not
+establish 97% accuracy. The scorecard is
+[longmemeval-stage184-count-policy-top20-2026-10-25.json](data/longmemeval-stage184-count-policy-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

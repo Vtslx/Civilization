@@ -96,6 +96,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
         metadata_overrides={
             "count_inventory_enabled": False,
             "answer_verification_enabled": True,
+            "count_inventory_policy": "skip_multi_session",
         },
     )
 
@@ -104,6 +105,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
     assert scorecard["candidate"]["adapter_features"] == {
         "count_inventory_enabled": False,
         "answer_verification_enabled": True,
+        "count_inventory_policy": "skip_multi_session",
     }
 
 

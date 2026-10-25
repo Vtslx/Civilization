@@ -292,6 +292,9 @@ def _load_and_aggregate(
         for key in ("count_inventory_enabled", "answer_verification_enabled")
         if isinstance(metadata.get(key), bool)
     }
+    count_inventory_policy = metadata.get("count_inventory_policy")
+    if count_inventory_policy in {"all", "skip_multi_session"}:
+        adapter_features["count_inventory_policy"] = count_inventory_policy
     if adapter_features:
         report["adapter_features"] = adapter_features
     return report, row_index
