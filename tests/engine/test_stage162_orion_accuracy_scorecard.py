@@ -104,6 +104,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
             "entity_count_prompt_enabled": True,
             "user_authored_count_evidence_validation_enabled": True,
             "relative_count_time_window_enabled": True,
+            "immediate_return_event_date_resolution_enabled": True,
             "postprocessor_replay_only": True,
             "postprocessor_source_run": "Stage184",
             "subset_replay_only": True,
@@ -127,6 +128,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
         "entity_count_prompt_enabled": True,
         "user_authored_count_evidence_validation_enabled": True,
         "relative_count_time_window_enabled": True,
+        "immediate_return_event_date_resolution_enabled": True,
     }
     assert scorecard["candidate"]["result_provenance"] == {
         "postprocessor_replay_only": True,

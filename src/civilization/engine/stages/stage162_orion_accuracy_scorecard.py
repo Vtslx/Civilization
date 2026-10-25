@@ -325,6 +325,7 @@ def _load_and_aggregate(
             "entity_count_prompt_enabled",
             "user_authored_count_evidence_validation_enabled",
             "relative_count_time_window_enabled",
+            "immediate_return_event_date_resolution_enabled",
         )
         if isinstance(metadata.get(key), bool)
     }

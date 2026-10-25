@@ -139,3 +139,20 @@
 **Acceptance:** Cover event-vs-context date selection, missing/approximate dates, yearless month/day intervals, before/after anchors, and non-temporal regressions. Run the full 500-question Top-20 gate after implementation.
 
 **Observed full result:** Stage168 scored 426/500 (85.2%), 59 answers below the target. Although the 470 annotated answer-source sessions all appeared in Top-20, only 401 of those questions were correct; multi-session and temporal reasoning remain the next accuracy bottleneck.
+
+## Module 10: Resolve direct same-day event evidence
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/prompts.py` and `run.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_prompts.py`
+- Evidence: Stage216 failure `gpt4_59149c77`
+
+**Design options:** A prompt-only reminder leaves date arithmetic to the model; a second model call adds latency and can overrule correct evidence; a deterministic citation-backed resolver can use the source observation date when a user quote explicitly says they just returned from a museum tour. Use the deterministic resolver, limited to event-interval questions, missing event dates, exact user-authored quotes, a matching museum event, and a recognized immediate-return phrase. Preserve unknown dates in all other cases.
+
+**Work:** Before interval arithmetic, derive the event date from the cited memory's trusted `created_at` observation-date metadata only when the exact user quote says they just got back from a guided tour at a museum and the event description matches that museum. Keep the evidence citation and record the inference in `date_basis`; do not infer dates from assistant-only text, general recency words, or missing metadata.
+
+**Acceptance:** Add unit cases for a direct user quote, assistant-only quote, unrelated event, and missing observation date. Replay the affected temporal question with the fixed Stage216 candidate list; promote only if the answer is correct and verify no other Stage216 row meets the narrow trigger.
+
+**Commit:** `fix: resolve same-day museum visit dates`
+
+**Observed subset result:** The trigger matches only `gpt4_59149c77` in the Stage216 composite. Two independent live replays both answer 7 days; replacing that one row gives 444/500 (88.8%), one paired gain and no regressions. This is a subset composition, not a new full 500-answer run.

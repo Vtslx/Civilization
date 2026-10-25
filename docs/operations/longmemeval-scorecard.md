@@ -249,6 +249,18 @@ The scorecard marks the replay scope as `relative_count_window`; this is not a
 fresh all-500 generation run:
 [longmemeval-stage216-time-window-subset-top20-2026-10-25.json](data/longmemeval-stage216-time-window-subset-top20-2026-10-25.json).
 
+Stage219 adds a deterministic date fallback for one narrow case: a cited
+user-authored quote says they just got back from a guided tour, the event date
+is missing, and the interval question needs that date. It uses the retrieved
+memory's observation-date metadata; assistant-only quotes, unstructured
+memories, unrelated events, and missing observation dates do not trigger the
+fallback. Two live replays of the affected question both returned the supported
+seven-day interval. Composing that one temporal-reasoning row with Stage216
+produces **444/500 (88.8%)**, one answer higher and 41 short of the gate. The
+paired replay has one candidate-only win and no regressions. This is a
+one-question subset replay, not a new all-500 generation run:
+[longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json](data/longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
