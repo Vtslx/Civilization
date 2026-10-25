@@ -76,7 +76,7 @@ def test_stage79_temporal_coverage_spans_session_and_global_tiers() -> None:
         summary="camping trip",
         source="session",
         time_index=1.0,
-        metadata={"observation_date": "2024-03-01"},
+        metadata={"observation_date": "2024-03-01", "source_session_id": "session-1"},
     )
     session.write_cell(
         memory_system="episodic",
@@ -84,7 +84,7 @@ def test_stage79_temporal_coverage_spans_session_and_global_tiers() -> None:
         summary="camping trip",
         source="session",
         time_index=2.0,
-        metadata={"observation_date": "2024-03-01"},
+        metadata={"observation_date": "2024-03-01", "source_session_id": "session-1"},
     )
     global_store.write_cell(
         memory_system="episodic",
@@ -92,15 +92,15 @@ def test_stage79_temporal_coverage_spans_session_and_global_tiers() -> None:
         summary="camping trip",
         source="global",
         time_index=3.0,
-        metadata={"observation_date": "2024-03-02"},
+        metadata={"observation_date": "2024-03-01", "source_session_id": "global-session"},
     )
 
     results = OrionGlobalRetrievalRouter().read(
         session, global_store, query="How many camping trips did I take?", include_global=True, limit=2
     )
 
-    dates = [item.result.cell.metadata["observation_date"] for item in results]
-    assert len(set(dates)) == 2
+    source_sessions = [item.result.cell.metadata["source_session_id"] for item in results]
+    assert len(set(source_sessions)) == 2
     assert {item.tier for item in results} == {"session", "global"}
 
 

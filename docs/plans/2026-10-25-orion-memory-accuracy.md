@@ -84,7 +84,7 @@
 
 **Commit:** `feat: rank conversational memory by speaker provenance`
 
-## Module 6: Temporal source-session coverage
+## Module 6: Temporal date coverage
 
 **Files:**
 - Create: `src/civilization/engine/stages/stage164_orion_temporal_coverage.py`
@@ -97,3 +97,17 @@
 **Acceptance:** Verify date coverage, relevance fallback, latest-first behavior, cross-tier handling, resolved-global policy, and full service regression. Run a full Top-20 scorecard before retaining any accuracy claim.
 
 **Commit:** `feat: diversify temporal memory evidence by date`
+
+## Module 7: Bounded source-session coverage through the benchmark adapter
+
+**Files:**
+- Create: `src/civilization/engine/stages/stage165_orion_source_session_coverage.py`
+- Modify: `stage164_orion_temporal_coverage.py`, `stage73_orion_memory_kernel.py`, and `stage79_orion_global_retrieval.py`
+- Test: `tests/engine/test_stage165_orion_source_session_coverage.py` and the Stage79 integration test
+- Benchmark adapter: persist source-session/pair provenance and preserve Civilization's server order through top-k selection
+
+**Work:** When benchmark cells include a source-session ID, advance a new source conversation by at most two ranks ahead of a nearby repeat for temporal or multi-event queries. Scope session IDs by source user when available. Keep relevance candidate selection and latest/current query behavior intact; retain Stage164 date coverage when source-session metadata is absent.
+
+**Acceptance:** Verify same-date sessions remain represented within the bounded lookahead, rank displacement never exceeds two places, latest-first ordering is unchanged, missing provenance preserves the Stage164 fallback, and session/global fusion respects source-session diversity. Run the fixed 500-question Top-20 scorecard before recording any accuracy gain.
+
+**Commit:** `feat: diversify temporal evidence by source session`

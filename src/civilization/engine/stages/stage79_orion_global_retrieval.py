@@ -9,6 +9,7 @@ from .stage73_orion_memory_kernel import MemoryReadResult, OrionMemoryStore
 from .stage161_orion_relevance_ranking import OrionRelevanceRanker, has_recency_intent, tokenize
 from .stage163_orion_role_aware_ranking import OrionRoleAwareRanker
 from .stage164_orion_temporal_coverage import reorder_for_temporal_coverage
+from .stage165_orion_source_session_coverage import reorder_for_source_session_coverage
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage79_orion_global_retrieval")
@@ -63,6 +64,7 @@ class OrionGlobalRetrievalRouter:
 
         ordered = sorted([*session, *global_results], key=order_key)
         ordered, _ = reorder_for_temporal_coverage(ordered, query)
+        ordered, _ = reorder_for_source_session_coverage(ordered, query)
         return ordered[:limit]
 
 

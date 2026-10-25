@@ -100,7 +100,8 @@ stored outside the source disk to cover disk loss.
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 
 Orion retrieval uses fielded BM25F ranking with bounded priors, explicit
-recency tie-breaking, speaker-aware ranking, and date coverage for temporal
+recency tie-breaking, speaker-aware ranking, and date/source-session coverage
+for temporal
 queries. Its scoring signals, compatibility guarantees, and
 limits are documented in [English](docs/operations/orion-relevance-ranking.md)
 and [简体中文](docs/operations/orion-relevance-ranking.zh-CN.md).

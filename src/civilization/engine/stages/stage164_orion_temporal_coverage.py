@@ -58,7 +58,7 @@ def reorder_for_temporal_coverage(results: Iterable[Any], query: str) -> tuple[l
     """
 
     ordered = list(results)
-    if len(ordered) < 2 or not _needs_temporal_coverage(query):
+    if len(ordered) < 2 or not is_temporal_coverage_query(query):
         return ordered, False
 
     first_per_date: list[Any] = []
@@ -75,7 +75,9 @@ def reorder_for_temporal_coverage(results: Iterable[Any], query: str) -> tuple[l
     return [*first_per_date, *repeats], len(seen_dates) > 1
 
 
-def _needs_temporal_coverage(query: str) -> bool:
+def is_temporal_coverage_query(query: str) -> bool:
+    """Return whether a query benefits from multi-event evidence coverage."""
+
     text = query.casefold()
     words = set(_WORD_RE.findall(text))
     if words & _LATEST_MARKERS or any(marker in text for marker in _CJK_LATEST_MARKERS):

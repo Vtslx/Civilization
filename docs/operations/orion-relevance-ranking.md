@@ -34,10 +34,14 @@ cell or removes its original speaker text.
 
 For temporal, sequence, or multi-event questions, the reader first chooses the
 BM25F-ranked candidate set and then places the best cell from each observation
-date before same-date repeats. When metadata has no observation date, it falls
-back to the cell timestamp. Queries asking for the latest/current value retain
-newest-first ranking instead of date diversification. Session/global fusion
-applies this rule after the shared-corpus ranking.
+date before same-date repeats. When cells have `source_session_id` metadata, it
+can advance an unseen source conversation by at most two ranks ahead of a
+nearby repeat; the session key is scoped by `source_user_id` when available.
+Cells without source-session metadata retain their relative order, and dates
+without metadata fall back to the cell timestamp. Queries asking for the
+latest/current value keep newest-first ranking instead of date or session
+diversification. Session/global fusion applies both coverage passes after the
+shared-corpus ranking.
 
 The final score includes the BM25F relevance score, a small exact-phrase bonus,
 bounded confidence and importance priors (at most 0.05 each), and the existing
