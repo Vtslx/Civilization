@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 import json
+import math
 from pathlib import Path
 
 from .stage73_orion_memory_kernel import MemoryReadResult, OrionMemoryStore
+from .stage161_orion_relevance_ranking import OrionRelevanceRanker, has_recency_intent, tokenize
 
 
 DEFAULT_OUTPUT_DIR = Path("artifacts/civilization/stage79_orion_global_retrieval")
@@ -20,10 +22,44 @@ class OrionTieredReadResult:
 
 
 class OrionGlobalRetrievalRouter:
+    def __init__(self, *, ranker: OrionRelevanceRanker | None = None) -> None:
+        self._ranker = ranker if ranker is not None else OrionRelevanceRanker()
+
     def read(self, session_store: OrionMemoryStore, global_store: OrionMemoryStore, *, query: str, include_global: bool = False, limit: int = 4) -> list[OrionTieredReadResult]:
-        session = [OrionTieredReadResult("session", item) for item in session_store.read(query, limit=limit)]
-        global_results = [OrionTieredReadResult("global", item) for item in global_store.read(query, limit=limit)] if include_global else []
-        ordered = sorted([*session, *global_results], key=lambda item: (item.tier != "session", -item.result.score, item.result.cell.cell_id))
+        if limit < 1:
+            raise ValueError("limit must be >= 1")
+        session_store.expire_working_memory()
+        session_cells = tuple(cell for cell in session_store.cells.values() if cell.decay_state == "active")
+        if include_global:
+            global_store.expire_working_memory()
+            global_cells = tuple(cell for cell in global_store.cells.values() if cell.decay_state == "active")
+        else:
+            global_cells = ()
+        session = [
+            OrionTieredReadResult("session", item)
+            for item in session_store.read(query, limit=limit, ranking_context=global_cells, ranker=self._ranker)
+        ]
+        global_results = (
+            [
+                OrionTieredReadResult("global", item)
+                for item in global_store.read(query, limit=limit, ranking_context=session_cells, ranker=self._ranker)
+            ]
+            if include_global
+            else []
+        )
+        recent_first = has_recency_intent(query, tokenize(query))
+
+        def order_key(item: OrionTieredReadResult) -> tuple[float, float, bool, str]:
+            try:
+                time_index = float(item.result.cell.time_index)
+            except (TypeError, ValueError):
+                time_index = 0.0
+            if not math.isfinite(time_index):
+                time_index = 0.0
+            temporal_key = -time_index if recent_first else time_index
+            return (-item.result.score, temporal_key, item.tier != "session", item.result.cell.cell_id)
+
+        ordered = sorted([*session, *global_results], key=order_key)
         return ordered[:limit]
 
 

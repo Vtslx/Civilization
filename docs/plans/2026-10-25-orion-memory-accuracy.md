@@ -35,7 +35,7 @@
 **Files:**
 - Modify: `src/civilization/engine/stages/stage79_orion_global_retrieval.py`
 - Test: `tests/engine/test_stage79_orion_global_retrieval.py`
-- Document: `docs/versions/v0.00.07-helix/README.md` and its Chinese counterpart
+- Document: `docs/operations/orion-relevance-ranking.md` and its Chinese counterpart
 
 **Work:** Compare session and opted-in global results on the same relevance scale, with tier priority only as a deterministic tie-break. Keep global retrieval opt-in, session IDs isolated, resolved-global policy enforced, and all retrieval choices auditable.
 

@@ -5,7 +5,7 @@ from enum import StrEnum
 import json
 from pathlib import Path
 import time
-from typing import Any
+from typing import Any, Iterable
 
 from .stage161_orion_relevance_ranking import OrionRelevanceRanker, tokenize
 
@@ -287,6 +287,8 @@ class OrionMemoryStore:
         source: str | None = None,
         include_expired: bool = False,
         limit: int = 5,
+        ranking_context: Iterable[MemoryCell] = (),
+        ranker: OrionRelevanceRanker | None = None,
     ) -> list[MemoryReadResult]:
         if limit < 1:
             raise ValueError("limit must be >= 1")
@@ -300,7 +302,13 @@ class OrionMemoryStore:
             and (source is None or cell.source == source)
             and (include_expired or cell.decay_state == "active")
         ]
-        ranked = self._ranker.rank(query, candidates, link_score_for=self._link_score)
+        effective_ranker = ranker if ranker is not None else self._ranker
+        ranked = effective_ranker.rank(
+            query,
+            candidates,
+            link_score_for=lambda cell: self._link_score(cell.cell_id),
+            ranking_context=ranking_context,
+        )
         results = [
             MemoryReadResult(
                 cell=item.cell,

@@ -43,7 +43,8 @@ def tokenize(text: str) -> tuple[str, ...]:
     return tuple(output)
 
 
-def _has_recency_intent(query: str, query_tokens: tuple[str, ...]) -> bool:
+def has_recency_intent(query: str, query_tokens: tuple[str, ...] | None = None) -> bool:
+    query_tokens = query_tokens if query_tokens is not None else tokenize(query)
     return bool(_RECENCY_MARKERS.intersection(query_tokens)) or any(
         marker in query.casefold() for marker in _CJK_RECENCY_MARKERS
     )
@@ -86,17 +87,25 @@ class OrionRelevanceRanker:
         query: str,
         cells: Iterable[Any],
         *,
-        link_score_for: Callable[[str], float],
+        link_score_for: Callable[[Any], float],
+        ranking_context: Iterable[Any] = (),
     ) -> list[RankedMemoryCell]:
-        documents = [self._index_cell(cell) for cell in cells]
-        if not documents:
+        candidates = [self._index_cell(cell) for cell in cells]
+        if not candidates:
             return []
+        candidate_object_ids = {id(document.cell) for document in candidates}
+        context = [
+            self._index_cell(cell)
+            for cell in ranking_context
+            if id(cell) not in candidate_object_ids
+        ]
+        documents = [*candidates, *context]
 
         query_tokens = tokenize(query)
         query_terms = tuple(dict.fromkeys(term for term in query_tokens if term not in _STOPWORDS))
         if not query_terms:
             query_terms = tuple(dict.fromkeys(query_tokens))
-        recency_intent = _has_recency_intent(query, query_tokens)
+        recency_intent = has_recency_intent(query, query_tokens)
         document_count = len(documents)
         field_averages = {
             name: max(1.0, sum(len(document.fields[name]) for document in documents) / document_count)
@@ -107,14 +116,14 @@ class OrionRelevanceRanker:
             document_frequency.update(document.all_terms)
 
         ranked: list[RankedMemoryCell] = []
-        for document in documents:
+        for document in candidates:
             matched_terms = tuple(sorted(set(query_tokens) & document.all_terms))
             bm25f = self._bm25f_score(document, query_terms, document_count, document_frequency, field_averages)
             phrase = self._phrase_match(query_terms, document) if len(query_terms) > 1 else False
             phrase_component = self.phrase_bonus if phrase else 0.0
             importance = self._bounded_prior(getattr(document.cell, "importance", 0.0)) * 0.05
             confidence = self._bounded_prior(getattr(document.cell, "confidence", 0.0)) * 0.05
-            link_score = self._nonnegative(link_score_for(str(document.cell.cell_id)))
+            link_score = self._nonnegative(link_score_for(document.cell))
             score = bm25f + phrase_component + importance + confidence + link_score
             ranked.append(
                 RankedMemoryCell(
