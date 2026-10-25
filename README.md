@@ -96,6 +96,8 @@ sessions. Details, guarantees per failure mode, and the knobs:
 `civilization backup`, `civilization verify-backup`, and `civilization restore`
 provide an offline, checksummed memory backup path; a verified copy must be
 stored outside the source disk to cover disk loss.
+`civilization scorecard` checks full LongMemEval answerer results against the
+485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 
 Orion retrieval uses fielded BM25F ranking with bounded priors and explicit
 recency tie-breaking. Its scoring signals, compatibility guarantees, and

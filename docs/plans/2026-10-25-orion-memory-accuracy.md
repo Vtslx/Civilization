@@ -59,9 +59,10 @@
 ## Module 4: Full-score evaluation and release gate
 
 **Files:**
-- Create or extend the benchmark runner under `src/civilization/engine/stages/`
-- Test: deterministic metric calculations and failure-row handling
-- Document: the measured baseline, exact run protocol, category results, and remaining limits
+- Create: `src/civilization/engine/stages/stage162_orion_accuracy_scorecard.py`
+- Modify: `src/civilization/cli.py`
+- Test: `tests/engine/test_stage162_orion_accuracy_scorecard.py`
+- Document: `docs/operations/longmemeval-scorecard.md` and its Chinese counterpart
 
 **Work:** Add an auditable scorecard for full-data runs that separates answer accuracy from evidence recall, ranking quality, abstention, latency, and service errors. Compare each release candidate to the fixed 500-question baseline without changing prompt, model, data, or cutoff mid-run.
 

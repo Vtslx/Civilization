@@ -525,6 +525,30 @@ def _command_restore_backup(args: argparse.Namespace) -> int:
     return 0
 
 
+def _command_scorecard(args: argparse.Namespace) -> int:
+    from .engine.stages.stage162_orion_accuracy_scorecard import build_longmemeval_scorecard, write_scorecard
+
+    try:
+        report = build_longmemeval_scorecard(
+            args.results,
+            baseline_file=args.baseline,
+            dataset_file=args.dataset_file,
+            expected_questions=args.expected_questions,
+            cutoff=args.cutoff,
+            target_accuracy=args.target_accuracy,
+        )
+        if args.output:
+            output = write_scorecard(report, args.output)
+        else:
+            output = None
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"LongMemEval scorecard failed: {error}") from error
+    if output is not None:
+        print(f"scorecard saved: {output.resolve()}")
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
 # --------------------------------------------------------------------------- #
 # persist-sidecar
 # --------------------------------------------------------------------------- #
@@ -730,6 +754,24 @@ def build_parser() -> argparse.ArgumentParser:
     restore_backup.add_argument("--destination", required=True, help="new state directory; must not already exist")
     restore_backup.add_argument("--json", action="store_true", help="machine-readable output")
     restore_backup.set_defaults(func=_command_restore_backup)
+
+    scorecard = subparsers.add_parser(
+        "scorecard",
+        help="validate and summarize a full LongMemEval answerer result",
+    )
+    scorecard.add_argument("--results", required=True, help="LongMemEval benchmark result JSON")
+    scorecard.add_argument("--baseline", default=None, help="optional result JSON for a paired comparison")
+    scorecard.add_argument("--dataset-file", default=None, help="the exact LongMemEval dataset JSON used for the run")
+    scorecard.add_argument("--expected-questions", type=int, default=500, help="required complete question count")
+    scorecard.add_argument(
+        "--cutoff",
+        choices=["top_20", "top_200"],
+        default="top_20",
+        help="top_20 is the release gate; top_200 is diagnostic only",
+    )
+    scorecard.add_argument("--target-accuracy", type=float, default=0.97, help="release target in [0, 1]")
+    scorecard.add_argument("--output", default=None, help="optional JSON scorecard output path")
+    scorecard.set_defaults(func=_command_scorecard)
 
     sidecar = subparsers.add_parser(
         "persist-sidecar",
