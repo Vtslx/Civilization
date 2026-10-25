@@ -167,6 +167,25 @@ while preference was 24/30 (80.0%). This is a small measured gain; it does not
 establish 97% accuracy. The scorecard is
 [longmemeval-stage184-count-policy-top20-2026-10-25.json](data/longmemeval-stage184-count-policy-top20-2026-10-25.json).
 
+Stage188 adds deterministic temporal post-processing for event-to-event
+intervals and two-option event-order questions when both cited dates are
+usable. This is a **frozen-response postprocessor replay** over Stage184's 500
+saved answer records and the same ranked Top-200 candidates; changed answers
+were judged again, while unaffected records were retained. It scored
+**434/500 (86.8%)**, 51 answers short of the gate. Compared with Stage174, 29
+questions were candidate-only correct and 21 baseline-only correct, a net gain
+of 8. Temporal reasoning reached 111/133, five above Stage184. The scorecard
+marks `result_provenance.postprocessor_replay_only=true` so this is not mistaken
+for a fresh all-500 answer-generation run:
+[longmemeval-stage188-temporal-postprocessor-top20-2026-10-25.json](data/longmemeval-stage188-temporal-postprocessor-top20-2026-10-25.json).
+
+A fresh live runner replay of the 133 temporal questions scored 105/133, then
+106/133 on a second run, versus 106/133 for Stage184. Those runs show model
+answer and judge variation; they did not reproduce the full five-answer lift
+from the frozen-response ablation. Treat Stage188 as evidence for the
+deterministic postprocessor on fixed outputs, not as proof of a fresh-run
+accuracy gain or a 97% result.
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

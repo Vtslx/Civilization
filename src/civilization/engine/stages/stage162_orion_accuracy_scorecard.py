@@ -289,7 +289,11 @@ def _load_and_aggregate(
     }
     adapter_features = {
         key: metadata[key]
-        for key in ("count_inventory_enabled", "answer_verification_enabled")
+        for key in (
+            "count_inventory_enabled",
+            "answer_verification_enabled",
+            "temporal_event_resolution_enabled",
+        )
         if isinstance(metadata.get(key), bool)
     }
     count_inventory_policy = metadata.get("count_inventory_policy")
@@ -297,6 +301,14 @@ def _load_and_aggregate(
         adapter_features["count_inventory_policy"] = count_inventory_policy
     if adapter_features:
         report["adapter_features"] = adapter_features
+    result_provenance: dict[str, Any] = {}
+    if isinstance(metadata.get("postprocessor_replay_only"), bool):
+        result_provenance["postprocessor_replay_only"] = metadata["postprocessor_replay_only"]
+    source_run = metadata.get("postprocessor_source_run")
+    if isinstance(source_run, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", source_run):
+        result_provenance["postprocessor_source_run"] = source_run
+    if result_provenance:
+        report["result_provenance"] = result_provenance
     return report, row_index
 
 
