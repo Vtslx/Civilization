@@ -293,6 +293,7 @@ def _load_and_aggregate(
             "count_inventory_enabled",
             "answer_verification_enabled",
             "preference_verification_enabled",
+            "count_completeness_repair_enabled",
             "temporal_event_resolution_enabled",
             "explicit_total_deduplication_enabled",
             "entity_count_prompt_enabled",
