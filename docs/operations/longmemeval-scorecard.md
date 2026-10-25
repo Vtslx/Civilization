@@ -129,6 +129,18 @@ Per-type scores were knowledge-update 67/78 (85.9%), multi-session 100/133
 multi-session remains the largest gap. See
 [longmemeval-stage171-count-inventory-top20-2026-10-25.json](data/longmemeval-stage171-count-inventory-top20-2026-10-25.json).
 
+Stage174 added an independent citation-backed answer check for non-numeric
+multi-session, knowledge-update, and temporal questions. The full run scored
+**426/500 (85.2%)**, still 59 answers short of the gate. It matched Stage168's
+overall score: 24 questions changed from wrong to right and 24 from right to
+wrong. The verifier revised 92 answers, of which 74 were judged correct, but
+the net paired gain over Stage168 was zero. Temporal-reasoning reached 106/133
+(79.7%), knowledge-update 71/78 (91.0%), and multi-session remained 102/133
+(76.7%). All 470 answer-source questions still had a source session in Top-20;
+402 were answered correctly. This check improves some cited answers but does
+not establish a 97% result. See
+[longmemeval-stage174-answer-verification-top20-2026-10-25.json](data/longmemeval-stage174-answer-verification-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
