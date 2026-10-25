@@ -292,6 +292,7 @@ def _load_and_aggregate(
         for key in (
             "count_inventory_enabled",
             "answer_verification_enabled",
+            "preference_verification_enabled",
             "temporal_event_resolution_enabled",
         )
         if isinstance(metadata.get(key), bool)
@@ -307,6 +308,21 @@ def _load_and_aggregate(
     source_run = metadata.get("postprocessor_source_run")
     if isinstance(source_run, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", source_run):
         result_provenance["postprocessor_source_run"] = source_run
+    if isinstance(metadata.get("subset_replay_only"), bool):
+        result_provenance["subset_replay_only"] = metadata["subset_replay_only"]
+    replay_question_type = metadata.get("subset_replay_question_type")
+    if replay_question_type in {
+        "temporal-reasoning",
+        "multi-session",
+        "knowledge-update",
+        "single-session-user",
+        "single-session-assistant",
+        "single-session-preference",
+    }:
+        result_provenance["subset_replay_question_type"] = replay_question_type
+    subset_source_run = metadata.get("subset_replay_source_run")
+    if isinstance(subset_source_run, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", subset_source_run):
+        result_provenance["subset_replay_source_run"] = subset_source_run
     if result_provenance:
         report["result_provenance"] = result_provenance
     return report, row_index

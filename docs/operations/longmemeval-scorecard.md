@@ -186,6 +186,18 @@ from the frozen-response ablation. Treat Stage188 as evidence for the
 deterministic postprocessor on fixed outputs, not as proof of a fresh-run
 accuracy gain or a 97% result.
 
+Stage195 adds an independent preference check that uses cited user preferences
+to tailor advice and retries once when its citations fail validation. This is a
+**subset replay composition**: the runner re-evaluated the 30
+single-session-preference questions from Stage188 while retaining its other 470
+rows. It scored **437/500 (87.4%)**, 48 answers short of the gate. Against
+Stage174, 32 questions were candidate-only correct and 21 baseline-only
+correct. Preference reached 27/30 (90.0%). Two live preference replays scored
+25/30 and 27/30, compared with Stage188's 24/30; those samples show some model
+variation. The scorecard records the preference flag and subset provenance,
+and does not claim a new all-500 generation run:
+[longmemeval-stage195-preference-subset-replay-top20-2026-10-25.json](data/longmemeval-stage195-preference-subset-replay-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

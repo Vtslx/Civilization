@@ -96,10 +96,14 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
         metadata_overrides={
             "count_inventory_enabled": False,
             "answer_verification_enabled": True,
+            "preference_verification_enabled": True,
             "count_inventory_policy": "skip_multi_session",
             "temporal_event_resolution_enabled": True,
             "postprocessor_replay_only": True,
             "postprocessor_source_run": "Stage184",
+            "subset_replay_only": True,
+            "subset_replay_question_type": "single-session-preference",
+            "subset_replay_source_run": "Stage188",
         },
     )
 
@@ -108,12 +112,16 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
     assert scorecard["candidate"]["adapter_features"] == {
         "count_inventory_enabled": False,
         "answer_verification_enabled": True,
+        "preference_verification_enabled": True,
         "count_inventory_policy": "skip_multi_session",
         "temporal_event_resolution_enabled": True,
     }
     assert scorecard["candidate"]["result_provenance"] == {
         "postprocessor_replay_only": True,
         "postprocessor_source_run": "Stage184",
+        "subset_replay_only": True,
+        "subset_replay_question_type": "single-session-preference",
+        "subset_replay_source_run": "Stage188",
     }
 
 
