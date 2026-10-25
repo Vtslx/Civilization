@@ -75,6 +75,21 @@ The same role-aware build scored **454/500 (90.8%)** in the Top-200 diagnostic,
 only 3 answers above Stage162 Top-200 and still 31 below 485; see
 [longmemeval-stage163-top200-2026-10-25.json](data/longmemeval-stage163-top200-2026-10-25.json).
 
+The Stage165 bounded source-session retriever with LLM Top-20 reranking and
+structured, cited answers scored **416/500 (83.2%)** on the full Top-20 run.
+The 97% gate was not met; the candidate is 69 correct answers short. Per-type
+results were knowledge-update 70/78 (89.7%), multi-session 105/133 (78.9%),
+single-session-assistant 54/56 (96.4%), single-session-preference 27/30 (90.0%),
+single-session-user 67/70 (95.7%), and temporal-reasoning 93/133 (69.9%). The
+retrieval returned an answer-source session in all 470 annotated Top-20 cases,
+but the answerer still missed 79 of them. Session presence is not proof that
+every event or exact fact needed for a multi-event answer was selected.
+
+This candidate used an LLM reranker, an evidence-JSON answer contract, and a
+count-completeness review; it is not a prompt-identical paired comparison with
+Stage163. The candidate-only scorecard, including dataset and result hashes, is
+[longmemeval-stage165-reranked-top20-2026-10-25.json](data/longmemeval-stage165-reranked-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

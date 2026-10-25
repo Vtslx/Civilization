@@ -111,3 +111,16 @@
 **Acceptance:** Verify same-date sessions remain represented within the bounded lookahead, rank displacement never exceeds two places, latest-first ordering is unchanged, missing provenance preserves the Stage164 fallback, and session/global fusion respects source-session diversity. Run the fixed 500-question Top-20 scorecard before recording any accuracy gain.
 
 **Commit:** `feat: diversify temporal evidence by source session`
+
+## Module 8: Temporal answer completeness
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/prompts.py` and `run.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_prompts.py`
+- Evidence: `docs/operations/data/longmemeval-stage165-reranked-top20-2026-10-25.json`
+
+**Work:** The full reranked run found source-session evidence in 470/470 answerable Top-20 cases, while temporal-reasoning accuracy remained 93/133 (69.9%). Improve temporal event extraction so the answerer distinguishes event dates from observation dates, resolves before/after relations, and computes intervals from the requested reference points. Preserve selected-memory citations and count audit; use explicit fallback behavior when event dates are absent or conflicting.
+
+**Acceptance:** Add matched fixtures for event-relative intervals, inclusive windows, update-vs-history questions, and ambiguous/missing dates. Re-run all 500 LongMemEval questions at Top-20 and record a new scorecard; the target remains 485/500.
+
+**Commit:** `feat: improve temporal evidence reasoning`
