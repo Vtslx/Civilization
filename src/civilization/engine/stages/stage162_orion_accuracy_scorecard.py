@@ -137,6 +137,32 @@ def build_longmemeval_scorecard(
                 * 100,
                 2,
             ),
+            "answer_source_pair_recall_at_20_delta_percentage_points": (
+                round(
+                    (
+                        candidate["evidence_retrieval"]["answer_source_pair_recall_at_20"]
+                        - baseline["evidence_retrieval"]["answer_source_pair_recall_at_20"]
+                    )
+                    * 100,
+                    2,
+                )
+                if candidate["evidence_retrieval"]["answer_source_pair_recall_at_20"] is not None
+                and baseline["evidence_retrieval"]["answer_source_pair_recall_at_20"] is not None
+                else None
+            ),
+            "answer_source_pair_recall_at_200_delta_percentage_points": (
+                round(
+                    (
+                        candidate["evidence_retrieval"]["answer_source_pair_recall_at_200"]
+                        - baseline["evidence_retrieval"]["answer_source_pair_recall_at_200"]
+                    )
+                    * 100,
+                    2,
+                )
+                if candidate["evidence_retrieval"]["answer_source_pair_recall_at_200"] is not None
+                and baseline["evidence_retrieval"]["answer_source_pair_recall_at_200"] is not None
+                else None
+            ),
         }
     return report
 
@@ -394,6 +420,17 @@ def _evidence_retrieval_metrics(
             "answer_errors_with_source_in_top_20": None,
             "answer_accuracy_given_source_in_top_20": None,
             "mean_reciprocal_rank_at_200": None,
+            "answer_source_pair_metadata_available": False,
+            "answer_source_pair_questions": None,
+            "answer_source_pairs": None,
+            "answer_source_pairs_in_top_20": None,
+            "answer_source_pair_recall_at_20": None,
+            "answer_source_pairs_in_top_200": None,
+            "answer_source_pair_recall_at_200": None,
+            "questions_with_all_answer_pairs_in_top_20": None,
+            "questions_with_all_answer_pairs_in_top_200": None,
+            "answers_correct_with_all_answer_pairs_in_top_20": None,
+            "answers_wrong_with_all_answer_pairs_in_top_20": None,
             "question_types": {},
         }
     if result_rows.keys() != dataset_rows.keys():
@@ -403,6 +440,19 @@ def _evidence_retrieval_metrics(
     source_questions = hit20 = hit200 = 0
     source_hit_correct20 = source_hit_error20 = 0
     reciprocal_rank_sum = 0.0
+    pair_metadata_available = any(
+        isinstance(result.get("retrieval"), dict)
+        and any(
+            isinstance(retrieved, dict)
+            and "source_session_id" in retrieved
+            and "source_pair_index" in retrieved
+            for retrieved in result["retrieval"].get("search_results", [])
+        )
+        for result in result_rows.values()
+    )
+    answer_pair_questions = answer_pairs = pair_hit20 = pair_hit200 = 0
+    questions_all_pairs20 = questions_all_pairs200 = 0
+    correct_all_pairs20 = error_all_pairs20 = 0
     for question_id, result in result_rows.items():
         source_row = dataset_rows[question_id]
         answer_session_ids = result["answer_session_ids"]
@@ -416,9 +466,51 @@ def _evidence_retrieval_metrics(
         category = result["question_type"]
         metrics = type_counts.setdefault(
             category,
-            {"questions": 0, "hit_at_20": 0, "hit_at_200": 0, "hit_correct_at_20": 0, "hit_error_at_20": 0, "rr_sum": 0.0},
+            {
+                "questions": 0,
+                "hit_at_20": 0,
+                "hit_at_200": 0,
+                "hit_correct_at_20": 0,
+                "hit_error_at_20": 0,
+                "rr_sum": 0.0,
+                "answer_pair_questions": 0,
+                "answer_pairs": 0,
+                "pair_hit_at_20": 0,
+                "pair_hit_at_200": 0,
+                "all_pairs_at_20": 0,
+                "all_pairs_at_200": 0,
+                "correct_all_pairs_at_20": 0,
+                "error_all_pairs_at_20": 0,
+            },
         )
         metrics["questions"] += 1
+        required_pairs = _answer_source_memory_pairs(source_row, set(answer_session_ids))
+        if required_pairs:
+            answer_pair_questions += 1
+            answer_pairs += len(required_pairs)
+            metrics["answer_pair_questions"] += 1
+            metrics["answer_pairs"] += len(required_pairs)
+            if pair_metadata_available:
+                present20 = _retrieved_pair_keys(retrieval_results[:20])
+                present200 = _retrieved_pair_keys(retrieval_results[:200])
+                hit_pairs20 = len(required_pairs & present20)
+                hit_pairs200 = len(required_pairs & present200)
+                pair_hit20 += hit_pairs20
+                pair_hit200 += hit_pairs200
+                metrics["pair_hit_at_20"] += hit_pairs20
+                metrics["pair_hit_at_200"] += hit_pairs200
+                if required_pairs.issubset(present20):
+                    questions_all_pairs20 += 1
+                    metrics["all_pairs_at_20"] += 1
+                    if result["score"] >= 1.0:
+                        correct_all_pairs20 += 1
+                        metrics["correct_all_pairs_at_20"] += 1
+                    else:
+                        error_all_pairs20 += 1
+                        metrics["error_all_pairs_at_20"] += 1
+                if required_pairs.issubset(present200):
+                    questions_all_pairs200 += 1
+                    metrics["all_pairs_at_200"] += 1
         source_rank = None
         for rank, retrieved in enumerate(retrieval_results[:200], start=1):
             memory = retrieved.get("memory") if isinstance(retrieved, dict) else None
@@ -456,6 +548,24 @@ def _evidence_retrieval_metrics(
                 else None
             ),
             "mean_reciprocal_rank_at_200": round(float(metrics["rr_sum"]) / int(metrics["questions"]), 6),
+            "answer_source_pair_questions": int(metrics["answer_pair_questions"]),
+            "answer_source_pairs": int(metrics["answer_pairs"]),
+            "answer_source_pairs_in_top_20": int(metrics["pair_hit_at_20"]) if pair_metadata_available else None,
+            "answer_source_pair_recall_at_20": (
+                round(int(metrics["pair_hit_at_20"]) / int(metrics["answer_pairs"]), 6)
+                if pair_metadata_available and metrics["answer_pairs"]
+                else None
+            ),
+            "answer_source_pairs_in_top_200": int(metrics["pair_hit_at_200"]) if pair_metadata_available else None,
+            "answer_source_pair_recall_at_200": (
+                round(int(metrics["pair_hit_at_200"]) / int(metrics["answer_pairs"]), 6)
+                if pair_metadata_available and metrics["answer_pairs"]
+                else None
+            ),
+            "questions_with_all_answer_pairs_in_top_20": int(metrics["all_pairs_at_20"]) if pair_metadata_available else None,
+            "questions_with_all_answer_pairs_in_top_200": int(metrics["all_pairs_at_200"]) if pair_metadata_available else None,
+            "answers_correct_with_all_answer_pairs_in_top_20": int(metrics["correct_all_pairs_at_20"]) if pair_metadata_available else None,
+            "answers_wrong_with_all_answer_pairs_in_top_20": int(metrics["error_all_pairs_at_20"]) if pair_metadata_available else None,
         }
         for name, metrics in sorted(type_counts.items())
     }
@@ -473,6 +583,17 @@ def _evidence_retrieval_metrics(
             round(source_hit_correct20 / hit20, 6) if hit20 else None
         ),
         "mean_reciprocal_rank_at_200": round(reciprocal_rank_sum / source_questions, 6) if source_questions else None,
+        "answer_source_pair_metadata_available": pair_metadata_available,
+        "answer_source_pair_questions": answer_pair_questions if pair_metadata_available else None,
+        "answer_source_pairs": answer_pairs if pair_metadata_available else None,
+        "answer_source_pairs_in_top_20": pair_hit20 if pair_metadata_available else None,
+        "answer_source_pair_recall_at_20": round(pair_hit20 / answer_pairs, 6) if pair_metadata_available and answer_pairs else None,
+        "answer_source_pairs_in_top_200": pair_hit200 if pair_metadata_available else None,
+        "answer_source_pair_recall_at_200": round(pair_hit200 / answer_pairs, 6) if pair_metadata_available and answer_pairs else None,
+        "questions_with_all_answer_pairs_in_top_20": questions_all_pairs20 if pair_metadata_available else None,
+        "questions_with_all_answer_pairs_in_top_200": questions_all_pairs200 if pair_metadata_available else None,
+        "answers_correct_with_all_answer_pairs_in_top_20": correct_all_pairs20 if pair_metadata_available else None,
+        "answers_wrong_with_all_answer_pairs_in_top_20": error_all_pairs20 if pair_metadata_available else None,
         "question_types": per_type,
     }
 
@@ -506,6 +627,39 @@ def _answer_source_memory_chunks(question: dict[str, Any], answer_session_ids: s
             if content:
                 chunks.add(_normalize_memory_text(content))
     return chunks
+
+
+def _answer_source_memory_pairs(question: dict[str, Any], answer_session_ids: set[Any]) -> set[tuple[str, int]]:
+    session_ids = question.get("haystack_session_ids")
+    sessions = question.get("haystack_sessions")
+    if not isinstance(session_ids, list) or not isinstance(sessions, list):
+        raise ScorecardError("source dataset row is missing conversation sessions")
+    if len(session_ids) != len(sessions):
+        raise ScorecardError("source dataset session IDs and conversations have different lengths")
+
+    answer_pairs: set[tuple[str, int]] = set()
+    for session_id, session in zip(session_ids, sessions, strict=True):
+        if session_id not in answer_session_ids or not isinstance(session, list):
+            continue
+        for offset in range(0, len(session), 2):
+            pair = session[offset : offset + 2]
+            if any(isinstance(message, dict) and bool(message.get("has_answer")) for message in pair):
+                answer_pairs.add((str(session_id), offset // 2))
+    return answer_pairs
+
+
+def _retrieved_pair_keys(retrieval_results: list[Any]) -> set[tuple[str, int]]:
+    pairs: set[tuple[str, int]] = set()
+    for item in retrieval_results:
+        if not isinstance(item, dict):
+            continue
+        session_id = item.get("source_session_id")
+        pair_index = item.get("source_pair_index")
+        if isinstance(pair_index, str) and pair_index.isdigit():
+            pair_index = int(pair_index)
+        if isinstance(session_id, str) and isinstance(pair_index, int):
+            pairs.add((session_id, pair_index))
+    return pairs
 
 
 def _observation_date(date_text: Any) -> str | None:

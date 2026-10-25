@@ -176,6 +176,42 @@ def test_stage162_pair_compares_only_identical_protocols(tmp_path: Path) -> None
     assert report["candidate"]["evidence_retrieval"]["answer_accuracy_given_source_in_top_20"] == pytest.approx(2 / 3)
 
 
+def test_stage162_reports_answer_pair_recall_below_session_recall(tmp_path: Path) -> None:
+    result = _result(tmp_path / "pairs.json", [1.0, 0.0], question_ids=["q-0", "q-1"])
+    dataset_path = _dataset(tmp_path / "pairs-dataset.json", ["q-0", "q-1"])
+    result_data = json.loads(result.read_text())
+    for index, row in enumerate(result_data["evaluations"]):
+        row["retrieval"]["search_results"][0]["source_session_id"] = f"source-{index}"
+        row["retrieval"]["search_results"][0]["source_pair_index"] = 1 if index == 0 else 0
+    result.write_text(json.dumps(result_data), encoding="utf-8")
+
+    dataset_data = json.loads(dataset_path.read_text())
+    dataset_data[0]["haystack_sessions"][0].extend(
+        [
+            {"role": "user", "content": "unrelated second pair", "has_answer": False},
+            {"role": "assistant", "content": "not answer evidence"},
+        ]
+    )
+    dataset_path.write_text(json.dumps(dataset_data), encoding="utf-8")
+
+    report = build_longmemeval_scorecard(
+        result,
+        dataset_file=dataset_path,
+        expected_questions=2,
+    )
+
+    retrieval = report["candidate"]["evidence_retrieval"]
+    assert retrieval["answer_source_in_top_20"] == 2
+    assert retrieval["answer_source_pair_metadata_available"] is True
+    assert retrieval["answer_source_pair_questions"] == 2
+    assert retrieval["answer_source_pairs"] == 2
+    assert retrieval["answer_source_pairs_in_top_20"] == 1
+    assert retrieval["answer_source_pair_recall_at_20"] == 0.5
+    assert retrieval["questions_with_all_answer_pairs_in_top_20"] == 1
+    assert retrieval["answers_correct_with_all_answer_pairs_in_top_20"] == 0
+    assert retrieval["answers_wrong_with_all_answer_pairs_in_top_20"] == 1
+
+
 @pytest.mark.parametrize(
     "metadata_overrides, expected_error",
     [

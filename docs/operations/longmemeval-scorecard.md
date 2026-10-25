@@ -14,11 +14,12 @@ provider, `top_k=200`, and cutoff list. The result metadata must certify
 The 97% target means at least 485 fully correct answers out of 500. The scorecard
 reports both strict correct-answer accuracy and mean judge score, plus each of
 the six question types, paired wins/losses, search latency, returned-result
-counts, explicit API-error rows, and exact source-session chunk recall at Top-20
-and Top-200 with MRR@200. Source-session coverage is a diagnostic derived by
-matching the benchmark's answer-session IDs to the conversation chunks returned
-by Civilization; it is not the answerer accuracy metric. A partial score does
-not count as a fully correct answer for the 485-answer gate.
+counts, explicit API-error rows, exact source-session chunk recall at Top-20 and
+Top-200 with MRR@200, and answer-marked pair recall when the dataset provides
+pair labels. Session recall only proves at least one chunk from a source
+session was retrieved; pair recall checks whether the chunks marked as
+containing answers were retrieved. Neither is the answerer accuracy metric. A
+partial score does not count as a fully correct answer for the 485-answer gate.
 
 ## Run and score
 
@@ -219,6 +220,13 @@ baseline-only correct answers. Its provenance identifies the replay scope as
 `multi-session` / `physical_entity_count`; the 500-row result is not a fresh
 full generation run:
 [longmemeval-stage203-entity-count-subset-top20-2026-10-25.json](data/longmemeval-stage203-entity-count-subset-top20-2026-10-25.json).
+
+Stage203's pair-level retrieval diagnostic found 867/883 answer-marked pairs in
+Top-20 (98.2%); all answer-marked pairs were present for 456/470 annotated
+questions. Within multi-session, 312/322 pairs were present and 113/121
+questions had complete pair coverage. The answerer still missed 14 of those 113
+multi-session questions, so the remaining errors split between missing
+answer-bearing chunks and reasoning over chunks that are present.
 
 Stage213 validates evidence roles for personal count items in role-marked
 memories: assistant-only claims cannot establish the user's ownership,
