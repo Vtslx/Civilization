@@ -141,6 +141,18 @@ the net paired gain over Stage168 was zero. Temporal-reasoning reached 106/133
 not establish a 97% result. See
 [longmemeval-stage174-answer-verification-top20-2026-10-25.json](data/longmemeval-stage174-answer-verification-top20-2026-10-25.json).
 
+Stage178 ran the same ranked evidence with `--no-count-inventory`; direct
+structured answering and count-completeness review remained enabled. It scored
+**424/500 (84.8%)**, 61 answers short of the gate. Compared with Stage174's
+count-inventory-enabled run, the ablation was lower by two answers: 22 questions
+were correct only with inventory disabled and 24 only with it enabled. Per-type
+scores were knowledge-update 72/78 (92.3%), multi-session 100/133 (75.2%),
+single-session-assistant 56/56 (100%), preference 25/30 (83.3%), user 69/70
+(98.6%), and temporal-reasoning 102/133 (76.7%). The result is close enough that
+the default stays enabled; keep the CLI switch for repeatable A/B analysis. The
+scorecard records the feature flag in `adapter_features`:
+[longmemeval-stage178-no-count-inventory-top20-2026-10-25.json](data/longmemeval-stage178-no-count-inventory-top20-2026-10-25.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same

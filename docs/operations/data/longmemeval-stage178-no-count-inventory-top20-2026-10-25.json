@@ -1,0 +1,325 @@
+{
+  "candidate": {
+    "benchmark": "longmemeval",
+    "result_sha256": "3b19383afa5a909b1d7ca1b4c831ae87df7350597d53a527fb900d3521225407",
+    "answerer_model": "gpt-6-luna",
+    "judge_model": "gpt-6-luna",
+    "provider": "openai",
+    "top_k": 200,
+    "top_k_cutoffs": [
+      "top_20"
+    ],
+    "question_count": 500,
+    "correct_count": 424,
+    "score_sum": 424.0,
+    "accuracy": 0.848,
+    "strict_correct_accuracy": 0.848,
+    "required_correct_for_target": 485,
+    "target_met": false,
+    "abstention": {
+      "questions": 30,
+      "correct": 22
+    },
+    "api_error_count": 0,
+    "question_types": {
+      "knowledge-update": {
+        "questions": 78,
+        "correct": 72,
+        "score_sum": 72.0,
+        "accuracy": 0.923077
+      },
+      "multi-session": {
+        "questions": 133,
+        "correct": 100,
+        "score_sum": 100.0,
+        "accuracy": 0.75188
+      },
+      "single-session-assistant": {
+        "questions": 56,
+        "correct": 56,
+        "score_sum": 56.0,
+        "accuracy": 1.0
+      },
+      "single-session-preference": {
+        "questions": 30,
+        "correct": 25,
+        "score_sum": 25.0,
+        "accuracy": 0.833333
+      },
+      "single-session-user": {
+        "questions": 70,
+        "correct": 69,
+        "score_sum": 69.0,
+        "accuracy": 0.985714
+      },
+      "temporal-reasoning": {
+        "questions": 133,
+        "correct": 102,
+        "score_sum": 102.0,
+        "accuracy": 0.766917
+      }
+    },
+    "retrieval": {
+      "mean_results_returned": 200.0,
+      "mean_search_latency_ms": 104.91,
+      "p95_search_latency_ms": 139.4
+    },
+    "adapter_features": {
+      "count_inventory_enabled": false,
+      "answer_verification_enabled": true
+    },
+    "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "evidence_retrieval": {
+      "available": true,
+      "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "answer_source_questions": 470,
+      "answer_source_in_top_20": 470,
+      "answer_source_recall_at_20": 1.0,
+      "answer_source_in_top_200": 470,
+      "answer_source_recall_at_200": 1.0,
+      "answer_correct_with_source_in_top_20": 402,
+      "answer_errors_with_source_in_top_20": 68,
+      "answer_accuracy_given_source_in_top_20": 0.855319,
+      "mean_reciprocal_rank_at_200": 0.992215,
+      "question_types": {
+        "knowledge-update": {
+          "answer_source_questions": 72,
+          "answer_source_in_top_20": 72,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 72,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 66,
+          "answer_errors_with_source_in_top_20": 6,
+          "answer_accuracy_given_source_in_top_20": 0.916667,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "multi-session": {
+          "answer_source_questions": 121,
+          "answer_source_in_top_20": 121,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 121,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 94,
+          "answer_errors_with_source_in_top_20": 27,
+          "answer_accuracy_given_source_in_top_20": 0.77686,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "single-session-assistant": {
+          "answer_source_questions": 56,
+          "answer_source_in_top_20": 56,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 56,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 56,
+          "answer_errors_with_source_in_top_20": 0,
+          "answer_accuracy_given_source_in_top_20": 1.0,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "single-session-preference": {
+          "answer_source_questions": 30,
+          "answer_source_in_top_20": 30,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 30,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 25,
+          "answer_errors_with_source_in_top_20": 5,
+          "answer_accuracy_given_source_in_top_20": 0.833333,
+          "mean_reciprocal_rank_at_200": 0.938889
+        },
+        "single-session-user": {
+          "answer_source_questions": 64,
+          "answer_source_in_top_20": 64,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 64,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 63,
+          "answer_errors_with_source_in_top_20": 1,
+          "answer_accuracy_given_source_in_top_20": 0.984375,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "temporal-reasoning": {
+          "answer_source_questions": 127,
+          "answer_source_in_top_20": 127,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 127,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 98,
+          "answer_errors_with_source_in_top_20": 29,
+          "answer_accuracy_given_source_in_top_20": 0.771654,
+          "mean_reciprocal_rank_at_200": 0.985624
+        }
+      }
+    },
+    "release_gate_applies": true
+  },
+  "cutoff": "top_20",
+  "target_accuracy": 0.97,
+  "baseline": {
+    "benchmark": "longmemeval",
+    "result_sha256": "f0f555c06ba17694801a0af263018b912463dfd2aecd062e164803c7c7073dcf",
+    "answerer_model": "gpt-6-luna",
+    "judge_model": "gpt-6-luna",
+    "provider": "openai",
+    "top_k": 200,
+    "top_k_cutoffs": [
+      "top_20"
+    ],
+    "question_count": 500,
+    "correct_count": 426,
+    "score_sum": 426.0,
+    "accuracy": 0.852,
+    "strict_correct_accuracy": 0.852,
+    "required_correct_for_target": 485,
+    "target_met": false,
+    "abstention": {
+      "questions": 30,
+      "correct": 25
+    },
+    "api_error_count": 0,
+    "question_types": {
+      "knowledge-update": {
+        "questions": 78,
+        "correct": 70,
+        "score_sum": 70.0,
+        "accuracy": 0.897436
+      },
+      "multi-session": {
+        "questions": 133,
+        "correct": 104,
+        "score_sum": 104.0,
+        "accuracy": 0.781955
+      },
+      "single-session-assistant": {
+        "questions": 56,
+        "correct": 55,
+        "score_sum": 55.0,
+        "accuracy": 0.982143
+      },
+      "single-session-preference": {
+        "questions": 30,
+        "correct": 25,
+        "score_sum": 25.0,
+        "accuracy": 0.833333
+      },
+      "single-session-user": {
+        "questions": 70,
+        "correct": 70,
+        "score_sum": 70.0,
+        "accuracy": 1.0
+      },
+      "temporal-reasoning": {
+        "questions": 133,
+        "correct": 102,
+        "score_sum": 102.0,
+        "accuracy": 0.766917
+      }
+    },
+    "retrieval": {
+      "mean_results_returned": 200.0,
+      "mean_search_latency_ms": 104.91,
+      "p95_search_latency_ms": 139.4
+    },
+    "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "evidence_retrieval": {
+      "available": true,
+      "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "answer_source_questions": 470,
+      "answer_source_in_top_20": 470,
+      "answer_source_recall_at_20": 1.0,
+      "answer_source_in_top_200": 470,
+      "answer_source_recall_at_200": 1.0,
+      "answer_correct_with_source_in_top_20": 401,
+      "answer_errors_with_source_in_top_20": 69,
+      "answer_accuracy_given_source_in_top_20": 0.853191,
+      "mean_reciprocal_rank_at_200": 0.992215,
+      "question_types": {
+        "knowledge-update": {
+          "answer_source_questions": 72,
+          "answer_source_in_top_20": 72,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 72,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 65,
+          "answer_errors_with_source_in_top_20": 7,
+          "answer_accuracy_given_source_in_top_20": 0.902778,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "multi-session": {
+          "answer_source_questions": 121,
+          "answer_source_in_top_20": 121,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 121,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 96,
+          "answer_errors_with_source_in_top_20": 25,
+          "answer_accuracy_given_source_in_top_20": 0.793388,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "single-session-assistant": {
+          "answer_source_questions": 56,
+          "answer_source_in_top_20": 56,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 56,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 55,
+          "answer_errors_with_source_in_top_20": 1,
+          "answer_accuracy_given_source_in_top_20": 0.982143,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "single-session-preference": {
+          "answer_source_questions": 30,
+          "answer_source_in_top_20": 30,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 30,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 25,
+          "answer_errors_with_source_in_top_20": 5,
+          "answer_accuracy_given_source_in_top_20": 0.833333,
+          "mean_reciprocal_rank_at_200": 0.938889
+        },
+        "single-session-user": {
+          "answer_source_questions": 64,
+          "answer_source_in_top_20": 64,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 64,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 64,
+          "answer_errors_with_source_in_top_20": 0,
+          "answer_accuracy_given_source_in_top_20": 1.0,
+          "mean_reciprocal_rank_at_200": 1.0
+        },
+        "temporal-reasoning": {
+          "answer_source_questions": 127,
+          "answer_source_in_top_20": 127,
+          "answer_source_recall_at_20": 1.0,
+          "answer_source_in_top_200": 127,
+          "answer_source_recall_at_200": 1.0,
+          "answer_correct_with_source_in_top_20": 96,
+          "answer_errors_with_source_in_top_20": 31,
+          "answer_accuracy_given_source_in_top_20": 0.755906,
+          "mean_reciprocal_rank_at_200": 0.985624
+        }
+      }
+    },
+    "release_gate_applies": true
+  },
+  "comparison": {
+    "accuracy_delta_percentage_points": -0.4,
+    "paired_outcomes": {
+      "both_correct": 400,
+      "candidate_only_correct": 24,
+      "baseline_only_correct": 26,
+      "both_wrong": 50
+    },
+    "question_type_deltas_percentage_points": {
+      "knowledge-update": 2.56,
+      "multi-session": -3.01,
+      "single-session-assistant": 1.79,
+      "single-session-preference": 0.0,
+      "single-session-user": -1.43,
+      "temporal-reasoning": 0.0
+    },
+    "answer_source_recall_at_20_delta_percentage_points": 0.0,
+    "answer_source_recall_at_200_delta_percentage_points": 0.0
+  }
+}

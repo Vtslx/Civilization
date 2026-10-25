@@ -89,6 +89,24 @@ def test_stage162_computes_strict_97_percent_release_gate(tmp_path: Path) -> Non
     assert candidate["question_types"]["single-session-user"]["correct"] == 1
 
 
+def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
+    result = _result(
+        tmp_path / "features.json",
+        [1.0, 0.0],
+        metadata_overrides={
+            "count_inventory_enabled": False,
+            "answer_verification_enabled": True,
+        },
+    )
+
+    scorecard = build_longmemeval_scorecard(result, expected_questions=2)
+
+    assert scorecard["candidate"]["adapter_features"] == {
+        "count_inventory_enabled": False,
+        "answer_verification_enabled": True,
+    }
+
+
 def test_stage162_marks_top200_as_diagnostic_not_release_gate(tmp_path: Path) -> None:
     result = _result(
         tmp_path / "top200.json",

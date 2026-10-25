@@ -287,6 +287,13 @@ def _load_and_aggregate(
             "p95_search_latency_ms": _percentile(latencies, 0.95),
         },
     }
+    adapter_features = {
+        key: metadata[key]
+        for key in ("count_inventory_enabled", "answer_verification_enabled")
+        if isinstance(metadata.get(key), bool)
+    }
+    if adapter_features:
+        report["adapter_features"] = adapter_features
     return report, row_index
 
 
