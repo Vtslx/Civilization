@@ -294,6 +294,7 @@ def _load_and_aggregate(
             "answer_verification_enabled",
             "preference_verification_enabled",
             "temporal_event_resolution_enabled",
+            "explicit_total_deduplication_enabled",
         )
         if isinstance(metadata.get(key), bool)
     }

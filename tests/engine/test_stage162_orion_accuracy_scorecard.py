@@ -99,6 +99,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
             "preference_verification_enabled": True,
             "count_inventory_policy": "skip_multi_session",
             "temporal_event_resolution_enabled": True,
+            "explicit_total_deduplication_enabled": True,
             "postprocessor_replay_only": True,
             "postprocessor_source_run": "Stage184",
             "subset_replay_only": True,
@@ -115,6 +116,7 @@ def test_stage162_preserves_adapter_feature_flags(tmp_path: Path) -> None:
         "preference_verification_enabled": True,
         "count_inventory_policy": "skip_multi_session",
         "temporal_event_resolution_enabled": True,
+        "explicit_total_deduplication_enabled": True,
     }
     assert scorecard["candidate"]["result_provenance"] == {
         "postprocessor_replay_only": True,

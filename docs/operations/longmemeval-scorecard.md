@@ -198,6 +198,18 @@ variation. The scorecard records the preference flag and subset provenance,
 and does not claim a new all-500 generation run:
 [longmemeval-stage195-preference-subset-replay-top20-2026-10-25.json](data/longmemeval-stage195-preference-subset-replay-top20-2026-10-25.json).
 
+Stage196 removes an explicitly labeled aggregate count row only when at least
+two same-unit incremental items sum exactly to it. This prevents double-counting
+reported totals while leaving incomplete or per-unit amounts on their direct
+answer path. A frozen-response replay over Stage195 scored **439/500 (87.8%)**,
+46 short of the gate. Against Stage195, two answers changed from wrong to right
+and none regressed; the corrected cases were a handbag plus skincare total and
+a car-cover plus detailing-spray total. Against Stage174, 32 questions were
+candidate-only correct and 19 baseline-only correct. The scorecard records
+`explicit_total_deduplication_enabled` and replay provenance:
+[longmemeval-stage196-explicit-total-dedup-top20-2026-10-25.json](data/longmemeval-stage196-explicit-total-dedup-top20-2026-10-25.json).
+This remains a frozen-response replay, not a fresh all-500 generation run.
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
