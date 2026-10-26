@@ -394,3 +394,15 @@
 **Verification:** `python3 -m pytest tests/engine/test_memory_backup.py -q` passed 23 tests, including missing/short/wrong-key rejection, tampering/truncation, bounded KDF parameters, long PAX paths, multi-frame archives, v1 recovery, no plaintext verification temp file, optional-dependency failure, and CLI secret handling. `compileall`, pyproject TOML validation, and `git diff --check` passed. The adjacent session-persistence suite could not be collected in the current environment because `psutil` is not installed; no dependencies were installed to work around it.
 
 **DR boundary:** This protects backup confidentiality and integrity; it does not create an independent copy. The checked volume has only about 3.6 GiB free and the repository and `/Volumes/Net/Recovery` share that same filesystem. No separate offsite target or credentials are available, so scheduling, replication, alerting, retention, and a production restore drill remain open. A same-volume encrypted archive is not disaster recovery.
+
+## Module 24: Add count-aware answer verification
+
+**Adapter commit:** `e41684f feat: verify numeric answers with cited item audits`
+
+**Design:** Extend the opt-in answer verifier with item counts, units, totals, and dated events. A revised numeric answer is accepted only if the complete audit passes citation, evidence, unit, and count validation; all other responses keep the original structured answer. The normal default remains unchanged.
+
+**Frozen Stage238 pilot:** With the Stage221 direct-retrieval Top-20 prefix frozen for the same 94 Stage228 multi-session count questions, a single baseline answer was generated and judged, then independently verified on that exact answer/evidence. Baseline was 57/94; candidate was 59/94. Paired results were 3 candidate-only and 1 baseline-only, a net gain of 2. The verifier changed 32 answers; 51 revisions were rejected as unverified and 6 for invalid evidence.
+
+**Known regression:** Question `b5ef892d` moved from 8 days to 3 after the verifier misread “last month” as outside “this year.” The candidate had valid citations but incorrect time-window reasoning. Keep the feature opt-in and add a calendar-year window guard before broad enablement.
+
+**Artifact and status:** `docs/operations/data/longmemeval-stage238-count-aware-verification-frozen-pilot-2026-10-27.json`. Stage238 is not a full score; the best complete score remains 433/500 (86.6%), 52 short of 485/500. A fresh 500-question Top-20 candidate is still required.
