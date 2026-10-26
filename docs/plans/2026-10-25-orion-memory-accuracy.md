@@ -220,6 +220,27 @@
 
 **Commit:** `6cc4f45 feat: scope memory reranking by question type`; result record: `docs/operations/data/longmemeval-stage225-selective-four-type-reranker-top20-2026-10-26.json`.
 
+## Module 14: Resolve citation-backed temporal anchors and trip durations
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/prompts.py` and `benchmarks/longmemeval/run.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_prompts.py` and `tests/test_longmemeval_run.py`
+- Design/ADR: `docs/plans/2026-10-26-longmemeval-deterministic-temporal-completion.md`, `docs/decisions/adr-002-citation-backed-temporal-resolvers.md`
+- Pilot: `docs/operations/data/longmemeval-stage226-temporal-resolver-pilot-2026-10-26.json`
+- Full scorecard: `docs/operations/data/longmemeval-stage226-temporal-completion-top20-2026-10-26.json`
+
+**Design:** Resolve “how many units ago … when I …” from a uniquely matched user-authored anchor quote when its direct calendar or relative date is tied to observation metadata. Resolve trip duration only from matching, user-authored start and return events with supported dates. When source role, event identity, or date is missing or ambiguous, leave the answer unresolved. Singularize duration output such as “1 month”.
+
+**Acceptance:** Test explicit anchors, observation-date relative terms, assistant-only/undated/mismatched events, trip start/return, and answerer runtime integration. Run a frozen-output paired pilot, then a fresh full 500-question Top-20 scorecard before claiming any release gain.
+
+**Observed frozen-output pilot:** 16 of 20 elapsed/trip questions had valid direct user-date resolutions; 14 were already correct, and two previously wrong answers were corrected. Both passed the benchmark judge; four unsupported or ambiguous cases stayed unchanged. This is a targeted postprocessor pilot, not a full score.
+
+**Observed full result:** Stage226, with the four-type selective reranker and temporal resolver, scored 419/500 (83.8%), +5.8 percentage points versus the 390/500 baseline, 66 answers below the release gate. Temporal reasoning stayed at 108/133; provider rerun variability prevents attributing a net score change to the resolver. The targeted 2/2 corrections remain supported by the frozen-output pilot.
+
+**Verification:** 81 prompt/runtime/adapter tests and 17 subtests passed; compileall and `git diff --check` passed.
+
+**Commit:** `74cc7e9 fix: resolve citation-backed temporal intervals`.
+
 ## Module 14: Resolve cited user-event anchors and trip durations
 
 **Files:**
