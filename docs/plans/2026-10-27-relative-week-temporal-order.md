@@ -52,6 +52,6 @@ Use all 133 Stage241 temporal answers and their selected Top-20 IDs; reconstruct
 
 ## Task 4: Commit the code and validate the full candidate
 
-Stage242 passed the isolated gate and the adapter change is committed. Run Stage243 over all 500 frozen Stage221 retrieval inputs with reranking, answer generation, and judging enabled. Save a compact scorecard with exact paired outcomes, per-type scores, retrieval-order verification, and resolver trigger count. Remove bulky temporary predictions only after the compact artifact is validated. Record the results in Civilization and project memory using an English documentation commit.
+Stage242 passed the isolated gate and the adapter change is committed. Stage243 was started over all 500 frozen Stage221 retrieval inputs. Four concurrent model requests timed out repeatedly; a second run resumed from the 123 completed per-question outputs at two workers, but generation requests still timed out. `/models` remained HTTP 200, while a minimal Chat Completions request timed out after 20 seconds. The partial checkpoint remains at `/tmp/civilization-stage243-relative-week-20261027`; no full scorecard exists, so do not treat the 123-row prefix as an accuracy result. Resume the remaining questions after the inference endpoint responds normally. Remove bulky temporary predictions only after a compact full scorecard is validated.
 
 If Stage242 fails the gate, revert the parser change and record the negative pilot without running Stage243.
