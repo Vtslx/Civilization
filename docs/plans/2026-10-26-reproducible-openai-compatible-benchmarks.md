@@ -40,7 +40,9 @@ Run the client unit tests and a same-prompt provider preflight twice with a fixe
 
 **Observed matched evaluation:** With the Stage221 retrieval snapshot held fixed, the new gateway scored 385/500 (77.0%) without reranking and 433/500 (86.6%) with the four-type reranker: 62 candidate-only and 14 baseline-only outcomes, a net gain of 48. The candidate is 52 answers below the 485/500 gate. Both arms used the same retrieval hash and prompt hash; answerer and judge metadata reported seed acceptance.
 
-**Determinism caveat:** In a separate 94-question count-policy rerun, the gateway accepted seed 42 but selected a different Top-20 reranker ordering in all 94 questions compared with the first run. The first all-policy run is exploratory; the frozen-selection follow-up is the valid policy comparison. Keep the seed feature as a request control, not a determinism guarantee.
+**Determinism caveat:** In a separate 94-question count-policy rerun, the gateway accepted seed 42 but selected a different Top-20 reranker ordering in all 94 questions compared with the first run. The first all-policy run is exploratory; the frozen-selection follow-up is the valid policy comparison. In the Stage230 full rerun, only 2/374 reranked questions retained the same selected order versus Stage227. Keep the seed feature as a request control, not a determinism guarantee.
+
+**Stage230 rerun:** The fresh four-type candidate using the updated temporal resolver scored 427/500 (85.4%), below the 433/500 Stage227 best. Reranker selection variance prevents attributing that difference to the resolver. The frozen Stage229 pilot isolated the code change: two temporal answers changed, one wrong answer was corrected, one previously correct answer stayed correct, and no regression occurred.
 
 **Verification:** Adapter full suite: 88 tests and 20 subtests passed; Python compileall and `git diff --check` passed. Adapter commit: `cef267b feat: add reproducible seeds for OpenAI-compatible benchmarks`.
 

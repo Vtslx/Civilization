@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "benchmark": "longmemeval",
+    "project_name": "stage229-relative-event-order-frozen-output-pilot",
+    "provider": "openai",
+    "provider_base_url": "http://192.168.3.13:3425/v1",
+    "judge_model": "group/auto-gpt-6-luna",
+    "resolved_model_preflight": "gpt-6-luna",
+    "openai_seed": 42,
+    "judge_seed_accepted": true,
+    "input_scorecard": "/Volumes/Net/Civilization/docs/operations/data/longmemeval-stage227-provider-seed-four-type-reranker-top20-2026-10-26.json",
+    "retrieval_source_sha256": "d3e8bf56bc1a4432f27373d03f17f729b8bbdd9597709d3bffc7d96b92122eca",
+    "input_prompt_source_sha256": "7c1a68edbfd21482734261b7446c63fa8f8f7cee70ef1b53b10a39ab5f448c94",
+    "resolver_source_sha256_after_change": "7cf6a4427c452556ae1c6bc2f34b067d51a6c2e08ab4b8a72ed78d536335880a",
+    "temporal_questions_replayed": 133,
+    "changed_answers": 2,
+    "corrected_answers": 1,
+    "regressions": 0,
+    "temporal_correct_before": 112,
+    "temporal_correct_after": 113.0,
+    "full_score_frozen_output_before": 433,
+    "full_score_frozen_output_after": 434.0,
+    "remaining_to_485_after_replay": 51.0,
+    "interpretation": "Frozen-output resolver diagnostic; this is not a fresh 500-question answer-generation scorecard."
+  },
+  "changed_rows": [
+    {
+      "question_id": "gpt4_2487a7cb",
+      "question_type": "temporal-reasoning",
+      "question": "Which event did I attend first, the 'Effective Time Management' workshop or the 'Data Analysis using Python' webinar?",
+      "question_date": "2023/05/24 (Wed) 08:02",
+      "ground_truth_answer": "'Data Analysis using Python' webinar",
+      "answer_before": "The 'Effective Time Management' workshop came first. It was held last Saturday relative to May 24, 2023, while the 'Data Analysis using Python' webinar was two months earlier, so the webinar came first. The proposed answer is correct.",
+      "answer_after": "The 'Data Analysis using Python' webinar happened first.",
+      "answer_audit_after": {
+        "validated": true,
+        "validation_errors": [],
+        "evidence": [
+          {
+            "memory_index": 1,
+            "quote": "the workshop on \"Effective Time Management\" at the local community center last Saturday"
+          },
+          {
+            "memory_index": 2,
+            "quote": "I participated in a webinar on \"Data Analysis using Python\" two months ago"
+          }
+        ],
+        "temporal_events": [
+          {
+            "description": "Attended the 'Data Analysis using Python' webinar",
+            "event_date": "Approximately March 24, 2023",
+            "date_basis": "Relative date: two months before the May 24, 2023 conversation",
+            "relation_to_anchor": "Earlier",
+            "evidence": [
+              {
+                "memory_index": 2,
+                "quote": "I participated in a webinar on \"Data Analysis using Python\" two months ago"
+              }
+            ]
+          },
+          {
+            "description": "Attended the 'Effective Time Management' workshop",
+            "event_date": "May 20, 2023",
+            "date_basis": "Relative date: last Saturday before the May 24, 2023 conversation",
+            "relation_to_anchor": "Later",
+            "evidence": [
+              {
+                "memory_index": 1,
+                "quote": "the workshop on \"Effective Time Management\" at the local community center last Saturday"
+              }
+            ]
+          }
+        ]
+      },
+      "score_before": 1.0,
+      "score_after": 1,
+      "judgment_after": "PASS"
+    },
+    {
+      "question_id": "gpt4_88806d6e",
+      "question_type": "temporal-reasoning",
+      "question": "Who did I meet first, Mark and Sarah or Tom?",
+      "question_date": "2023/05/28 (Sun) 21:23",
+      "ground_truth_answer": "Tom",
+      "answer_before": "Mark and Sarah happened first.",
+      "answer_after": "Tom happened first.",
+      "answer_audit_after": {
+        "validated": true,
+        "validation_errors": [],
+        "evidence": [
+          {
+            "memory_index": 2,
+            "quote": "a few months ago, I volunteered at a charity event and met a lot of like-minded people, including a guy named Tom"
+          },
+          {
+            "memory_index": 1,
+            "quote": "Mark and Sarah, who I met on a beach trip about a month ago"
+          }
+        ],
+        "temporal_events": [
+          {
+            "description": "Met Tom at a charity event",
+            "event_date": "A few months before 2023-05-28; exact date not given",
+            "date_basis": "User said it happened a few months before the conversation date.",
+            "relation_to_anchor": "Earlier than meeting Mark and Sarah",
+            "evidence": [
+              {
+                "memory_index": 2,
+                "quote": "a few months ago, I volunteered at a charity event and met a lot of like-minded people, including a guy named Tom"
+              }
+            ]
+          },
+          {
+            "description": "Met Mark and Sarah on a beach trip",
+            "event_date": "About one month before 2023-05-28; exact date not given",
+            "date_basis": "User said it happened about a month before the conversation date.",
+            "relation_to_anchor": "Later than meeting Tom",
+            "evidence": [
+              {
+                "memory_index": 1,
+                "quote": "Mark and Sarah, who I met on a beach trip about a month ago"
+              }
+            ]
+          }
+        ]
+      },
+      "score_before": 0.0,
+      "score_after": 1,
+      "judgment_after": "PASS"
+    }
+  ]
+}

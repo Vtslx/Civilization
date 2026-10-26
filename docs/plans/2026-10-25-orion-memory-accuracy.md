@@ -299,3 +299,23 @@
 **Provider caveat:** The gateway accepted seed 42 in metadata but its unpaired reranker selections differed in 94/94 questions. The initial all-policy run cannot isolate inventory effects; the frozen-order run is authoritative for this pilot.
 
 **Status:** No count-policy code change. Overall goal remains active: 433/500, 52 short of 485/500. Continue with temporal event matching and reasoning failures under fixed evidence.
+
+## Module 17: Bound relative event ordering to cited date intervals
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/prompts.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_prompts.py`
+- Design: `docs/plans/2026-10-26-citation-backed-relative-event-order.md`
+- Decision: `docs/decisions/adr-004-bounded-relative-event-order.md`
+- Frozen-output pilot: `docs/operations/data/longmemeval-stage229-relative-event-order-frozen-pilot-2026-10-26.json`
+- Fresh full candidate: `docs/operations/data/longmemeval-stage230-relative-order-four-type-candidate-top20-2026-10-26.json`
+
+**Design:** Keep exact-date ordering. For approximate relative phrases, derive bounded intervals only from validated user-authored quotes and an unambiguous observation date. Rewrite two-option order answers only when cited intervals are disjoint; leave overlapping, assistant-only, or undated evidence unchanged. Prevent unsupported phrases such as “a few months before” from falling through to their embedded anchor date.
+
+**Verification:** Adapter full suite: 92 tests and 20 subtests passed; compileall and `git diff --check` passed. Adapter commit: `4b0b2d2 fix: resolve citation-backed relative event order`.
+
+**Frozen-output pilot:** Replayed the resolver on all 133 Stage227 temporal answers. Two answers changed; one previously wrong answer was corrected, one answer already judged correct remained correct, and there were no regressions. Frozen overall score diagnostic moved from 433/500 to 434/500; this is not a new full generation score.
+
+**Fresh full candidate:** Stage230, using the new code and the Stage221 retrieval snapshot, scored 427/500 (85.4%), 58 below 485. The earlier Stage227 full candidate scored 433/500. Across reranked rows, only 2/374 selected memory orders matched between the two runs despite seed acceptance, so the six-answer delta is confounded by provider reranker variability. In Stage230 the target Mark/Tom chronology was corrected, while temporal category accuracy moved from 112/133 to 109/133.
+
+**Status:** The best full score remains Stage227 at 433/500 (86.6%), 52 below the gate. Relative interval logic is citation-bounded and tested; it does not close the overall accuracy gap. Continue targeting multi-session and temporal reasoning under fixed evidence and track provider selection variance.
