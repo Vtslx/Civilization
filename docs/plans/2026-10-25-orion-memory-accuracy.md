@@ -397,7 +397,7 @@
 
 ## Module 24: Add count-aware answer verification
 
-**Adapter commit:** `e41684f feat: verify numeric answers with cited item audits`
+**Adapter commits:** `e41684f feat: verify numeric answers with cited item audits`; `e5063c6 fix: guard current-year count verification`; README follow-up `eb36278 docs: clarify count-aware verification scope`.
 
 **Design:** Extend the opt-in answer verifier with item counts, units, totals, and dated events. A revised numeric answer is accepted only if the complete audit passes citation, evidence, unit, and count validation; all other responses keep the original structured answer. The normal default remains unchanged.
 
@@ -406,3 +406,9 @@
 **Known regression:** Question `b5ef892d` moved from 8 days to 3 after the verifier misread “last month” as outside “this year.” The candidate had valid citations but incorrect time-window reasoning. Keep the feature opt-in and add a calendar-year window guard before broad enablement.
 
 **Artifact and status:** `docs/operations/data/longmemeval-stage238-count-aware-verification-frozen-pilot-2026-10-27.json`. Stage238 is not a full score; the best complete score remains 433/500 (86.6%), 52 short of 485/500. A fresh 500-question Top-20 candidate is still required.
+
+**Stage239 guard:** Added a deterministic check that rejects a current-year count revision when its cited Top-20 evidence contains a relevant user event from “last month” in the same year but the candidate omitted that item. It also prevents counting such an event when its source date falls in the prior year. Focused regression tests cover the observed Yellowstone case. This is a narrow safeguard; Stage239 full-candidate scoring remains pending.
+
+**Stage239 full candidate:** On the Stage221 retrieval snapshot with four-type reranking and numeric verification selected for multi-session questions, the full Top-20 score was 422/500 (84.4%). Stage227 remains best at 433/500 (86.6%); Stage232 scored 432/500 (86.4%). Paired outcomes were 19 candidate-only / 30 Stage227-only and 20 candidate-only / 30 Stage232-only. Per type: knowledge update 73/78, multi-session 102/133, assistant 50/56, preference 25/30, user 68/70, temporal reasoning 104/133. The selected Top-20 matched Stage221's direct prefix in 130/500 rows, with mean ID overlap 11.8/20; ranking variance confounds attribution. The count subset scored 72/94 vs 71/94 Stage227 skip and 75/94 Stage232, also unpaired by selected rank.
+
+**Decision/status:** Keep the feature opt-in and do not claim an aggregate gain. The isolated Stage238 verifier pilot scored 59/94 vs its paired frozen baseline of 57/94, but had one current-year temporal regression. Best complete score remains 433/500 (86.6%), 52 below the 485/500 release gate. The 97% and 100% precision targets remain unmet.

@@ -33,7 +33,7 @@
 **Files:** `benchmarks/longmemeval/run.py`, `tests/test_longmemeval_run.py`, `README.md`
 
 1. Factor the verification decision into a helper that accepts an existing `LongMemEvalAnswer` and frozen evidence.
-2. For numeric questions, apply the verifier's complete audit fields to a candidate copy, then run `validate_longmemeval_answer`; replace the original only on success.
+2. For numeric questions, apply the verifier's complete audit fields to a candidate copy, then run `validate_longmemeval_answer` plus the deterministic current-year/last-month consistency guard; replace the original only on success.
 3. Missing fields, invalid citations, mismatched totals, and incompatible units leave the original answer untouched and set a diagnostic status.
 4. Add tests for a valid corrected count, incomplete inventory, invalid citations, mismatched count totals, and unchanged non-numeric answers.
 5. Document that `multi-session` verification is opt-in and adds a verifier call for numeric aggregates, which are not covered by the default cross-session verifier.
@@ -62,3 +62,9 @@ This experiment targets answer synthesis for count questions. It does not change
 - One regression remains: `b5ef892d` changed 8 days to 3 by incorrectly excluding a Yellowstone trip described as “last month” from “this year.” The cited answer passed the current structural validator but failed the temporal meaning of the question.
 - Compact artifact: `docs/operations/data/longmemeval-stage238-count-aware-verification-frozen-pilot-2026-10-27.json`.
 - Decision: commit the feature as opt-in, keep the default unchanged, and require a fresh full 500-question Top-20 candidate before recommending it. Add a calendar-year window regression guard before broad enablement. The best full score remains 433/500; Stage238 is a targeted slice, not a release score.
+
+**Stage239 guard follow-up:** Added `validate_current_year_count_window` to reject a count revision that omits a relevant, user-authored “last month” event whose observation date falls in the question's calendar year. It also rejects a last-month event counted when its observation date places it in the prior year. Unit and pipeline regression tests reproduce `b5ef892d` and confirm the original audited answer is retained. This guard is deliberately limited to explicit current-year count questions.
+
+**Stage239 full candidate:** The fresh 500-question Top-20 run scored 422/500 (84.4%), below Stage227 433/500 and Stage232 432/500. Paired outcomes were 19 candidate-only vs 30 Stage227-only, and 20 candidate-only vs 30 Stage232-only. By type: knowledge update 73/78, multi-session 102/133, assistant 50/56, preference 25/30, user 68/70, temporal 104/133. The reranker-selected Top-20 exactly matched the Stage221 direct prefix in 130/500 questions (mean ID overlap 11.8/20), so the aggregate delta is confounded by selection variance. On the Stage228 count qids, Stage239 scored 72/94; selection variance also prevents a causal comparison with Stage227/232 references.
+
+**Decision/status:** Keep numeric verification opt-in; do not claim a full-run gain. The frozen Stage238 pilot remains the isolated evidence (+2 net). Best full score remains 433/500, 52 short of 485/500; no 97% or 100% precision claim is supported.
