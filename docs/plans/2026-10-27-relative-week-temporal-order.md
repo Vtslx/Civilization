@@ -50,6 +50,8 @@ Use all 133 Stage241 temporal answers and their selected Top-20 IDs; reconstruct
 
 **Stage242 result:** Adapter commit `f455c0d fix: resolve cited last-week temporal order` passed 111 tests and 22 subtests; `compileall` and `git diff --check` passed. The frozen pilot changed one answer (`gpt4_b4a80587`), which moved from incorrect to correct. Temporal accuracy moved 114/133→115/133; paired outcomes were 1 candidate-only, 0 baseline-only, 114 both-correct, and 18 both-wrong. The frozen full diagnostic moved 433/500→434/500; this is not a fresh full score. Artifact: `docs/operations/data/longmemeval-stage242-last-week-temporal-frozen-pilot-2026-10-27.json`.
 
+The existing N-event list-order resolver was also replayed on the frozen temporal answers after the parser change. It produced no additional answer changes or new list resolutions.
+
 ## Task 4: Commit the code and validate the full candidate
 
 Stage242 passed the isolated gate and the adapter change is committed. Stage243 was started over all 500 frozen Stage221 retrieval inputs. Four concurrent model requests timed out repeatedly; a second run resumed from the 123 completed per-question outputs at two workers, but generation requests still timed out. `/models` remained HTTP 200, while a minimal Chat Completions request timed out after 20 seconds. The partial checkpoint remains at `/tmp/civilization-stage243-relative-week-20261027`; no full scorecard exists, so do not treat the 123-row prefix as an accuracy result. Resume the remaining questions after the inference endpoint responds normally. Remove bulky temporary predictions only after a compact full scorecard is validated.

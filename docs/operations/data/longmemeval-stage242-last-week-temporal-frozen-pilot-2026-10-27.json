@@ -82,5 +82,12 @@
       ]
     }
   ],
-  "decision": "Positive isolated pilot: one candidate-only correction and zero regressions. Proceed to a full 500-question candidate; the frozen 434/500 diagnostic is not a fresh full score."
+  "decision": "Positive isolated pilot: one candidate-only correction and zero regressions. Proceed to a full 500-question candidate; the frozen 434/500 diagnostic is not a fresh full score.",
+  "secondary_list_order_check": {
+    "temporal_questions": 133,
+    "existing_multi_event_resolver_replayed": true,
+    "additional_answer_changes": 0,
+    "new_list_resolutions": 0,
+    "interpretation": "The new relative-week interval support was also replayed through the existing N-event list-order resolver on the same frozen temporal answers; it caused no additional answer changes."
+  }
 }
