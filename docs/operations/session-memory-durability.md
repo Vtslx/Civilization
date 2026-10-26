@@ -235,6 +235,27 @@ civilization verify-backup --backup /secure-backups/orion-2026-10-26.enc
 # Restore into a new directory. Existing destinations are refused.
 civilization restore --backup /secure-backups/orion-2026-10-26.enc --destination var/state-restored
 
+# Copy an existing encrypted bundle to a separate mounted filesystem.
+civilization replicate-backup --backup /secure-backups/orion-2026-10-26.enc --destination-dir /mnt/recovery/orion
+
+# Optional S3-compatible replication; credentials come from the SDK credential chain.
+python -m pip install 'astreusn-civilization-v1[secure-backup,backup-s3]'
+civilization replicate-s3-backup \
+  --backup /secure-backups/orion-2026-10-26.enc \
+  --bucket approved-backup-bucket \
+  --key-prefix civilization/orion \
+  --checkpoint-dir /var/lib/civilization/s3-checkpoints \
+  --endpoint-url https://s3.example.net \
+  --region us-east-1
+
+# Retention is a dry run by default; review the exact version IDs before applying.
+civilization s3-backup-retention \
+  --bucket approved-backup-bucket \
+  --prefix civilization/orion \
+  --keep-latest 30 \
+  --older-than-days 365 \
+  --endpoint-url https://s3.example.net
+
 # Start the service against the recovered directory after checking the result.
 civilization serve --state-dir var/state-restored --provider-base-url <url> --provider-model <model>
 ```
@@ -267,13 +288,21 @@ Memory can contain private user data. Store bundles outside the source volume,
 keep versions according to an operational retention policy, and run restore
 drills against a disposable directory. Encryption does not automate offsite
 replication, scheduling, retention, alerts, or restore drills. A backup on the
-same disk is not disaster recovery.
+same disk is not disaster recovery. `replicate-backup` refuses a destination on
+the same filesystem. `replicate-s3-backup` requires bucket versioning, stores a
+private resumable multipart checkpoint, and only reports success after an exact
+VersionId is downloaded, hashed, and authenticated. Object Lock retention is
+optional; the retention command never deletes by default. Do not claim an
+offsite recovery path until an authorized endpoint and bucket have passed a live
+synthetic restore drill. The repository currently has no configured S3 target,
+schedule, or alerting policy.
 
 ## Limits and non-goals
 
-- **No automated replication.** Journals and snapshots survive restarts on this
-  machine. The backup command creates a portable copy but does not schedule or
-  transfer it to another failure domain.
+- **Replication is manual.** Journals and snapshots survive restarts on this
+  machine. The local and S3 replica commands do not schedule uploads or monitor
+  failure domains; operators must select a writable target, run them, and
+  monitor results.
 - **Global (cross-session) memory uses the same journal.** It is hydrated at
   startup and every mutation is appended, so it no longer depends on an explicit
   save. `POST /admin/orion/global-store/save|load` remains as export/import: a
