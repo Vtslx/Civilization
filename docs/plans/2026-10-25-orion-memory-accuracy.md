@@ -267,6 +267,8 @@
 
 **Credential handling:** The endpoint key was provided to the process at runtime and is absent from source, scorecards, and memory.
 
+**Provider configuration follow-up (2026-10-26):** LongMemEval now loads `OPENAI_BASE_URL` and `OPENAI_API_KEY` from the ignored local `.env` file and accepts `LONGMEMEVAL_ANSWERER_MODEL` / `LONGMEMEVAL_JUDGE_MODEL` defaults. The requested model alias was verified through `/models` and one Chat Completions smoke call. Adapter commit: `17b0453 feat: configure LongMemEval models via environment`. The key remains local and is not included in the commit.
+
 **Commit:** `cef267b feat: add reproducible seeds for OpenAI-compatible benchmarks` in the `memory-benchmarks` repository.
 
 ## Module 14: Resolve cited user-event anchors and trip durations
@@ -372,3 +374,13 @@
 **Observed Stage232 result:** 863/883 answer-marked pairs were in Top-20 (97.7%), and all answer pairs were present for 453/470 answerable questions. Among 61 incorrect answerable rows, 47 already had all annotated answer pairs in Top-20. This supports answer synthesis and event reasoning as the largest current gap; pair coverage is not factual precision.
 
 **Decision/status:** No code change. Preserve the 485/500 Top-20 gate and target synthesis errors using frozen evidence. The best full score remains 433/500, 52 short.
+
+## Module 22: Reject runtime count adjudication after the frozen pilot
+
+**Artifact:** `docs/operations/data/longmemeval-stage237-count-adjudication-frozen-implementation-pilot-2026-10-26.json`
+
+**Protocol:** Run the opt-in adjudication path on the same 94 multi-session count questions with the Stage227 Top-20 memories frozen. Compare against the Stage227 `skip_multi_session` and Stage228 `all` references; verify each question retained the exact same Top-20 memory order.
+
+**Observed result:** Stage237 scored 68/94, below both `skip_multi_session` at 71/94 and `all` at 69/94. Against skip, the adjudicator had 4 candidate-only and 7 skip-only outcomes; against all, it had 5 candidate-only and 6 all-only outcomes. The Top-20 memory order matched Stage227 in 94/94 questions. The earlier offline Stage236 draft replay at 73/94 did not reproduce in the runtime implementation. Stage237 metadata recorded model aliases and seed acceptance but omitted the provider base URL.
+
+**Decision/status:** Do not ship count adjudication. The uncommitted adapter implementation was removed; keep `skip_multi_session` as the default. This is a negative frozen-slice experiment, not a full benchmark score. The best full score remains 433/500, 52 below 485/500.

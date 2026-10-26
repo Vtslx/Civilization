@@ -1,0 +1,71 @@
+{
+  "stage": 237,
+  "date": "2026-10-26",
+  "experiment": "Frozen Top-20 multi-session count adjudication implementation pilot",
+  "source_run": {
+    "project_name": "stage237-count-adjudication-frozen",
+    "run_id": "stage237-count-adjudication-seed42",
+    "timestamp": "20261026_225449",
+    "raw_sha256": "6bf99328ad5275cac83ee0a064716db09fce003f63b897c65b36d4086d4f005a",
+    "provider": "openai",
+    "answerer_model": "group/auto-gpt-6-luna",
+    "judge_model": "group/auto-gpt-6-luna",
+    "base_url_recorded": false,
+    "seed": 42,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true
+  },
+  "protocol": {
+    "questions": 94,
+    "question_type": "multi-session count inventory",
+    "evaluate_only": true,
+    "reranker_enabled": false,
+    "retrieval_policy": "Stage227 selected Top-20 order frozen",
+    "identical_top20_memory_order_vs_stage227": 94
+  },
+  "scores": {
+    "skip_multi_session": {
+      "correct": 71,
+      "total": 94
+    },
+    "all_inventory": {
+      "correct": 69,
+      "total": 94
+    },
+    "count_adjudication": {
+      "correct": 68,
+      "total": 94
+    }
+  },
+  "paired_outcomes": {
+    "skip_multi_session": {
+      "total": 94,
+      "both_correct": 64,
+      "adjudicator_only": 4,
+      "reference_only": 7,
+      "both_wrong": 19
+    },
+    "all_inventory": {
+      "total": 94,
+      "both_correct": 63,
+      "adjudicator_only": 5,
+      "reference_only": 6,
+      "both_wrong": 20
+    }
+  },
+  "adjudication_status": {
+    "accepted": 43,
+    "fallback_adjudicator_unanswerable": 17,
+    "fallback_invalid_evidence": 34
+  },
+  "prior_offline_draft_pilot": {
+    "score": "73/94",
+    "paired_vs_skip": {
+      "adjudicator_only": 5,
+      "skip_only": 3
+    },
+    "interpretation": "The earlier pre-generated-draft result did not reproduce in the runtime implementation pilot."
+  },
+  "decision": "Do not ship the count adjudication implementation; retain skip_multi_session as the default.",
+  "reason": "Runtime adjudication scored below both frozen policy references and had more regressions than corrections versus skip."
+}
