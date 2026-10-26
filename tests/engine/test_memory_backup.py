@@ -16,6 +16,7 @@ from civilization.engine.persistence import (
     PersistenceConfig,
     SessionPersistence,
     create_memory_backup,
+    replicate_memory_backup,
     restore_memory_backup,
     verify_memory_backup,
 )
@@ -289,6 +290,85 @@ def test_encrypted_memory_backup_hides_payload_and_rejects_wrong_passphrase(tmp_
         verify_memory_backup(backup, passphrase="wrong-passphrase")
 
 
+def test_replicate_memory_backup_copies_and_authenticates_without_exposing_passphrase(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    import civilization.engine.persistence.backup as backup_module
+
+    state = _state_fixture(tmp_path)
+    source = tmp_path / "memory.enc"
+    target_directory = tmp_path / "replicas"
+    target_directory.mkdir()
+    create_memory_backup(state, source, passphrase=_TEST_PASSPHRASE)
+    real_device_id = backup_module._filesystem_device_id
+    target = target_directory.resolve()
+
+    def simulated_distinct_device(path: Path) -> int:
+        resolved = Path(path).resolve()
+        device_id = real_device_id(resolved)
+        return device_id + 1 if resolved == target else device_id
+
+    monkeypatch.setattr(backup_module, "_filesystem_device_id", simulated_distinct_device)
+
+    report = replicate_memory_backup(source, target_directory, passphrase=_TEST_PASSPHRASE)
+    replica = target_directory / source.name
+
+    assert report["replicated"] is True
+    assert report["verified"] is True
+    assert report["encrypted"] is True
+    assert report["source_device_id"] != report["destination_device_id"]
+    assert replica.read_bytes() == source.read_bytes()
+    assert replica.stat().st_mode & 0o777 == 0o600
+    assert verify_memory_backup(replica, passphrase=_TEST_PASSPHRASE)["verified"] is True
+    assert _TEST_PASSPHRASE not in json.dumps(report)
+    assert not list(target_directory.glob(".civ-replica-*.tmp"))
+
+
+def test_replicate_memory_backup_rejects_same_filesystem_and_preserves_source(tmp_path: Path) -> None:
+    state = _state_fixture(tmp_path)
+    source = tmp_path / "memory.enc"
+    target_directory = tmp_path / "same-volume-replicas"
+    target_directory.mkdir()
+    create_memory_backup(state, source, passphrase=_TEST_PASSPHRASE)
+    original_bytes = source.read_bytes()
+
+    with pytest.raises(MemoryBackupError, match="distinct filesystem"):
+        replicate_memory_backup(source, target_directory, passphrase=_TEST_PASSPHRASE)
+
+    assert source.read_bytes() == original_bytes
+    assert list(target_directory.iterdir()) == []
+
+
+def test_replicate_memory_backup_rejects_plaintext_and_existing_generations(tmp_path: Path, monkeypatch) -> None:
+    import civilization.engine.persistence.backup as backup_module
+
+    state = _state_fixture(tmp_path)
+    plaintext = tmp_path / "legacy.tar"
+    _write_legacy_backup(state, plaintext)
+    target_directory = tmp_path / "replicas"
+    target_directory.mkdir()
+    with pytest.raises(MemoryBackupError, match="only encrypted v2"):
+        replicate_memory_backup(plaintext, target_directory, passphrase=_TEST_PASSPHRASE)
+
+    source = tmp_path / "memory.enc"
+    create_memory_backup(state, source, passphrase=_TEST_PASSPHRASE)
+    existing = target_directory / source.name
+    existing.write_bytes(b"preserve this generation")
+    real_device_id = backup_module._filesystem_device_id
+    target = target_directory.resolve()
+
+    def simulated_distinct_device(path: Path) -> int:
+        resolved = Path(path).resolve()
+        device_id = real_device_id(resolved)
+        return device_id + 1 if resolved == target else device_id
+
+    monkeypatch.setattr(backup_module, "_filesystem_device_id", simulated_distinct_device)
+    with pytest.raises(FileExistsError):
+        replicate_memory_backup(source, target_directory, passphrase=_TEST_PASSPHRASE)
+    assert existing.read_bytes() == b"preserve this generation"
+
+
 def test_encrypted_memory_backup_rejects_tampering_and_truncation(tmp_path: Path) -> None:
     state = _state_fixture(tmp_path)
     backup = tmp_path / "memory.enc"
@@ -414,6 +494,68 @@ def test_backup_cli_requires_environment_passphrase_and_has_no_passphrase_argume
     with pytest.raises(SystemExit):
         main(["backup", "--state-dir", str(state), "--output", str(backup), "--passphrase", _TEST_PASSPHRASE])
     assert not backup.exists()
+
+
+def test_replicate_backup_cli_requires_environment_passphrase_and_has_no_passphrase_argument(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backup = tmp_path / "memory.enc"
+    destination = tmp_path / "replicas"
+    destination.mkdir()
+    monkeypatch.delenv("CIVILIZATION_BACKUP_PASSPHRASE", raising=False)
+
+    with pytest.raises(SystemExit, match="CIVILIZATION_BACKUP_PASSPHRASE"):
+        main(["replicate-backup", "--backup", str(backup), "--destination-dir", str(destination)])
+    with pytest.raises(SystemExit):
+        main([
+            "replicate-backup",
+            "--backup",
+            str(backup),
+            "--destination-dir",
+            str(destination),
+            "--passphrase",
+            _TEST_PASSPHRASE,
+        ])
+    assert list(destination.iterdir()) == []
+
+
+def test_replicate_backup_cli_reports_verified_replica_without_secret(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    import civilization.engine.persistence.backup as backup_module
+
+    state = _state_fixture(tmp_path)
+    source = tmp_path / "memory.enc"
+    target_directory = tmp_path / "replicas"
+    target_directory.mkdir()
+    create_memory_backup(state, source, passphrase=_TEST_PASSPHRASE)
+    real_device_id = backup_module._filesystem_device_id
+    target = target_directory.resolve()
+
+    def simulated_distinct_device(path: Path) -> int:
+        resolved = Path(path).resolve()
+        device_id = real_device_id(resolved)
+        return device_id + 1 if resolved == target else device_id
+
+    monkeypatch.setattr(backup_module, "_filesystem_device_id", simulated_distinct_device)
+    monkeypatch.setenv("CIVILIZATION_BACKUP_PASSPHRASE", _TEST_PASSPHRASE)
+
+    assert main([
+        "replicate-backup",
+        "--backup",
+        str(source),
+        "--destination-dir",
+        str(target_directory),
+        "--json",
+    ]) == 0
+    output = capsys.readouterr().out
+    report = json.loads(output)
+    assert report["verified"] is True
+    assert report["encrypted"] is True
+    assert _TEST_PASSPHRASE not in output
 
 
 def test_memory_backup_rejects_short_passphrases(tmp_path: Path) -> None:

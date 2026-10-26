@@ -8,7 +8,13 @@ so that fsync work and the durable stream survive service restarts.
 
 from __future__ import annotations
 
-from .backup import MemoryBackupError, create_memory_backup, restore_memory_backup, verify_memory_backup
+from .backup import (
+    MemoryBackupError,
+    create_memory_backup,
+    replicate_memory_backup,
+    restore_memory_backup,
+    verify_memory_backup,
+)
 from .journal import (
     FORMAT_VERSION,
     JOURNAL_NAME,
@@ -79,6 +85,7 @@ __all__ = [
     "cell_from_dict",
     "create_memory_backup",
     "link_from_dict",
+    "replicate_memory_backup",
     "restore_memory_backup",
     "session_directory",
     "trace_from_dict",

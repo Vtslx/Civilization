@@ -513,6 +513,28 @@ def _command_verify_backup(args: argparse.Namespace) -> int:
     return 0
 
 
+def _command_replicate_backup(args: argparse.Namespace) -> int:
+    from .engine.persistence import replicate_memory_backup
+
+    passphrase = os.environ.get("CIVILIZATION_BACKUP_PASSPHRASE")
+    if not passphrase:
+        raise SystemExit("backup replication failed: set CIVILIZATION_BACKUP_PASSPHRASE in the process environment")
+    try:
+        report = replicate_memory_backup(
+            args.backup,
+            args.destination_dir,
+            passphrase=passphrase,
+        )
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"backup replication failed: {error}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"encrypted backup replica verified on a distinct filesystem: {report['replica']}")
+        print(f"bytes: {report['total_bytes']}; sha256: {report['sha256']}")
+    return 0
+
+
 def _command_restore_backup(args: argparse.Namespace) -> int:
     from .engine.persistence import restore_memory_backup
 
@@ -755,6 +777,15 @@ def build_parser() -> argparse.ArgumentParser:
     verify_backup.add_argument("--backup", required=True, help="backup bundle")
     verify_backup.add_argument("--json", action="store_true", help="machine-readable output")
     verify_backup.set_defaults(func=_command_verify_backup)
+
+    replicate_backup = subparsers.add_parser(
+        "replicate-backup",
+        help="copy an encrypted backup to an existing directory on a distinct filesystem",
+    )
+    replicate_backup.add_argument("--backup", required=True, help="encrypted v2 backup bundle")
+    replicate_backup.add_argument("--destination-dir", required=True, help="existing directory on a distinct filesystem")
+    replicate_backup.add_argument("--json", action="store_true", help="machine-readable output")
+    replicate_backup.set_defaults(func=_command_replicate_backup)
 
     restore_backup = subparsers.add_parser(
         "restore",

@@ -150,6 +150,114 @@ def verify_memory_backup(backup_file: str | Path, *, passphrase: str | None = No
     return _verification_report(manifest, encrypted=encrypted)
 
 
+def replicate_memory_backup(
+    backup_file: str | Path,
+    destination_directory: str | Path,
+    *,
+    passphrase: str | None = None,
+) -> dict[str, Any]:
+    """Copy a verified encrypted backup to an existing distinct filesystem.
+
+    The source remains untouched. The destination filename is the source
+    filename; an existing destination is never replaced. A private temporary
+    copy is authenticated before an atomic hard-link publishes it.
+    """
+
+    passphrase = _validate_passphrase(passphrase)
+    source_input = Path(backup_file).expanduser()
+    if source_input.is_symlink():
+        raise MemoryBackupError("backup source must not be a symlink")
+    source = source_input.resolve(strict=True)
+    if not source.is_file():
+        raise FileNotFoundError(source)
+
+    source_signature = _backup_file_signature(source)
+    source_report = verify_memory_backup(source, passphrase=passphrase)
+    if not source_report.get("encrypted"):
+        raise MemoryBackupError("only encrypted v2 backups can be replicated")
+    if _backup_file_signature(source) != source_signature:
+        raise MemoryBackupError("backup source changed while it was being verified")
+
+    target_input = Path(destination_directory).expanduser()
+    if target_input.is_symlink():
+        raise MemoryBackupError("backup destination directory must not be a symlink")
+    target_directory_path = target_input.resolve(strict=True)
+    if not target_directory_path.is_dir():
+        raise NotADirectoryError(target_directory_path)
+    source_device = _filesystem_device_id(source)
+    target_device = _filesystem_device_id(target_directory_path)
+    if source_device == target_device:
+        raise MemoryBackupError("backup replica destination must be on a distinct filesystem")
+
+    destination = target_directory_path / source.name
+    if destination.exists() or destination.is_symlink():
+        raise FileExistsError(destination)
+
+    descriptor: int | None = None
+    temporary: Path | None = None
+    copied_digest = hashlib.sha256()
+    copied_size = 0
+    try:
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=".civ-replica-",
+            suffix=".tmp",
+            dir=target_directory_path,
+        )
+        temporary = Path(temporary_name)
+        os.fchmod(descriptor, 0o600)
+        with os.fdopen(descriptor, "wb") as target_stream:
+            descriptor = None
+            with source.open("rb") as source_stream:
+                while chunk := source_stream.read(_CHUNK_SIZE):
+                    target_stream.write(chunk)
+                    copied_digest.update(chunk)
+                    copied_size += len(chunk)
+            target_stream.flush()
+            os.fsync(target_stream.fileno())
+
+        if _backup_file_signature(source) != source_signature:
+            raise MemoryBackupError("backup source changed while it was being replicated")
+        if copied_size != source_signature[2]:
+            raise MemoryBackupError("backup replica size does not match its source")
+
+        copied_sha256 = copied_digest.hexdigest()
+        replica_sha256 = _sha256_file(temporary)
+        if replica_sha256 != copied_sha256:
+            raise MemoryBackupError("backup replica checksum does not match its source stream")
+
+        replica_report = verify_memory_backup(temporary, passphrase=passphrase)
+        if not replica_report.get("encrypted"):
+            raise MemoryBackupError("backup replica is not encrypted")
+
+        # Same-directory hard-link publication is atomic and never replaces an
+        # existing generation, including one created concurrently.
+        os.link(temporary, destination)
+        _fsync_directory(target_directory_path)
+    except Exception:
+        if descriptor is not None:
+            os.close(descriptor)
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+        raise
+
+    assert temporary is not None
+    temporary.unlink(missing_ok=True)
+    _fsync_directory(target_directory_path)
+    return {
+        "replicated": True,
+        "verified": True,
+        "encrypted": True,
+        "source": str(source),
+        "replica": str(destination),
+        "source_device_id": source_device,
+        "destination_device_id": target_device,
+        "total_bytes": copied_size,
+        "sha256": copied_sha256,
+        "entry_count": replica_report["entry_count"],
+        "session_count": replica_report["session_count"],
+    }
+
+
 def restore_memory_backup(
     backup_file: str | Path,
     destination: str | Path,
@@ -721,6 +829,15 @@ def _sha256_file(path: Path) -> str:
         while chunk := source.read(_CHUNK_SIZE):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _backup_file_signature(path: Path) -> tuple[int, int, int, int]:
+    stat = path.stat()
+    return stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns
+
+
+def _filesystem_device_id(path: Path) -> int:
+    return path.stat().st_dev
 
 
 def _copy_and_verify(stream: Any, destination: Path, entry: dict[str, Any]) -> None:
