@@ -64,7 +64,7 @@
     "top20_selection_sha256": "7a27e0ec0299318bf612a270f9739f5c05781c37ebd215fc03ab9122ae739efa",
     "top20_order_matches_stage221_direct": 130,
     "mean_top20_id_overlap_vs_stage221_direct": 11.828,
-    "evaluation_payload": "Top-20 answers, judgments, audits, selected source-pair provenance, and qids; full retrieval memory text omitted."
+    "evaluation_payload": "Top-20 answers, judgments, audits, selected source-pair provenance, pair-coverage analysis, and qids; full retrieval memory text omitted."
   },
   "metrics_by_cutoff": {
     "top_20": {
@@ -98524,5 +98524,67 @@
     }
   ],
   "interpretation": "Fresh full 500-question candidate. Aggregate is below both Stage227 and Stage232; paired differences are confounded by LLM reranker selection variability and changed prompt source. Stage238 remains the isolated evidence for count-aware verification.",
-  "decision": "Do not enable the verifier by default. The full candidate is not an accuracy improvement; investigate reranker/evidence-selection variance and temporal synthesis. The 97% target remains unmet."
+  "decision": "Do not enable the verifier by default. The full candidate is not an accuracy improvement; investigate reranker/evidence-selection variance and temporal synthesis. The 97% target remains unmet.",
+  "answer_pair_coverage": {
+    "method": "For non-abstention questions, mark message pairs with has_answer=true inside answer_session_ids; match to selected Top-20 provenance (source_session_id, source_pair_index).",
+    "answerable_questions": 470,
+    "abstention_questions": 30,
+    "answer_marked_pairs": 883,
+    "top20_pair_hits": 865,
+    "top20_pair_recall": 0.9796149490373726,
+    "questions_with_all_answer_pairs_in_top20": 455,
+    "answerable_wrong_answers": 70,
+    "wrong_answers_with_all_answer_pairs_in_top20": 61,
+    "by_question_type": {
+      "knowledge-update": {
+        "questions": 72,
+        "answer_pairs": 144,
+        "top20_hits": 143,
+        "all_pairs_present": 71,
+        "wrong": 4,
+        "wrong_all_pairs_present": 4
+      },
+      "multi-session": {
+        "questions": 121,
+        "answer_pairs": 322,
+        "top20_hits": 312,
+        "all_pairs_present": 114,
+        "wrong": 26,
+        "wrong_all_pairs_present": 21
+      },
+      "single-session-assistant": {
+        "questions": 56,
+        "answer_pairs": 56,
+        "top20_hits": 54,
+        "all_pairs_present": 54,
+        "wrong": 6,
+        "wrong_all_pairs_present": 5
+      },
+      "single-session-preference": {
+        "questions": 30,
+        "answer_pairs": 44,
+        "top20_hits": 43,
+        "all_pairs_present": 29,
+        "wrong": 5,
+        "wrong_all_pairs_present": 5
+      },
+      "single-session-user": {
+        "questions": 64,
+        "answer_pairs": 64,
+        "top20_hits": 63,
+        "all_pairs_present": 63,
+        "wrong": 2,
+        "wrong_all_pairs_present": 2
+      },
+      "temporal-reasoning": {
+        "questions": 127,
+        "answer_pairs": 253,
+        "top20_hits": 250,
+        "all_pairs_present": 124,
+        "wrong": 27,
+        "wrong_all_pairs_present": 24
+      }
+    },
+    "interpretation": "Retrieval covers almost all annotated answer-bearing pairs; 61 of 70 answerable wrong answers already contain every marked pair. Remaining errors are largely answer synthesis/event reasoning, although pair coverage is not proof of factual precision."
+  }
 }
