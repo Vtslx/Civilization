@@ -1,0 +1,76 @@
+{
+  "stage": 240,
+  "date": "2026-10-27",
+  "experiment": "Frozen Stage239 multi-event temporal list-order resolver replay",
+  "provider": {
+    "base_url": "http://192.168.3.13:3425/v1",
+    "judge_model": "group/auto-gpt-6-luna",
+    "seed": 42,
+    "judge_seed_accepted": true
+  },
+  "input": {
+    "source_scorecard": "/Volumes/Net/Civilization/docs/operations/data/longmemeval-stage239-count-aware-verification-full-top20-2026-10-27.json",
+    "source_retrieval_snapshot": "/tmp/civilization-stage221-baseline-scorecard.json",
+    "source_retrieval_sha256": "d3e8bf56bc1a4432f27373d03f17f729b8bbdd9597709d3bffc7d96b92122eca",
+    "stage239_prompt_sha256": "fe472eb9d3895b7218e0a0a40ea36f3a291ef73d9a4b10a548992eb9d1911004",
+    "top20_selection_sha256": "7a27e0ec0299318bf612a270f9739f5c05781c37ebd215fc03ab9122ae739efa",
+    "question_scope": "All 133 Stage239 temporal-reasoning answers with frozen selected Top-20 evidence.",
+    "answer_generation_repeated": false,
+    "reranker_repeated": false,
+    "method": "Rebuild the list from event audit items only when every event has a source-validated disjoint date interval; rejudge changed answers only."
+  },
+  "scores": {
+    "temporal_baseline": {
+      "correct": 109,
+      "total": 133
+    },
+    "temporal_candidate": {
+      "correct": 110,
+      "total": 133
+    },
+    "full_frozen_diagnostic_baseline": {
+      "correct": 422,
+      "total": 500
+    },
+    "full_frozen_diagnostic_candidate": {
+      "correct": 423,
+      "total": 500
+    }
+  },
+  "paired_outcomes": {
+    "total": 2,
+    "both_correct": 1,
+    "candidate_only": 1,
+    "baseline_only": 0,
+    "both_wrong": 0
+  },
+  "resolver_candidates": 2,
+  "status_counts": {
+    "resolved": 2
+  },
+  "resolved_rows": [
+    {
+      "question_id": "gpt4_7f6b06db",
+      "baseline_correct": true,
+      "candidate_correct": true,
+      "status": "resolved",
+      "validation_error_count": 0,
+      "question": "What is the order of the three trips I took in the past three months, from earliest to latest?",
+      "ground_truth_answer": "I went on a day hike to Muir Woods National Monument with my family, then I went on a road trip with friends to Big Sur and Monterey, and finally I started my solo camping trip to Yosemite National Park.",
+      "baseline_answer": "Muir Woods day hike → Big Sur and Monterey road trip → Yosemite solo camping trip",
+      "candidate_answer": "1. Day hike to Muir Woods National Monument\n2. Road trip to Big Sur and Monterey\n3. Solo camping trip to Yosemite National Park"
+    },
+    {
+      "question_id": "gpt4_f420262c",
+      "baseline_correct": false,
+      "candidate_correct": true,
+      "status": "resolved",
+      "validation_error_count": 0,
+      "question": "What is the order of airlines I flew with from earliest to latest before today?",
+      "ground_truth_answer": "JetBlue, Delta, United, American Airlines",
+      "baseline_answer": "JetBlue → United Airlines → American Airlines. The evidence does not establish that the Boston–Atlanta flight was on Delta, so Delta cannot be placed in the order of airlines you flew with.",
+      "candidate_answer": "1. JetBlue red-eye flight from San Francisco to Boston\n2. Delta round-trip flight from Boston to Atlanta\n3. United Airlines flight from Boston to Chicago\n4. American Airlines flight from New York to Los Angeles"
+    }
+  ],
+  "decision": "Positive isolated pilot with one correction and zero regressions. Keep the resolver opt-in; run a fresh full 500-question Top-20 candidate before recommending it."
+}
