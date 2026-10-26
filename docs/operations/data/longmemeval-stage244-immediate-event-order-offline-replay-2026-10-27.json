@@ -1,0 +1,48 @@
+{
+  "stage": 244,
+  "date": "2026-10-27",
+  "experiment": "Offline replay of opt-in immediate-event intervals on frozen Stage241 temporal answers",
+  "input": {
+    "source_scorecard": "docs/operations/data/longmemeval-stage241-temporal-list-order-full-top20-2026-10-27.json",
+    "source_retrieval_snapshot": "/tmp/civilization-stage221-baseline-scorecard.json",
+    "temporal_questions": 133,
+    "top20_evidence_frozen": true,
+    "answer_generation_repeated": false,
+    "reranker_repeated": false
+  },
+  "feature": {
+    "cli_flag": "--temporal-recent-event-order-resolution",
+    "default_enabled": false,
+    "interval": "observation date minus six days through observation date",
+    "citation_requirements": "exact user-authored quote, one observation date, two meaningful description/quote token overlaps",
+    "ordering_gate": "all expected events present and every interval pairwise disjoint"
+  },
+  "offline_result": {
+    "newly_resolved_lists": 1,
+    "answer_changes": 1,
+    "changed_rows": [
+      {
+        "question_id": "gpt4_d6585ce8",
+        "question": "What is the order of the concerts and musical events I attended in the past two months, starting from the earliest?",
+        "ground_truth_answer": "The order of the concerts I attended is: 1. Billie Eilish concert at the Wells Fargo Center in Philly, 2. Free outdoor concert series in the park, 3. Music festival in Brooklyn, 4. Jazz night at a local bar, 5. Queen + Adam Lambert concert at the Prudential Center in Newark, NJ.",
+        "baseline_answer": "The events with supported dates, from earliest to latest, were the Billie Eilish concert on March 18, the outdoor concert series on March 25, and the jazz night on April 8. The Brooklyn music festival and the Queen concert were also attended within the period described, but the memories give no event dates for them, so their positions in the order cannot be determined.",
+        "candidate_answer": "1. Billie Eilish concert at Wells Fargo Center in Philadelphia\n2. Free outdoor concert series in the park\n3. Music festival in Brooklyn featuring Glass Animals\n4. Jazz night at a local bar\n5. Queen with Adam Lambert at Prudential Center in Newark",
+        "baseline_judgment": "FAIL",
+        "baseline_correct": false,
+        "candidate_judgment": "not_run_provider_timeout",
+        "bounded_events": [
+          {
+            "description": "Music festival in Brooklyn featuring Glass Animals",
+            "date_basis": "Bounded from 2023-03-26 through 2023-04-01 using a user-authored immediate-event quote and its observation date."
+          },
+          {
+            "description": "Queen with Adam Lambert at Prudential Center in Newark",
+            "date_basis": "Bounded from 2023-04-09 through 2023-04-15 using a user-authored immediate-event quote and its observation date."
+          }
+        ]
+      }
+    ],
+    "judge_run": "unavailable; provider Chat Completions timed out; no accuracy score computed"
+  },
+  "decision": "Keep the feature opt-in. The offline candidate order matches the five event labels in the benchmark reference, but live judging and a full candidate run are pending provider recovery."
+}

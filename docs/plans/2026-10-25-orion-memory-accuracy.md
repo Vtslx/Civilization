@@ -438,3 +438,11 @@
 **Stage242 interaction audit:** Replayed the existing N-event list-order resolver on the same 133 frozen temporal answers using the expanded relative-week parser. It produced no additional answer changes and no new list resolutions.
 
 **Status:** Stage242 passed its isolated gate. Stage243 stopped at 123/500 completed rows after repeated provider timeouts; `/models` returned HTTP 200 but both concurrent generation requests and a minimal Chat Completions smoke call timed out. The checkpoint is preserved at `/tmp/civilization-stage243-relative-week-20261027` for resumption after provider inference recovers. No Stage243 score is available. Keep the resolver opt-in; the best complete score remains 433/500 (86.6%), and the 97% and 100% precision goals remain unmet.
+
+## Module 27: Bound immediate-event dates for temporal lists
+
+**Adapter commit:** `8292b8d feat: add opt-in immediate event ordering`. The new `--temporal-recent-event-order-resolution` flag uses a broad `[observation_date - 6 days, observation_date]` interval only when an exact user-authored citation contains a completed immediate-event phrase, its observation date is unique, and the event description shares at least two meaningful terms with the quote. The N-event resolver still requires the expected complete list and pairwise-disjoint intervals. The flag is disabled by default and recorded in run metadata.
+
+**Stage244 offline replay:** Replayed all 133 frozen Stage241 temporal answers. One answer changed: `gpt4_d6585ce8`; its previously undated Brooklyn music festival and Queen/Adam Lambert concert were placed between the exact March 25 outdoor concert and April 8 jazz night. The resulting five event identities and order match the benchmark reference. Chat Completions was unavailable, so the changed answer was not live-judged and no accuracy score is claimed. Artifact: `docs/operations/data/longmemeval-stage244-immediate-event-order-offline-replay-2026-10-27.json`.
+
+**Verification and status:** Adapter suite passed 114 tests and 25 subtests; compileall and diff checks passed. Keep the feature opt-in pending a frozen judge pilot and full 500-question candidate. The best verified complete score remains 433/500 (86.6%); 97% accuracy and 100% precision remain unachieved.

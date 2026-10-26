@@ -49,6 +49,8 @@ Run focused tests, the full adapter suite, `compileall`, and `git diff --check`.
 
 Reconstruct Stage241's selected Top-20 memory text from the Stage221 snapshot and replay only the temporal list-order postprocessor over all 133 temporal answers. Record changed qids and candidate text. The provider currently times out on Chat Completions; do not claim a judged pilot or enable the feature by default until the provider can rejudge changed answers.
 
+**Stage244 offline result:** On all 133 frozen temporal answers, the opt-in path changed one answer, qid `gpt4_d6585ce8`. It inserted the Brooklyn festival and Queen/Adam Lambert concert between their exact neighboring events, matching the five event identities and order in the benchmark reference. No live judge was available, so this is an unjudged candidate, not a score. Artifact: `docs/operations/data/longmemeval-stage244-immediate-event-order-offline-replay-2026-10-27.json`.
+
 ## Task 4: Judge and run a full candidate after inference recovers
 
-Rejudge only changed answers against their frozen Stage241 baseline. Require at least one candidate-only correction and zero baseline-only regressions. Then run a full 500-question candidate over the frozen Stage221 retrieval inputs with the feature enabled. Commit code with `fix: order immediate-event temporal lists`; record pilot and full-run evidence in Civilization with English documentation commits.
+The feature is implemented and committed as `8292b8d feat: add opt-in immediate event ordering`, with the full test suite passing (114 tests, 25 subtests). It remains disabled by default. After provider inference recovers, rejudge only changed answers against their frozen Stage241 baseline. Require at least one candidate-only correction and zero baseline-only regressions before running a full 500-question candidate over the frozen Stage221 retrieval inputs. Record judged pilot and full-run evidence in Civilization with English documentation commits.
