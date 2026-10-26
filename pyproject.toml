@@ -36,6 +36,10 @@ Documentation = "https://github.com/Vtslx/Civilization/tree/main/docs"
 secure-backup = [
   "cryptography>=50.0.2",
 ]
+# Replicate authenticated encrypted backups to S3-compatible object storage.
+backup-s3 = [
+  "boto3>=1.40.20",
+]
 # Host the service in-process: engine, service chain, and local model support.
 embedded = [
   "torch>=2.2",

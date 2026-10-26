@@ -535,6 +535,136 @@ def _command_replicate_backup(args: argparse.Namespace) -> int:
     return 0
 
 
+def _command_replicate_s3_backup(args: argparse.Namespace) -> int:
+    from .engine.persistence import create_s3_client, replicate_encrypted_backup_to_s3
+
+    passphrase = os.environ.get("CIVILIZATION_BACKUP_PASSPHRASE")
+    if not passphrase:
+        raise SystemExit("S3 backup replication failed: set CIVILIZATION_BACKUP_PASSPHRASE in the process environment")
+    try:
+        client = create_s3_client(
+            endpoint_url=args.endpoint_url,
+            region_name=args.region,
+            allow_insecure_http=args.allow_insecure_http,
+        )
+        report = replicate_encrypted_backup_to_s3(
+            args.backup,
+            client=client,
+            bucket=args.bucket,
+            key_prefix=args.key_prefix,
+            checkpoint_directory=args.checkpoint_dir,
+            endpoint_identity=args.endpoint_url or f"aws:{args.region}",
+            passphrase=passphrase,
+            part_size_bytes=args.part_size_mib * 1024 * 1024,
+            object_lock_mode=args.object_lock_mode,
+            retention_days=args.retention_days,
+        )
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"S3 backup replication failed: {error}") from error
+    except Exception as error:
+        raise SystemExit(f"S3 backup replication failed: {type(error).__name__}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"encrypted S3 backup verified: s3://{report['bucket']}/{report['key']}")
+        print(f"version: {report['version_id']}; bytes: {report['total_bytes']}; sha256: {report['source_sha256']}")
+    return 0
+
+
+def _command_s3_backup_retention(args: argparse.Namespace) -> int:
+    from .engine.persistence import apply_s3_backup_retention, create_s3_client, plan_s3_backup_retention
+
+    try:
+        client = create_s3_client(
+            endpoint_url=args.endpoint_url,
+            region_name=args.region,
+            allow_insecure_http=args.allow_insecure_http,
+        )
+        plan = plan_s3_backup_retention(
+            client,
+            bucket=args.bucket,
+            prefix=args.prefix,
+            keep_latest=args.keep_latest,
+            older_than_days=args.older_than_days,
+        )
+        report = apply_s3_backup_retention(client, plan, apply=args.apply)
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"S3 backup retention failed: {error}") from error
+    except Exception as error:
+        raise SystemExit(f"S3 backup retention failed: {type(error).__name__}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        action = "deleted" if args.apply else "would delete"
+        candidates = report.get("deleted_versions", report.get("candidate_versions", []))
+        preserved = report.get("preserved_versions", plan.get("preserved_versions", []))
+        print(f"S3 backup retention plan: {action} {len(candidates)} version(s)")
+        print(f"preserved: {len(preserved)} version(s)")
+    return 0
+
+
+def _command_replicate_s3_backup(args: argparse.Namespace) -> int:
+    from .engine.persistence import create_s3_client, replicate_encrypted_backup_to_s3
+
+    passphrase = os.environ.get("CIVILIZATION_BACKUP_PASSPHRASE")
+    if not passphrase:
+        raise SystemExit("S3 backup replication failed: set CIVILIZATION_BACKUP_PASSPHRASE in the process environment")
+    try:
+        client = create_s3_client(
+            endpoint_url=args.endpoint_url,
+            region_name=args.region,
+            allow_insecure_http=args.allow_insecure_http,
+        )
+        report = replicate_encrypted_backup_to_s3(
+            args.backup,
+            client=client,
+            bucket=args.bucket,
+            key_prefix=args.key_prefix,
+            checkpoint_directory=args.checkpoint_dir,
+            endpoint_identity=args.endpoint_url or f"aws:{args.region}",
+            passphrase=passphrase,
+            part_size_bytes=args.part_size_mib * 1024 * 1024,
+            object_lock_mode=args.object_lock_mode,
+            retention_days=args.retention_days,
+        )
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"S3 backup replication failed: {error}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"encrypted S3 backup verified: s3://{report['bucket']}/{report['key']}")
+        print(f"version: {report['version_id']}; bytes: {report['total_bytes']}; sha256: {report['source_sha256']}")
+    return 0
+
+
+def _command_s3_backup_retention(args: argparse.Namespace) -> int:
+    from .engine.persistence import apply_s3_backup_retention, create_s3_client, plan_s3_backup_retention
+
+    try:
+        client = create_s3_client(
+            endpoint_url=args.endpoint_url,
+            region_name=args.region,
+            allow_insecure_http=args.allow_insecure_http,
+        )
+        plan = plan_s3_backup_retention(
+            client,
+            bucket=args.bucket,
+            prefix=args.prefix,
+            keep_latest=args.keep_latest,
+            older_than_days=args.older_than_days,
+        )
+        report = apply_s3_backup_retention(client, plan, apply=args.apply)
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"S3 backup retention failed: {error}") from error
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        action = "deleted" if args.apply else "would delete"
+        print(f"S3 backup retention plan: {action} {len(report.get('deleted_versions', report.get('candidate_versions', [])))} version(s)")
+        print(f"preserved: {len(report.get('preserved_versions', plan.get('preserved_versions', [])))} version(s)")
+    return 0
+
+
 def _command_restore_backup(args: argparse.Namespace) -> int:
     from .engine.persistence import restore_memory_backup
 
@@ -786,6 +916,49 @@ def build_parser() -> argparse.ArgumentParser:
     replicate_backup.add_argument("--destination-dir", required=True, help="existing directory on a distinct filesystem")
     replicate_backup.add_argument("--json", action="store_true", help="machine-readable output")
     replicate_backup.set_defaults(func=_command_replicate_backup)
+
+    s3_backup = subparsers.add_parser(
+        "replicate-s3-backup",
+        help="resume, upload, and remotely verify an encrypted backup in a versioned S3-compatible bucket",
+    )
+    s3_backup.add_argument("--backup", required=True, help="encrypted v2 backup bundle")
+    s3_backup.add_argument("--bucket", required=True, help="versioned S3-compatible bucket")
+    s3_backup.add_argument("--key-prefix", required=True, help="object key prefix for content-addressed backups")
+    s3_backup.add_argument("--checkpoint-dir", required=True, help="private durable local multipart checkpoint directory")
+    s3_backup.add_argument(
+        "--endpoint-url",
+        default=os.getenv("CIVILIZATION_BACKUP_S3_ENDPOINT_URL"),
+        help="S3-compatible endpoint (omit for AWS S3; credentials use the SDK provider chain)",
+    )
+    s3_backup.add_argument(
+        "--region",
+        default=os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION") or "us-east-1",
+        help="S3 signing region",
+    )
+    s3_backup.add_argument("--part-size-mib", type=int, default=8, help="multipart size in MiB (minimum 5)")
+    s3_backup.add_argument("--object-lock-mode", choices=["GOVERNANCE", "COMPLIANCE"], default=None)
+    s3_backup.add_argument("--retention-days", type=int, default=None)
+    s3_backup.add_argument("--allow-insecure-http", action="store_true", help="allow a non-TLS HTTP endpoint explicitly")
+    s3_backup.add_argument("--json", action="store_true", help="machine-readable output")
+    s3_backup.set_defaults(func=_command_replicate_s3_backup)
+
+    s3_retention = subparsers.add_parser(
+        "s3-backup-retention",
+        help="plan or explicitly apply version-aware retention for encrypted S3 backups",
+    )
+    s3_retention.add_argument("--bucket", required=True)
+    s3_retention.add_argument("--prefix", required=True)
+    s3_retention.add_argument("--keep-latest", type=int, required=True)
+    s3_retention.add_argument("--older-than-days", type=int, required=True)
+    s3_retention.add_argument("--endpoint-url", default=os.getenv("CIVILIZATION_BACKUP_S3_ENDPOINT_URL"))
+    s3_retention.add_argument(
+        "--region",
+        default=os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION") or "us-east-1",
+    )
+    s3_retention.add_argument("--allow-insecure-http", action="store_true")
+    s3_retention.add_argument("--apply", action="store_true", help="delete only the reviewed candidate version IDs")
+    s3_retention.add_argument("--json", action="store_true", help="machine-readable output")
+    s3_retention.set_defaults(func=_command_s3_backup_retention)
 
     restore_backup = subparsers.add_parser(
         "restore",

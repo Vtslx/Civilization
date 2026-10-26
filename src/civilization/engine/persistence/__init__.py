@@ -15,6 +15,14 @@ from .backup import (
     restore_memory_backup,
     verify_memory_backup,
 )
+from .s3_backup import (
+    apply_s3_backup_retention,
+    create_s3_client,
+    plan_s3_backup_retention,
+    replicate_encrypted_backup_to_s3,
+    s3_backup_object_key,
+    validate_s3_endpoint_url,
+)
 from .journal import (
     FORMAT_VERSION,
     JOURNAL_NAME,
@@ -81,13 +89,19 @@ __all__ = [
     "SidecarClient",
     "SidecarServer",
     "apply_records",
+    "apply_s3_backup_retention",
     "build_sink",
     "cell_from_dict",
     "create_memory_backup",
+    "create_s3_client",
     "link_from_dict",
     "replicate_memory_backup",
     "restore_memory_backup",
+    "replicate_encrypted_backup_to_s3",
+    "plan_s3_backup_retention",
+    "s3_backup_object_key",
     "session_directory",
     "trace_from_dict",
     "verify_memory_backup",
+    "validate_s3_endpoint_url",
 ]
