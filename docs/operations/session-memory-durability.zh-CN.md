@@ -162,17 +162,22 @@ curl -s -X POST localhost:8765/admin/orion/memory/retention \
 
 日志重放可恢复进程和主机重启，但磁盘丢失还需要独立故障域中的第二份副本。
 备份命令离线运行：创建归档前需停止服务及持久化 sidecar，避免复制期间日志
-集合发生变化。
+集合发生变化。先安装加密可选依赖，并从批准的密钥管理器向每个命令进程注入
+`CIVILIZATION_BACKUP_PASSPHRASE`；CLI 不接受命令行密钥参数。
+密钥必须至少 16 个 UTF-8 字节且具备足够随机性，不要使用字典短语。
 
 ```bash
-# 在实时状态目录之外创建并验证权限为 0600 的 tar 归档。
-civilization backup --state-dir var/state --output /secure-backups/orion-2026-10-25.tar
+# 核心包保持仅依赖标准库；备份功能需要安装加密 extra。
+python -m pip install 'astreusn-civilization-v1[secure-backup]'
 
-# 不解压，检查清单、路径、文件大小和 SHA-256 校验和。
-civilization verify-backup --backup /secure-backups/orion-2026-10-25.tar
+# 在实时状态目录之外创建并验证权限为 0600 的加密归档。
+civilization backup --state-dir var/state --output /secure-backups/orion-2026-10-26.enc
+
+# 验证所有认证数据块、清单和载荷校验和。
+civilization verify-backup --backup /secure-backups/orion-2026-10-26.enc
 
 # 恢复到新目录；已存在的目标目录会被拒绝。
-civilization restore --backup /secure-backups/orion-2026-10-25.tar --destination var/state-restored
+civilization restore --backup /secure-backups/orion-2026-10-26.enc --destination var/state-restored
 
 # 检查恢复结果后，再以恢复目录启动服务。
 civilization serve --state-dir var/state-restored --provider-base-url <url> --provider-model <model>
@@ -182,12 +187,21 @@ civilization serve --state-dir var/state-restored --provider-base-url <url> --pr
 `global-memory.json`。它不包含任务队列、任务结果、审计日志、导出文件、服务商
 配置或模型文件。清单保存相对路径、字节数和 SHA-256 校验和。恢复会拒绝未知
 版本、路径穿越、链接、意外文件和校验不匹配，并在原子提升已验证的暂存目录后
-完成。目标路径必须不存在。
+完成。目标路径必须不存在。新归档使用带版本号的 AES-256-GCM 封装，每个 1 MiB
+数据块独立认证，并通过 Argon2id 从密钥派生加密密钥；每个归档使用新的 salt
+和 nonce 前缀。校验过程直接流式读取认证数据块，不会把整份明文 tar 写入临时
+文件。恢复时将文件写入权限受限的暂存目录，只有最终认证帧及清单检查全部通过
+后才会提升。JSON 报告会标记 `encrypted: true`。
 
-校验和用于发现意外损坏，不能鉴别恶意改写；归档本身也未加密。记忆可能含有
-用户隐私数据。请将备份保存到源卷之外、受访问控制且加密的备份目标中，按运维
-保留策略保留多个版本，并在临时目录中定期演练恢复。同一块磁盘上的备份不属于
-容灾副本。
+旧版 v1 tar 归档仍可不带密钥验证和恢复，但它们是明文，只校验载荷校验和；新建
+归档一律加密。恢复加密归档必须提供原密钥；密钥丢失后无法恢复，因此请将密钥
+与备份分开存入批准的密钥管理器。恢复时需为私有暂存目录预留足够的目标状态空间。
+迁移旧版 v1 时，先恢复到一个新状态目录，再从该目录创建新的加密备份；原明文
+归档应按保留策略妥善保护或退役。
+
+记忆可能含有用户隐私数据。请将归档存到源卷之外，并按运维策略保留多个版本，
+定期在临时目录中演练恢复。加密本身不会配置异地复制、定时任务、保留、告警或
+恢复演练。同一块磁盘上的备份不属于容灾副本。
 
 ## 边界与非目标
 

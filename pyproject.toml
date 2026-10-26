@@ -32,6 +32,10 @@ Issues = "https://github.com/Vtslx/Civilization/issues"
 Documentation = "https://github.com/Vtslx/Civilization/tree/main/docs"
 
 [project.optional-dependencies]
+# Encrypt new Orion backup bundles; the core package remains stdlib-only.
+secure-backup = [
+  "cryptography>=50.0.2",
+]
 # Host the service in-process: engine, service chain, and local model support.
 embedded = [
   "torch>=2.2",
@@ -54,6 +58,7 @@ research = [
 # Run the full test suite: it exercises the engine, so it needs engine deps.
 test = [
   "pytest>=8",
+  "cryptography>=50.0.2",
   "torch>=2.2",
   "transformers==4.57.6",
   "numpy>=1.26",

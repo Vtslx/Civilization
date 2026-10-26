@@ -384,3 +384,13 @@
 **Observed result:** Stage237 scored 68/94, below both `skip_multi_session` at 71/94 and `all` at 69/94. Against skip, the adjudicator had 4 candidate-only and 7 skip-only outcomes; against all, it had 5 candidate-only and 6 all-only outcomes. The Top-20 memory order matched Stage227 in 94/94 questions. The earlier offline Stage236 draft replay at 73/94 did not reproduce in the runtime implementation. Stage237 metadata recorded model aliases and seed acceptance but omitted the provider base URL.
 
 **Decision/status:** Do not ship count adjudication. The uncommitted adapter implementation was removed; keep `skip_multi_session` as the default. This is a negative frozen-slice experiment, not a full benchmark score. The best full score remains 433/500, 52 below 485/500.
+
+## Module 23: Encrypt Orion memory backups
+
+**Files:** `src/civilization/engine/persistence/backup.py`, `src/civilization/cli.py`, `pyproject.toml`, `tests/engine/test_memory_backup.py`, and the session durability documentation.
+
+**Design:** Make all new backups encrypted v2 bundles using independently authenticated 1 MiB AES-256-GCM frames and an Argon2id-derived key. Require a high-entropy passphrase via the Python API or `CIVILIZATION_BACKUP_PASSPHRASE`; never accept it as a CLI argument. Stream verification directly through the authenticated reader, restore into a private staging tree, and atomically promote only after the terminal frame, manifest, and payload hashes validate. Keep v1 plaintext archives readable for recovery but do not create them.
+
+**Verification:** `python3 -m pytest tests/engine/test_memory_backup.py -q` passed 23 tests, including missing/short/wrong-key rejection, tampering/truncation, bounded KDF parameters, long PAX paths, multi-frame archives, v1 recovery, no plaintext verification temp file, optional-dependency failure, and CLI secret handling. `compileall`, pyproject TOML validation, and `git diff --check` passed. The adjacent session-persistence suite could not be collected in the current environment because `psutil` is not installed; no dependencies were installed to work around it.
+
+**DR boundary:** This protects backup confidentiality and integrity; it does not create an independent copy. The checked volume has only about 3.6 GiB free and the repository and `/Volumes/Net/Recovery` share that same filesystem. No separate offsite target or credentials are available, so scheduling, replication, alerting, retention, and a production restore drill remain open. A same-volume encrypted archive is not disaster recovery.

@@ -216,17 +216,24 @@ path.
 Journal replay protects against process and host restarts. A second copy in an
 independent failure domain is still required for disk loss. These commands
 operate offline: stop the service and persistence sidecar before creating a
-bundle so the journal set cannot change during the copy.
+bundle so the journal set cannot change during the copy. Install the optional
+crypto dependency and inject `CIVILIZATION_BACKUP_PASSPHRASE` into each command
+process from an approved secret manager; the passphrase is never accepted as a
+CLI argument. Use a high-entropy value of at least 16 UTF-8 bytes; avoid
+dictionary phrases.
 
 ```bash
-# Create and verify a mode-0600 tar bundle outside the live state directory.
-civilization backup --state-dir var/state --output /secure-backups/orion-2026-10-25.tar
+# The core package stays standard-library-only; install crypto support for backup.
+python -m pip install 'astreusn-civilization-v1[secure-backup]'
 
-# Verify the manifest, paths, sizes, and SHA-256 checksums without extracting.
-civilization verify-backup --backup /secure-backups/orion-2026-10-25.tar
+# Create and verify a mode-0600 encrypted bundle outside the live state directory.
+civilization backup --state-dir var/state --output /secure-backups/orion-2026-10-26.enc
+
+# Verify every authenticated frame plus the manifest and payload checksums.
+civilization verify-backup --backup /secure-backups/orion-2026-10-26.enc
 
 # Restore into a new directory. Existing destinations are refused.
-civilization restore --backup /secure-backups/orion-2026-10-25.tar --destination var/state-restored
+civilization restore --backup /secure-backups/orion-2026-10-26.enc --destination var/state-restored
 
 # Start the service against the recovered directory after checking the result.
 civilization serve --state-dir var/state-restored --provider-base-url <url> --provider-model <model>
@@ -238,14 +245,29 @@ results, audit logs, exports, provider configuration, or model files. The
 manifest stores relative paths, byte counts, and SHA-256 checksums. Restore
 rejects unknown versions, path traversal, links, unexpected files, and checksum
 mismatches, then promotes the verified staging directory atomically. The target
-path must not already exist.
+path must not already exist. New bundles use a versioned AES-256-GCM envelope
+with 1 MiB independently authenticated chunks and an Argon2id-derived key. A
+fresh salt and nonce prefix are generated for every bundle. Verification streams
+through authenticated frames without writing a full plaintext tar temporary;
+restore writes files into a private staging directory and promotes them only
+after the final authentication frame and all manifest checks pass. `--json`
+reports `encrypted: true` for these bundles.
 
-Checksums detect accidental corruption; they do not authenticate an archive
-against a malicious rewrite, and the bundle is not encrypted. Memory can contain
-private user data. Store backups outside the source volume in an
-access-controlled, encrypted backup destination, keep versions according to an
-operational retention policy, and run restore drills against a disposable
-directory. A backup on the same disk is not disaster recovery.
+Legacy v1 tar bundles remain readable and restorable without a passphrase, but
+they are plaintext and only their payload checksums are verified. New backup
+creation always encrypts. The passphrase is required to restore encrypted
+bundles; losing it makes those bundles unrecoverable, so store it separately
+from the backup in an approved secret manager. Restore needs enough free space
+for the recovered state in its private staging directory. To migrate a v1
+bundle, restore it into a new state directory and create a fresh encrypted
+backup from that directory; protect or retire the original plaintext bundle
+according to the retention policy.
+
+Memory can contain private user data. Store bundles outside the source volume,
+keep versions according to an operational retention policy, and run restore
+drills against a disposable directory. Encryption does not automate offsite
+replication, scheduling, retention, alerts, or restore drills. A backup on the
+same disk is not disaster recovery.
 
 ## Limits and non-goals
 

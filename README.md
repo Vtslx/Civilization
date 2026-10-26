@@ -94,8 +94,10 @@ sessions. Details, guarantees per failure mode, and the knobs:
 [docs/operations/session-memory-durability.md](docs/operations/session-memory-durability.md)
 (also in [简体中文](docs/operations/session-memory-durability.zh-CN.md)).
 `civilization backup`, `civilization verify-backup`, and `civilization restore`
-provide an offline, checksummed memory backup path; a verified copy must be
-stored outside the source disk to cover disk loss.
+provide an offline encrypted memory backup path; install the `secure-backup`
+extra and inject `CIVILIZATION_BACKUP_PASSPHRASE` from a secret manager. Legacy
+v1 plaintext bundles remain restorable. Backup commands do not automate offsite
+replication, and a copy on the source disk is not disaster recovery.
 `civilization scorecard` checks full LongMemEval answerer results against the
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 
