@@ -38,4 +38,8 @@ Run the focused backup suite and the full configured repository tests; run compi
 
 The current writable internal data volume (`/tmp`) and iSCSI volume (`/Volumes/Net`) have different device IDs. Use synthetic test state on `/Volumes/Net`, a transient high-entropy passphrase, and a temporary destination under `/tmp`. Verify the encrypted replica and restore it to a new test directory. Remove both temporary trees after comparing all payload bytes. Do not use the production state directory.
 
-Document that this validates cross-device integrity but is not offsite DR. Leave the feature without an automatic schedule until a writable offsite target, retention window, alerts, and restore policy are selected.
+**Result:** CLI copy, encrypted verification, and restore succeeded. Synthetic payload bytes matched exactly; source and target device IDs differed. The command returned only non-secret metadata. The passphrase and both temporary trees were removed at process exit.
+
+The focused backup suite passed 28 tests; `compileall` and `git diff --check` passed. Full repository collection was unavailable because optional `torch`, `psutil`, and other development dependencies are missing. No dependencies were installed to bypass the environment gap.
+
+Document that this validates cross-device integrity but is not offsite DR. `/Volumes/Recovery` is a non-writable system recovery volume, so it is not a backup target. Leave the feature without an automatic schedule until a writable offsite target, retention window, alerts, and restore policy are selected.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for implementation; offsite operation remains unconfigured
+Implemented for manual distinct-filesystem replicas; offsite operation remains unconfigured
 
 ## Context
 
@@ -18,6 +18,7 @@ Copying an encrypted bundle to another directory on the same filesystem does not
 - Require source and destination to have different filesystem device IDs.
 - Stream ciphertext into a mode-0600 temporary file on the destination filesystem, verify the digest and encrypted bundle, then atomically publish without overwriting an existing file.
 - Do not delete prior backups. Retention and scheduling require a separately reviewed operational policy.
+- Validate the operation with a synthetic source on `/Volumes/Net` and a temporary destination on `/tmp`; do not use the macOS Recovery volume as a destination.
 
 ## Consequences
 
@@ -27,10 +28,12 @@ Copying an encrypted bundle to another directory on the same filesystem does not
 - Verifies both cryptographic readability and byte-for-byte copy integrity before publication.
 - Leaves source artifacts untouched and preserves existing destination generations.
 - Uses the existing standard-library streaming and encrypted-bundle primitives without adding a cloud SDK.
+- A synthetic cross-device copy and restore reproduced every payload byte exactly.
 
 ### Negative
 
 - A different filesystem on the same computer is not offsite disaster recovery.
+- The macOS `/Volumes/Recovery` mount is a root-owned, non-writable system recovery volume and cannot serve as a backup destination.
 - Operators must choose a writable destination, run the operation, schedule it, and monitor failures.
 - A filesystem device-ID check cannot prove geographic or administrative independence.
 
