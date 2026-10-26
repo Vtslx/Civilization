@@ -237,6 +237,8 @@
 
 **Observed full result:** Stage226, with the four-type selective reranker and temporal resolver, scored 419/500 (83.8%), +5.8 percentage points versus the 390/500 baseline, 66 answers below the release gate. Temporal reasoning stayed at 108/133; provider rerun variability prevents attributing a net score change to the resolver. The targeted 2/2 corrections remain supported by the frozen-output pilot.
 
+**Verifier ablation:** A mixed 14-question temporal numeric verification holdout moved from 7/14 to 8/14, with two candidate-only and one baseline-only result. That is not enough evidence to add the extra verifier call broadly; keep it off by default. Record: `docs/operations/data/longmemeval-stage226-temporal-verification-pilot-2026-10-26.json`.
+
 **Verification:** 81 prompt/runtime/adapter tests and 17 subtests passed; compileall and `git diff --check` passed.
 
 **Commit:** `74cc7e9 fix: resolve citation-backed temporal intervals`.

@@ -1,0 +1,19 @@
+{
+  "stage": "stage226_temporal_numeric_verification_mixed_holdout",
+  "benchmark": "longmemeval",
+  "model": "group/auto-gpt-6-luna",
+  "questions": 14,
+  "selection": "Seven baseline-wrong and seven baseline-correct temporal numeric questions whose answer verification had been skipped.",
+  "paired_results": {
+    "baseline_correct": 7,
+    "verification_correct": 8,
+    "candidate_only_correct": 2,
+    "baseline_only_correct": 1,
+    "both_correct": 6,
+    "both_wrong": 5,
+    "verification_rewrites": 6,
+    "unchanged_answers": 8
+  },
+  "interpretation": "The small mixed holdout produced one net gain with one regression. It is not strong enough evidence to enable an extra verifier call for all temporal numeric answers.",
+  "limitation": "This is a selected 14-question pilot, not a full benchmark result."
+}
