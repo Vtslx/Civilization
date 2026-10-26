@@ -199,17 +199,23 @@
 **Files:**
 - Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/run.py` and `README.md`
 - Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_run.py`
-- Scorecard: `docs/operations/data/longmemeval-stage223-selective-reranker-top20-2026-10-26.json`
+- Scorecard: `docs/operations/data/longmemeval-stage225-selective-four-type-reranker-top20-2026-10-26.json`
+- Intermediate scorecard: `docs/operations/data/longmemeval-stage224-selective-reranker-preference-top20-2026-10-26.json`
+- Error audit: `docs/operations/data/longmemeval-stage225-error-audit-2026-10-26.json`
 - Count-policy diagnostic: `docs/operations/data/longmemeval-stage223-count-inventory-pilot-2026-10-26.json`
+- Preference reranker pilot: `docs/operations/data/longmemeval-stage224-preference-reranker-pilot-2026-10-26.json`
+- Knowledge-update pilot: `docs/operations/data/longmemeval-stage224-knowledge-update-reranker-pilot-2026-10-26.json`
 
-**Design:** Keep global LLM reranking opt-in. Add a question-type allowlist so the answerer model can select up to 20 items from Top-200 only for categories where evidence selection helps. This replay targeted multi-session and temporal-reasoning; other categories use the existing ranker path.
+**Design:** Keep global LLM reranking opt-in. Add a question-type allowlist so the answerer model can select up to 20 items from Top-200 only for categories where evidence selection helps. The best tested allowlist is `multi-session`, `temporal-reasoning`, `single-session-preference`, and `knowledge-update`; single-session user/assistant questions keep the existing ranker path.
 
 **Acceptance:** Verify default-off behavior, type allowlist parsing, and non-target bypass. Compare a full 500-question Top-20 run against the matched baseline using the same dataset and provider. Report pairwise outcomes and per-type deltas; do not infer causality from selected pilots or rolling progress alone.
 
-**Observed full result:** Selective reranking scored 418/500 (83.6%) versus 390/500 (78.0%) baseline, a +5.6 percentage-point difference; 45 candidate-only and 17 baseline-only outcomes. It remains 67 answers below the 485/500 release gate. Multi-session rose from 87/133 to 105/133 and temporal reasoning from 91/133 to 105/133. The auto-routed provider also changed several unreranked preference/user answers between runs, so the paired difference includes some provider variability.
+**Observed full results:** The two-type run scored 418/500; adding preference reranking scored 422/500; the final four-type selective reranker scored 430/500 (86.0%) versus the 390/500 (78.0%) baseline, a +8.0 percentage-point difference; 62 candidate-only and 22 baseline-only outcomes. It remains 55 answers below the 485/500 release gate. Final by type: knowledge update 68/78, multi-session 108/133, single-session assistant 52/56, preference 27/30, user 67/70, and temporal reasoning 108/133. The auto-routed provider changed several unreranked user/assistant answers between runs, so the paired delta includes provider variability.
 
-**Evidence retrieval:** On the reranked result, Top-20 answer-marked pair hits rose from 732/883 to 830/883, and complete-pair questions rose from 365/470 to 426/470. These are evidence-retrieval metrics, not factual precision or 100% memory accuracy.
+**Evidence retrieval:** On the four-type reranked result, Top-20 answer-marked pair recall is 868/883 (98.30%), with all answer pairs in 458/470 questions. The matched baseline is 732/883 pairs and 365/470 complete-pair questions. These are evidence-retrieval metrics, not factual precision or 100% memory accuracy.
+
+**Error audit:** 56 of 70 wrong answers had every answer-marked pair in Top-20, 65 wrong-answer audits passed structural/citation validation, and 67 included citations. The remaining majority therefore needs better fact synthesis, temporal anchoring, and cross-session reasoning, not broader retrieval alone.
 
 **Count policy:** A separate 15-question evidence-complete multi-session count pilot scored 6/15 under each inventory policy, with one win each. Keep the default `skip_multi_session`; the pilot did not justify changing it globally.
 
-**Commit:** `6cc4f45 feat: scope memory reranking by question type`
+**Commit:** `6cc4f45 feat: scope memory reranking by question type`; result record: `docs/operations/data/longmemeval-stage225-selective-four-type-reranker-top20-2026-10-26.json`.

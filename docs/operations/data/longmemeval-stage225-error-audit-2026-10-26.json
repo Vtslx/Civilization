@@ -1,0 +1,52 @@
+{
+  "stage": "stage225_selective_reranker_error_audit",
+  "benchmark": "longmemeval",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "questions": 500,
+  "correct": 430,
+  "wrong": 70,
+  "by_question_type": {
+    "knowledge-update": {"questions": 78, "correct": 68, "wrong": 10},
+    "multi-session": {"questions": 133, "correct": 108, "wrong": 25},
+    "single-session-assistant": {"questions": 56, "correct": 52, "wrong": 4},
+    "single-session-preference": {"questions": 30, "correct": 27, "wrong": 3},
+    "single-session-user": {"questions": 70, "correct": 67, "wrong": 3},
+    "temporal-reasoning": {"questions": 133, "correct": 108, "wrong": 25}
+  },
+  "top20_answer_evidence": {
+    "answer_source_sessions": 470,
+    "answer_source_sessions_present": 470,
+    "answer_marked_pairs": 883,
+    "answer_marked_pairs_present": 868,
+    "pair_recall": 0.983012,
+    "questions_with_all_pairs": 458,
+    "wrong_answers_with_all_pairs": 56,
+    "wrong_answers_missing_some_pair": 14
+  },
+  "wrong_answer_audit": {
+    "validated_true": 65,
+    "validated_false_or_missing": 5,
+    "has_citations": 67,
+    "no_citations": 3,
+    "validation_error_categories": {
+      "citation_validation": 1,
+      "count_value_validation": 4
+    }
+  },
+  "numeric_count_subset": {
+    "questions": 208,
+    "by_question_type": {
+      "knowledge-update": {"questions": 35, "correct": 30, "wrong": 5, "count_value_present": 35, "count_value_missing": 0, "counted_items_present": 35, "all_pairs_top20": 35},
+      "multi-session": {"questions": 101, "correct": 82, "wrong": 19, "count_value_present": 98, "count_value_missing": 3, "counted_items_present": 95, "all_pairs_top20": 97},
+      "single-session-assistant": {"questions": 5, "correct": 2, "wrong": 3, "count_value_present": 2, "count_value_missing": 3, "counted_items_present": 2, "all_pairs_top20": 5},
+      "single-session-user": {"questions": 13, "correct": 13, "wrong": 0, "count_value_present": 13, "count_value_missing": 0, "counted_items_present": 13, "all_pairs_top20": 13},
+      "temporal-reasoning": {"questions": 54, "correct": 45, "wrong": 9, "count_value_present": 49, "count_value_missing": 5, "counted_items_present": 5, "all_pairs_top20": 53}
+    }
+  },
+  "interpretation": [
+    "Retrieval now finds every answer source session at Top-20 and 98.30% of answer-marked pairs, but 56 of the 70 wrong answers still have every marked answer pair in Top-20.",
+    "The largest remaining accuracy gaps are multi-session and temporal reasoning; further broad retrieval expansion alone is unlikely to close them.",
+    "These counts are answer-evidence and audit metrics, not a measurement of 100% factual memory precision."
+  ],
+  "scorecard": "longmemeval-stage225-selective-four-type-reranker-top20-2026-10-26.json"
+}

@@ -1,0 +1,16 @@
+{
+  "stage": "stage224_preference_reranker_pilot",
+  "benchmark": "longmemeval",
+  "model": "group/auto-gpt-6-luna",
+  "questions": 30,
+  "baseline_correct": 20,
+  "reranker_correct": 27,
+  "candidate_only_correct": 8,
+  "baseline_only_correct": 1,
+  "both_correct": 19,
+  "both_wrong": 2,
+  "questions_with_all_answer_pairs_top20_baseline": 19,
+  "questions_with_all_answer_pairs_top20_reranker": 29,
+  "interpretation": "Preference reranking improved this paired pilot and was included in the Stage225 selective allowlist.",
+  "limitation": "This is a selected category pilot, not a full release scorecard."
+}

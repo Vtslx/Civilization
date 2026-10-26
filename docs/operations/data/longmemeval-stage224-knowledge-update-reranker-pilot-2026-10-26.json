@@ -1,0 +1,25 @@
+{
+  "stage": "stage224_knowledge_update_reranker_pilot",
+  "benchmark": "longmemeval",
+  "model": "group/auto-gpt-6-luna",
+  "answerable_sample": {
+    "questions": 72,
+    "baseline_correct": 63,
+    "reranker_correct": 68,
+    "candidate_only_correct": 8,
+    "baseline_only_correct": 3,
+    "both_wrong": 1,
+    "questions_with_all_answer_pairs_top20_baseline": 54,
+    "questions_with_all_answer_pairs_top20_reranker": 72
+  },
+  "abstention_sample": {
+    "questions": 6,
+    "baseline_correct": 4,
+    "reranker_correct": 4,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 1,
+    "both_wrong": 1
+  },
+  "interpretation": "The answerable knowledge-update pilot improved evidence coverage and net answers, while abstention cases were neutral. This evidence motivated including knowledge-update in the full selective reranker run.",
+  "limitation": "This is a paired pilot, not a full release scorecard."
+}
