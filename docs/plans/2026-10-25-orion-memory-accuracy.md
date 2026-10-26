@@ -437,7 +437,7 @@
 
 **Stage242 interaction audit:** Replayed the existing N-event list-order resolver on the same 133 frozen temporal answers using the expanded relative-week parser. It produced no additional answer changes and no new list resolutions.
 
-**Status:** Stage242 passed its isolated gate. Stage243 reached 253/500 saved rows, then stopped after repeated HTTP 400 errors because the gateway routed to `Home` at `http://192.168.3.11:8080/v1/chat/completions`, which does not support the requested protocol. Three saved rows have empty judge responses: `bf659f65`, `gpt4_1916e0ea`, and `gpt4_a1b77f9c`. The checkpoint is preserved at `/tmp/civilization-stage243-relative-week-20261027`; no Stage243 score is available. Keep temporal resolver flags opt-in. The best complete score remains 433/500 (86.6%), and the 97% and 100% precision goals remain unmet.
+**Status:** Stage242 passed its isolated gate. Stage243 reached 253/500 saved rows, then stopped after repeated HTTP 400 errors because Chat Completions, Responses, and Messages all route `group/auto-gpt-6-luna` to `Home` at `http://192.168.3.11:8080/v1/chat/completions`, which does not support the requested protocol. `/models` still lists the alias with `owned_by=home`. Three saved rows have empty judge responses: `bf659f65`, `gpt4_1916e0ea`, and `gpt4_a1b77f9c`. The checkpoint is preserved at `/tmp/civilization-stage243-relative-week-20261027`; no Stage243 score is available. Keep temporal resolver flags opt-in. The best complete score remains 433/500 (86.6%), and the 97% and 100% precision goals remain unmet.
 
 ## Module 27: Bound immediate-event dates for temporal lists
 
