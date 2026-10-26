@@ -338,3 +338,13 @@
 **Decision/status:** Keep the flag opt-in. The best complete score remains Stage227 at 433/500 (86.6%), 52 below 485/500. No 97% or 100% factual precision claim is supported.
 
 **Commit:** `5809c05 feat: scope answer verification by question type`.
+
+## Module 19: Reject a second temporal verification pass
+
+**Pilot:** `docs/operations/data/longmemeval-stage233-temporal-second-verification-frozen-pilot-2026-10-26.json`
+
+**Protocol:** Replay one additional independent answer-verification call on the 133 Stage232 temporal answers with the same frozen Top-20 evidence. Do not regenerate answers or rerun the reranker. Rejudge only the changed answers.
+
+**Observed result:** 60 answers changed; 3 were corrected and 7 previously-correct answers regressed. The frozen 500-question diagnostic moved from 432/500 to 428/500; temporal reasoning fell from 112/133 to 108/133. Keep one temporal verification pass and reject a second global pass.
+
+**Status:** No code change. The single-session verification allowlist remains opt-in and supported by its separate positive frozen pilot. The best full score is still 433/500, 52 below the 485/500 target.
