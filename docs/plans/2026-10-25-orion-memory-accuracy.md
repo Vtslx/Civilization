@@ -319,3 +319,22 @@
 **Fresh full candidate:** Stage230, using the new code and the Stage221 retrieval snapshot, scored 427/500 (85.4%), 58 below 485. The earlier Stage227 full candidate scored 433/500. Across reranked rows, only 2/374 selected memory orders matched between the two runs despite seed acceptance, so the six-answer delta is confounded by provider reranker variability. In Stage230 the target Mark/Tom chronology was corrected, while temporal category accuracy moved from 112/133 to 109/133.
 
 **Status:** The best full score remains Stage227 at 433/500 (86.6%), 52 below the gate. Relative interval logic is citation-bounded and tested; it does not close the overall accuracy gap. Continue targeting multi-session and temporal reasoning under fixed evidence and track provider selection variance.
+
+## Module 18: Add opt-in verification for single-session fact questions
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/run.py`, `README.md`, and `tests/test_longmemeval_run.py`
+- Pilot: `docs/operations/data/longmemeval-stage231-single-session-verification-pilot-2026-10-26.json`
+- Full scorecard: `docs/operations/data/longmemeval-stage232-single-session-verification-four-type-candidate-top20-2026-10-26.json`
+- Design: `docs/plans/2026-10-26-single-session-answer-verification.md`
+- Decision: `docs/decisions/adr-005-optional-question-type-answer-verification.md`
+
+**Design:** Add `--answer-verification-question-types` as an opt-in allowlist. Preserve existing default cross-session, temporal, knowledge-update, and preference behavior. Revisions must pass exact-quote citation validation and full answer validation; invalid evidence keeps the original answer.
+
+**Frozen pilot:** Across all 126 single-session user/assistant answers, 23 answers changed; 4 previously wrong answers were corrected, 0 correct answers regressed, and the slice moved from 115/126 to 119/126. This is a frozen-input pilot, not a full score.
+
+**Full Stage232 result:** The new allowlist on a fresh full run scored 432/500 (86.4%) versus 427/500 in Stage230; paired outcomes were 27 Stage232-only and 22 Stage230-only. User questions moved 64/70→68/70 and assistant questions 51/56→52/56. However, only 3 of 374 reranker selections matched across the two runs, so provider variation confounds the aggregate +5. The Stage231 frozen pilot is the isolated evidence for this module.
+
+**Decision/status:** Keep the flag opt-in. The best complete score remains Stage227 at 433/500 (86.6%), 52 below 485/500. No 97% or 100% factual precision claim is supported.
+
+**Commit:** `5809c05 feat: scope answer verification by question type`.
