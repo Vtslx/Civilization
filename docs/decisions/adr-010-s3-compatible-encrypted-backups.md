@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed for local implementation; live target validation pending user-authorized endpoint and bucket
+Implemented locally; live target validation pending a user-authorized endpoint and bucket
 
 ## Context
 

@@ -50,6 +50,10 @@ Fake-client tests must cover successful multipart upload, checkpoint resume, rem
 
 Run focused tests, `compileall`, and `git diff --check`. Keep the optional dependency absent from the default install.
 
+**Local implementation result:** Commit `474ec9e feat: add resumable S3 encrypted backup replication` adds the optional `backup-s3` extra, CLI upload/retention commands, durable 0600 multipart checkpoints, content-addressed keys, remote read-back verification, and lock-aware retention planning. Fake-client tests passed along with the existing backup suite: 39 total tests. `compileall`, TOML parsing, and `git diff --check` passed. No boto3 package was installed and no S3 object was uploaded.
+
+**Local implementation result:** Commit `474ec9e feat: add resumable S3 encrypted backup replication` adds the optional `backup-s3` extra, two CLI commands, versioned content-addressed uploads, mode-0600 durable checkpoints, part reconciliation, Object Lock-aware retention planning, and an independent remote read-back verifier. The S3 fake-client suite and encrypted backup suite passed 39 tests; compileall, TOML validation, and diff checks passed. Boto3 remains optional; no package was installed and no object was uploaded.
+
 ## Task 5: Authorized live recovery drill
 
-After local implementation, request the user's authorized S3-compatible endpoint and bucket. Do not upload real or synthetic objects until the target is authorized. Then test an encrypted synthetic bundle end-to-end: multipart checkpoint/resume, remote checksum, VersionId, read-back AEAD verification, and restore. Record retention settings and remaining operational gaps. A mock-client pass is not a live DR claim.
+After local implementation, ask the user to authorize an S3-compatible endpoint and bucket. Do not upload real or synthetic objects before authorization. Then test an encrypted synthetic bundle end-to-end: multipart checkpoint/resume, remote checksum, VersionId, read-back AEAD verification, and restore. Record retention settings and remaining operational gaps. A mock-client pass is not a live DR claim. The endpoint/bucket and provider credentials are still unconfigured, so this live recovery drill remains pending.

@@ -96,8 +96,17 @@ sessions. Details, guarantees per failure mode, and the knobs:
 `civilization backup`, `civilization verify-backup`, and `civilization restore`
 provide an offline encrypted memory backup path; install the `secure-backup`
 extra and inject `CIVILIZATION_BACKUP_PASSPHRASE` from a secret manager. Legacy
-v1 plaintext bundles remain restorable. Backup commands do not automate offsite
-replication, and a copy on the source disk is not disaster recovery.
+v1 plaintext bundles remain restorable. `civilization replicate-backup` copies an
+already encrypted bundle to an existing directory on a different filesystem,
+and refuses same-device targets. For S3-compatible storage, install the optional
+`backup-s3` extra and use `civilization replicate-s3-backup`; it requires a
+versioned bucket, maintains private multipart checkpoints, and verifies an exact
+remote version by read-back. S3 credentials come from the SDK credential chain;
+the backup passphrase remains in `CIVILIZATION_BACKUP_PASSPHRASE`. The separate
+`civilization s3-backup-retention` command is dry-run by default and requires
+`--apply` to delete eligible object versions. These commands do not schedule
+replication or prove an offsite recovery path until an authorized target has
+passed a live restore drill.
 `civilization scorecard` checks full LongMemEval answerer results against the
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 

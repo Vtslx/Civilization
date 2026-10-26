@@ -200,8 +200,15 @@ civilization serve --state-dir var/state-restored --provider-base-url <url> --pr
 归档应按保留策略妥善保护或退役。
 
 记忆可能含有用户隐私数据。请将归档存到源卷之外，并按运维策略保留多个版本，
-定期在临时目录中演练恢复。加密本身不会配置异地复制、定时任务、保留、告警或
-恢复演练。同一块磁盘上的备份不属于容灾副本。
+定期在临时目录中演练恢复。`civilization replicate-backup` 可将已加密归档复制到
+不同文件系统；`civilization replicate-s3-backup` 通过可选 `backup-s3` extra 使用
+S3-compatible versioned bucket，持久保存 multipart checkpoint，并对远端 VersionId
+执行回读与 AEAD 校验。SDK 凭据来自标准 credential chain，备份密钥仍只从环境变量
+读取。`civilization s3-backup-retention` 默认只生成 dry-run 计划，显式 `--apply` 才会
+删除符合保留策略且未受 Object Lock/legal hold 保护的旧版本。
+
+这些命令不配置定时任务、告警或异地目标。必须对获准的远端 bucket 完成实时恢复演练，
+才能将该路径视为异地灾备；同一主机或同一物理站点的另一个文件系统不能防范站点级故障。
 
 ## 边界与非目标
 
