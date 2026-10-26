@@ -54,6 +54,10 @@
 
 **Acceptance:** Verify round-trip cell/link/metadata equality, corrupted and truncated artifact rejection, safe handling of unknown format versions, and recovery after an interrupted promotion. Do not claim disk-loss protection until an independent copy has been configured and tested.
 
+**Current verification (2026-10-26):** `python3 -m pytest tests/engine/test_memory_backup.py -q` passed all 13 backup/restore tests. The implementation uses a versioned SHA-256 manifest, mode-0600 archive, atomic publish, staged restore, and refuses overwrite.
+
+**Operational limit:** The backup CLI is offline/manual, archives are unencrypted, and no independent destination, schedule, retention policy, or restore drill is configured. Treat local backup tooling as verified; enterprise disaster recovery remains incomplete until a separate failure-domain target and end-to-end drill are established.
+
 **Commit:** `feat: add verified Orion memory backup and restore`
 
 ## Module 4: Full-score evaluation and release gate
