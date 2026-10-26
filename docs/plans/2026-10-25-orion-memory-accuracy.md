@@ -193,3 +193,23 @@
 **Observed verification:** 16 new stage tests and 25 adjacent Orion regression tests passed. No production-memory write path is exposed.
 
 **Commit:** `2663a6d feat: add stochastic memory token reservation and regression`
+
+## Module 13: Scope LLM evidence reranking to weak question types
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/run.py` and `README.md`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_run.py`
+- Scorecard: `docs/operations/data/longmemeval-stage223-selective-reranker-top20-2026-10-26.json`
+- Count-policy diagnostic: `docs/operations/data/longmemeval-stage223-count-inventory-pilot-2026-10-26.json`
+
+**Design:** Keep global LLM reranking opt-in. Add a question-type allowlist so the answerer model can select up to 20 items from Top-200 only for categories where evidence selection helps. This replay targeted multi-session and temporal-reasoning; other categories use the existing ranker path.
+
+**Acceptance:** Verify default-off behavior, type allowlist parsing, and non-target bypass. Compare a full 500-question Top-20 run against the matched baseline using the same dataset and provider. Report pairwise outcomes and per-type deltas; do not infer causality from selected pilots or rolling progress alone.
+
+**Observed full result:** Selective reranking scored 418/500 (83.6%) versus 390/500 (78.0%) baseline, a +5.6 percentage-point difference; 45 candidate-only and 17 baseline-only outcomes. It remains 67 answers below the 485/500 release gate. Multi-session rose from 87/133 to 105/133 and temporal reasoning from 91/133 to 105/133. The auto-routed provider also changed several unreranked preference/user answers between runs, so the paired difference includes some provider variability.
+
+**Evidence retrieval:** On the reranked result, Top-20 answer-marked pair hits rose from 732/883 to 830/883, and complete-pair questions rose from 365/470 to 426/470. These are evidence-retrieval metrics, not factual precision or 100% memory accuracy.
+
+**Count policy:** A separate 15-question evidence-complete multi-session count pilot scored 6/15 under each inventory policy, with one win each. Keep the default `skip_multi_session`; the pilot did not justify changing it globally.
+
+**Commit:** `6cc4f45 feat: scope memory reranking by question type`

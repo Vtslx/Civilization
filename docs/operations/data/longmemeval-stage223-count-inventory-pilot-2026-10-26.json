@@ -1,0 +1,16 @@
+{
+  "stage": "stage223_multisession_count_inventory_policy",
+  "benchmark": "longmemeval",
+  "model": "group/auto-gpt-6-luna",
+  "sample_size": 15,
+  "selection": "Wrong multi-session count questions with every answer-marked pair already present in the selective-reranker Top-20 result.",
+  "paired_results": {
+    "skip_multi_session_replay_correct": 6,
+    "all_inventory_correct": 6,
+    "all_inventory_only_correct": 1,
+    "skip_only_correct": 1,
+    "both_wrong": 8
+  },
+  "interpretation": "No net gain on this evidence-complete diagnostic sample; do not switch the global multi-session count policy from skip_multi_session to all based on this pilot.",
+  "limitation": "This is a selected 15-question ablation, not a full benchmark result."
+}
