@@ -44,7 +44,7 @@ Use Stage239's 133 temporal answers and frozen Top-20 provenance. Replay only th
 
 ## Task 4: Commit and document
 
-The isolated pilot passed its correction/no-regression gate, so keep the feature opt-in and run a fresh full 500-question Top-20 candidate before considering broader enablement. Record the pilot in Civilization with a separate English documentation commit. The Stage241 full run is pending.
+The isolated pilot passed its correction/no-regression gate. Stage241 then reran answer generation, reranking, and judging over saved Stage221 retrieval results; the frozen raw retrieval order matched in 500/500 questions. The candidate scored 433/500 (86.6%), tying Stage227 and not improving the best full score. Against Stage227, paired outcomes were 25 candidate-only and 25 reference-only. The reranker selected exactly the same Top-20 order as Stage239 in 130/500 rows, with mean ID overlap 16.658/20, so the +11 paired delta versus Stage239 is not attributable to the resolver. In Stage241 the resolver fired twice: one wrong order was corrected and one already-correct order remained correct. Keep the feature opt-in. Full scorecard: `docs/operations/data/longmemeval-stage241-temporal-list-order-full-top20-2026-10-27.json`.
 
 ## Scope boundary
 

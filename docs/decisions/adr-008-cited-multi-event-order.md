@@ -1,6 +1,6 @@
 # ADR-008: Rewrite multi-event order only from disjoint cited date intervals
 
-**Status:** Positive isolated pilot; opt-in pending full-candidate evidence
+**Status:** Positive isolated pilot; full candidate ties the best score; remain opt-in
 **Date:** 2026-10-27
 
 ## Context
