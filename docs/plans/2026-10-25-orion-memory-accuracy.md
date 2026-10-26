@@ -243,6 +243,28 @@
 
 **Commit:** `74cc7e9 fix: resolve citation-backed temporal intervals`.
 
+## Module 15: Seeded OpenAI-compatible benchmark runs
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/common/llm_client.py`, `benchmarks/longmemeval/run.py`, and `README.md`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_llm_client_seed.py` and `tests/test_longmemeval_run.py`
+- Plan: `docs/plans/2026-10-26-reproducible-openai-compatible-benchmarks.md`
+- Decision: `docs/decisions/adr-003-reproducible-openai-compatible-benchmarks.md`
+
+**Design:** Make provider seeding optional for OpenAI-compatible requests. Retry without the seed only after an explicit unsupported-seed response; record acceptance in run metadata. Supply custom endpoint and credentials through runtime environment variables, with no secret written to source, result JSON, or saved memory.
+
+**Provider preflight:** The requested endpoint `http://192.168.3.13:3425/v1` accepted seed 42 twice for the same short prompt; both responses resolved to `gpt-6-luna` and matched exactly. This verifies route and seed support only, not LongMemEval accuracy.
+
+**Verification:** Adapter full suite: 88 tests and 20 subtests passed; Python compileall and `git diff --check` passed.
+
+**Observed matched evaluation:** With the Stage221 retrieval snapshot held fixed, the requested endpoint scored 385/500 (77.0%) without reranking and 433/500 (86.6%) with four-type reranking: 62 candidate-only and 14 baseline-only outcomes, a net gain of 48. The candidate remains 52 answers below the 485/500 release gate. Both arms used the same retrieval-source hash and prompt hash; answerer and judge metadata reported seed acceptance.
+
+**Determinism caveat:** A separate 94-question rerun accepted seed 42 but selected a different Top-20 reranker order on all 94 questions. The initial `all` count-inventory arm is exploratory only; use the frozen-selection Stage228 pilot for policy conclusions. Seed acceptance is not a determinism guarantee.
+
+**Credential handling:** The endpoint key was provided to the process at runtime and is absent from source, scorecards, and memory.
+
+**Commit:** `cef267b feat: add reproducible seeds for OpenAI-compatible benchmarks` in the `memory-benchmarks` repository.
+
 ## Module 14: Resolve cited user-event anchors and trip durations
 
 **Files:**
@@ -259,3 +281,21 @@
 **Observed frozen-output pilot:** 20 elapsed/trip questions were eligible; 16 had valid direct user-date resolutions, including 14 already-correct answers. Two previously wrong answers were corrected and both passed the benchmark judge; four ambiguous or unsupported cases stayed unchanged. Pilot record: `docs/operations/data/longmemeval-stage226-temporal-resolver-pilot-2026-10-26.json`. This is not a full-run release score.
 
 **Commit:** `74cc7e9 fix: resolve citation-backed temporal intervals`
+
+## Module 16: Recheck multi-session count inventory on the selected gateway
+
+**Files:**
+- Scorecards: `docs/operations/data/longmemeval-stage227-provider-seed-baseline-top20-2026-10-26.json`, `docs/operations/data/longmemeval-stage227-provider-seed-four-type-reranker-top20-2026-10-26.json`
+- Error audit: `docs/operations/data/longmemeval-stage227-error-audit-2026-10-26.json`
+- Count-policy records: `docs/operations/data/longmemeval-stage228-count-inventory-all-pilot-2026-10-26.json`, `docs/operations/data/longmemeval-stage228-count-inventory-frozen-pilot-2026-10-26.json`
+- Related implementation: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/run.py`
+
+**Observed Stage227 result:** Best full result on the requested gateway is 433/500 (86.6%) with four-type reranking, 52 below the 485/500 gate. Per type: knowledge update 72/78, multi-session 104/133, assistant 52/56, preference 26/30, user 67/70, temporal reasoning 112/133.
+
+**Error audit:** Candidate misses: 29 multi-session, 21 temporal, 6 knowledge-update, 4 preference, 3 user, 4 assistant. Sixty-three of the 67 answer-side audits passed structural/citation validation, so evidence synthesis remains a major gap. This does not prove 100% factual precision.
+
+**Policy experiment:** On all 94 multi-session count-inventory questions with the Stage227 selected Top-20 order frozen, `all` scored 69/94 versus 71/94 for `skip_multi_session`; 7 were all-only and 9 skip-only. The prompt hash matched and the Top-20 order matched in 94/94. Keep `skip_multi_session` as the default.
+
+**Provider caveat:** The gateway accepted seed 42 in metadata but its unpaired reranker selections differed in 94/94 questions. The initial all-policy run cannot isolate inventory effects; the frozen-order run is authoritative for this pilot.
+
+**Status:** No count-policy code change. Overall goal remains active: 433/500, 52 short of 485/500. Continue with temporal event matching and reasoning failures under fixed evidence.
