@@ -348,3 +348,13 @@
 **Observed result:** 60 answers changed; 3 were corrected and 7 previously-correct answers regressed. The frozen 500-question diagnostic moved from 432/500 to 428/500; temporal reasoning fell from 112/133 to 108/133. Keep one temporal verification pass and reject a second global pass.
 
 **Status:** No code change. The single-session verification allowlist remains opt-in and supported by its separate positive frozen pilot. The best full score is still 433/500, 52 below the 485/500 target.
+
+## Module 20: Reject consensus reranker selection from three prior runs
+
+**Pilot:** `docs/operations/data/longmemeval-stage234-consensus-selection-pilot-2026-10-26.json`
+
+**Protocol:** For 266 multi-session and temporal questions, combine three prior reranker selections by candidate frequency, mean position, and original retrieval rank. Freeze the resulting Top-20 order and rerun answer generation/judging without another reranker call.
+
+**Observed result:** Consensus scored 210/266 (78.9%), versus 217/266 (81.6%) for the matched Stage232 selections; paired outcomes were 14 consensus-only and 21 Stage232-only. The consensus order used all three historical votes for 260 questions and Stage232 fallback order for six.
+
+**Decision/status:** Do not implement this consensus policy. It underperformed the matched reference; continue with answer synthesis and evidence-grounded reasoning. Best full score remains 433/500, 52 below the target.
