@@ -1,0 +1,86 @@
+{
+  "stage": 242,
+  "date": "2026-10-27",
+  "experiment": "Frozen Stage241 relative-week temporal choice-order pilot",
+  "provider": {
+    "base_url": "http://192.168.3.13:3425/v1",
+    "judge_model": "group/auto-gpt-6-luna",
+    "seed": 42,
+    "judge_seed_accepted": true
+  },
+  "input": {
+    "source_scorecard": "docs/operations/data/longmemeval-stage241-temporal-list-order-full-top20-2026-10-27.json",
+    "source_retrieval_snapshot": "/tmp/civilization-stage221-baseline-scorecard.json",
+    "source_retrieval_sha256": "d3e8bf56bc1a4432f27373d03f17f729b8bbdd9597709d3bffc7d96b92122eca",
+    "temporal_questions": 133,
+    "top20_evidence_frozen": true,
+    "answer_generation_repeated": false,
+    "reranker_repeated": false,
+    "changed_answers_rejudged": 1,
+    "resolver_code_commit": "f455c0d"
+  },
+  "scores": {
+    "temporal_baseline": {
+      "correct": 114,
+      "total": 133
+    },
+    "temporal_candidate": {
+      "correct": 115,
+      "total": 133
+    },
+    "full_frozen_diagnostic_baseline": {
+      "correct": 433,
+      "total": 500
+    },
+    "full_frozen_diagnostic_candidate": {
+      "correct": 434,
+      "total": 500
+    }
+  },
+  "paired_outcomes": {
+    "total": 133,
+    "both_correct": 114,
+    "candidate_only": 1,
+    "baseline_only": 0,
+    "both_wrong": 18
+  },
+  "newly_resolved_count": 1,
+  "changed_rows": [
+    {
+      "question_id": "gpt4_b4a80587",
+      "question": "Which event happened first, the road trip to the coast or the arrival of the new prime lens?",
+      "ground_truth_answer": "The arrival of the new prime lens",
+      "baseline_answer": "The road trip to the coast happened first: it was the week before May 23, 2023, while the new 50mm f/1.8 prime lens was acquired about a month before that date.",
+      "candidate_answer": "The arrival of the new prime lens happened first.",
+      "baseline_correct": false,
+      "candidate_correct": true,
+      "answer_evidence": [
+        {
+          "description": "Road trip to the coast",
+          "event_date": "Week before 2023-05-23",
+          "date_basis": "Explicit relative date in the conversation, resolved against the question date",
+          "relation_to_anchor": "After the lens arrived",
+          "evidence": [
+            {
+              "memory_index": 1,
+              "quote": "I just got back from a road trip to the coast with friends last week"
+            }
+          ]
+        },
+        {
+          "description": "Arrival of the new prime lens",
+          "event_date": "About one month before 2023-05-23",
+          "date_basis": "Explicit relative date in the conversation, resolved against the question date",
+          "relation_to_anchor": "Before the road trip",
+          "evidence": [
+            {
+              "memory_index": 4,
+              "quote": "my 50mm lens that I got a month ago"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "decision": "Positive isolated pilot: one candidate-only correction and zero regressions. Proceed to a full 500-question candidate; the frozen 434/500 diagnostic is not a fresh full score."
+}

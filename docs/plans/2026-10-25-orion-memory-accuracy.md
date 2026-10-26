@@ -428,3 +428,11 @@
 **Stage241 answer-pair coverage:** The selected Top-20 contained 868/883 annotated answer-bearing message pairs (98.3%), with complete pair coverage in 458/470 answerable questions. Of 59 wrong answerable answers, 52 already had every annotated answer pair in Top-20. This identifies answer synthesis and temporal reasoning as the larger measured gap, while 7 wrong answerable rows still lacked at least one marked pair. Pair coverage is not factual precision.
 
 **Artifact and decision:** `docs/operations/data/longmemeval-stage241-temporal-list-order-full-top20-2026-10-27.json`. Keep the resolver opt-in. The best complete accuracy remains 433/500 (86.6%); the 97% and 100% precision goals remain unmet.
+
+## Module 26: Bound user-cited “last week” dates conservatively
+
+**Adapter commit:** `f455c0d fix: resolve cited last-week temporal order`. Extended the existing temporal comparison resolver to recognize only user-authored `last week` and `previous week` phrases with one observation date. The parser uses a broad 13-day interval ending one day before observation, covering rolling-week and previous-calendar-week readings. Existing logic still refuses to order overlapping intervals, assistant-only citations, missing dates, or conflicting observations.
+
+**Stage242 isolated pilot:** Replayed all 133 Stage241 temporal answers and frozen Top-20 evidence. The resolver newly applied once and changed one answer: `gpt4_b4a80587`, the road-trip versus prime-lens order, moved from incorrect to correct. Temporal accuracy moved 114/133→115/133; paired outcomes were 1 candidate-only, 0 baseline-only, 114 both-correct, and 18 both-wrong. The frozen full diagnostic moved 433/500→434/500; this is not a fresh full score. Adapter verification passed 111 tests and 22 subtests, plus compileall and diff checks. Artifact: `docs/operations/data/longmemeval-stage242-last-week-temporal-frozen-pilot-2026-10-27.json`.
+
+**Status:** Run the Stage243 full 500-question candidate before any broader enablement. The best complete score remains 433/500 (86.6%); the 97% and 100% precision goals remain unmet.

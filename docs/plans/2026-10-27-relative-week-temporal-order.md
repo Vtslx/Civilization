@@ -48,8 +48,10 @@ Run focused tests, then `python3 -m pytest tests/test_longmemeval_prompts.py -q`
 
 Use all 133 Stage241 temporal answers and their selected Top-20 IDs; reconstruct full memory text from the Stage221 snapshot and preserve the answer audit. Run the choice-order resolver only, judge changed answers with the configured gateway, and report paired outcomes. Do not rerank or regenerate answers in this isolated pilot.
 
+**Stage242 result:** Adapter commit `f455c0d fix: resolve cited last-week temporal order` passed 111 tests and 22 subtests; `compileall` and `git diff --check` passed. The frozen pilot changed one answer (`gpt4_b4a80587`), which moved from incorrect to correct. Temporal accuracy moved 114/133→115/133; paired outcomes were 1 candidate-only, 0 baseline-only, 114 both-correct, and 18 both-wrong. The frozen full diagnostic moved 433/500→434/500; this is not a fresh full score. Artifact: `docs/operations/data/longmemeval-stage242-last-week-temporal-frozen-pilot-2026-10-27.json`.
+
 ## Task 4: Commit the code and validate the full candidate
 
-If Stage242 passes the gate, commit the adapter change with `fix: resolve cited last-week temporal order`, then run Stage243 over all 500 frozen Stage221 retrieval inputs with reranking, answer generation, and judging enabled. Save a compact scorecard with exact paired outcomes, per-type scores, retrieval-order verification, and resolver trigger count. Remove bulky temporary predictions only after the compact artifact is validated. Record the results in Civilization and project memory using an English documentation commit.
+Stage242 passed the isolated gate and the adapter change is committed. Run Stage243 over all 500 frozen Stage221 retrieval inputs with reranking, answer generation, and judging enabled. Save a compact scorecard with exact paired outcomes, per-type scores, retrieval-order verification, and resolver trigger count. Remove bulky temporary predictions only after the compact artifact is validated. Record the results in Civilization and project memory using an English documentation commit.
 
 If Stage242 fails the gate, revert the parser change and record the negative pilot without running Stage243.
