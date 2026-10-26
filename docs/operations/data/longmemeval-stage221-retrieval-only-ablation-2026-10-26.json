@@ -1,0 +1,50 @@
+{
+  "stage": "stage221_civilization_morphological_query_expansion",
+  "benchmark": "longmemeval",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_count": 500,
+  "answer_pair_questions": 470,
+  "answer_marked_pairs": 883,
+  "arms": {
+    "base": {
+      "top_20_pair_hits": 732,
+      "top_20_pair_recall": 0.828992,
+      "questions_with_all_pairs_top_20": 365,
+      "top_200_pair_hits": 872,
+      "top_200_pair_recall": 0.987542,
+      "questions_with_all_pairs_top_200": 460
+    },
+    "protected_top_20_morphological_tail": {
+      "top_20_pair_hits": 732,
+      "top_20_pair_recall": 0.828992,
+      "questions_with_all_pairs_top_20": 365,
+      "top_200_pair_hits": 876,
+      "top_200_pair_recall": 0.992072,
+      "questions_with_all_pairs_top_200": 465
+    }
+  },
+  "paired_deltas": {
+    "identical_top_20_order_questions": 500,
+    "top_200_answer_marked_pairs": 4,
+    "top_200_pair_recall_percentage_points": 0.453,
+    "questions_with_all_pairs_top_200": 5
+  },
+  "answerer_release_run": {
+    "provider": "openai",
+    "api_style": "openai-compatible",
+    "model": "group/auto-gpt-6-luna",
+    "cutoff": "top_20",
+    "correct": 390,
+    "total": 500,
+    "accuracy": 0.78,
+    "target_correct": 485,
+    "remaining_to_target": 95
+  },
+  "interpretation": [
+    "This is a matched retrieval-only ablation on the same current-source service and dataset; the protected Top-20 results are identical for all 500 questions.",
+    "The feature adds four answer-marked pairs and five fully covered questions by Top-200, but does not change the Top-20 answerer input or its accuracy.",
+    "The current-source Top-20 pair count is not directly comparable to historical Stage219 artifacts without replaying the historical source/runtime protocol."
+  ],
+  "adapter_commit": "bcf6cbd",
+  "accuracy_scorecard": "longmemeval-stage221-new-provider-top20-2026-10-26.json"
+}

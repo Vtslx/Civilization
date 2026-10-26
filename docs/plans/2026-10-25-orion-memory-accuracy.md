@@ -157,6 +157,25 @@
 
 **Observed subset result:** The trigger matches only `gpt4_59149c77` in the Stage216 composite. Two independent live replays both answer 7 days; replacing that one row gives 444/500 (88.8%), one paired gain and no regressions. This is a subset composition, not a new full 500-answer run.
 
+## Module 11: Expand inflected terms for episodic search
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/common/mem0_client.py`, `benchmarks/longmemeval/run.py`, and `README.md`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_civilization_adapter.py`, `tests/test_longmemeval_run.py`, and `tests/test_longmemeval_prompts.py`
+- Evidence: `docs/operations/data/longmemeval-stage221-retrieval-only-ablation-2026-10-26.json`
+
+**Evidence:** The matched current-source baseline misses 11 of 883 answer-marked pairs at Top-200.
+
+**Design:** Keep the exact question intact and optionally append bounded English inflection forms to the Civilization search query. For `top_k > 20`, preserve the base Top-20 prefix and fill the tail from deduplicated expanded-query results, then the base-query tail. Do not rewrite the answer prompt or mutate stored memories. Keep the behavior opt-in and record it in run and per-query metadata.
+
+**Acceptance:** Test inflection generation, opt-in behavior, other backends, prefix preservation, stable deduplication, and fallback. Compare both arms on all 500 questions under the same current-source runtime. Treat Top-20 answer accuracy as the release gate and Top-200 as retrieval diagnostics.
+
+**Observed retrieval-only result:** Top-20 ordered results are identical in 500/500 questions. Top-200 answer-marked pair recall rises from 872/883 (98.75%) to 876/883 (99.21%), and questions with all answer pairs in Top-200 rise from 460/470 to 465/470. Top-20 pair recall is unchanged. This is a retrieval-only result, not an answer-accuracy gain.
+
+**Observed full answerer result under the user-selected provider/model:** 390/500 (78.0%) at Top-20, 95 answers below the 485/500 release gate. By type: knowledge update 66/78, multi-session 87/133, single-session assistant 53/56, preference 24/30, user 69/70, and temporal reasoning 91/133. The inflection feature preserved the exact Top-20 input, so the answerer score is a new provider run, not a causal comparison of this feature.
+
+**Commit:** `bcf6cbd feat: expand Civilization recall without changing Top-20`
+
 ## Module 12: Stochastic token reservation and output regression
 
 **Files:**
@@ -165,23 +184,12 @@
 - Plan: `docs/plans/2026-10-26-orion-stochastic-prediction-regression.md`
 - Decision: `docs/decisions/adr-001-stochastic-token-reservation.md`
 
-**Design:** Keep the experiment provider-agnostic and side-effect free. The caller supplies logits for several candidate output offsets; a transaction-scoped SHA-256 counter stream reserves one token. Compare that token with the emitted token at the selected offset. An exact match is accepted; a mismatch is rolled back to the actual emitted sequence. Only after output completion may the component reserve a memory token, bound to the output digest and source-cell IDs. The one-token draft is never persisted.
+**Design:** Keep the experiment provider-agnostic and side-effect free. The caller supplies logits for several candidate output offsets; a transaction-scoped SHA-256 counter stream reserves one token. Compare that token with the emitted token at the selected offset. An exact match is accepted; a mismatch is rolled back to the actual emitted sequence. Only after output completion may the component reserve a memory token, conditioned on and bound to the reconciled output digest and source-cell IDs. The one-token draft is never persisted.
 
 **Acceptance:** Verify deterministic replay, multiple-position predictions, exact-match acceptance, mismatch rollback, incomplete-stream handling, evidence provenance, and zero persistent writes. Run targeted plus adjacent Orion stage regressions. Do not claim memory precision or LongMemEval accuracy from this synthetic stage; the 97% gate remains 485/500 under the fixed full benchmark.
 
 **Runtime boundary:** The current provider runtime exposes completed text and not incremental token logits/KV state, so this module is an experimental component and is not wired into provider chat generation. A future local-runtime integration needs its own accuracy and latency ablation before enablement.
 
-**Commit:** `feat: add stochastic memory token reservation and regression`
+**Observed verification:** 16 new stage tests and 25 adjacent Orion regression tests passed. No production-memory write path is exposed.
 
-## Module 11: Expand inflected terms for episodic search
-
-**Files:**
-- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/common/mem0_client.py` and `benchmarks/longmemeval/run.py`
-- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_civilization_adapter.py` and `tests/test_longmemeval_run.py`
-- Evidence: Stage219's 11 answer-marked pairs missing from Top-200
-
-**Design:** Keep the exact question intact and optionally append only simple English inflection forms (plural/singular and regular verb forms) to the Civilization search query. Do not rewrite the answer prompt or mutate stored memories. Make the behavior opt-in and record it in benchmark metadata so existing runs remain reproducible.
-
-**Acceptance:** Test plural/verb forms, unchanged queries with the feature disabled, and other backends. Run retrieval-only against the 14 fixed questions missing answer-marked pairs; compare Top-20 answer accuracy and Top-200 answer-pair recall with Stage219. Keep the module only if it improves evidence recall without unacceptable answer regressions.
-
-**Commit:** `feat: expand inflected query terms for Civilization search`
+**Commit:** `2663a6d feat: add stochastic memory token reservation and regression`
