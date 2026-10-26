@@ -156,3 +156,32 @@
 **Commit:** `fix: resolve same-day museum visit dates`
 
 **Observed subset result:** The trigger matches only `gpt4_59149c77` in the Stage216 composite. Two independent live replays both answer 7 days; replacing that one row gives 444/500 (88.8%), one paired gain and no regressions. This is a subset composition, not a new full 500-answer run.
+
+## Module 12: Stochastic token reservation and output regression
+
+**Files:**
+- Create: `src/civilization/engine/stages/stage166_orion_stochastic_memory.py`
+- Test: `tests/engine/test_stage166_orion_stochastic_memory.py`
+- Plan: `docs/plans/2026-10-26-orion-stochastic-prediction-regression.md`
+- Decision: `docs/decisions/adr-001-stochastic-token-reservation.md`
+
+**Design:** Keep the experiment provider-agnostic and side-effect free. The caller supplies logits for several candidate output offsets; a transaction-scoped SHA-256 counter stream reserves one token. Compare that token with the emitted token at the selected offset. An exact match is accepted; a mismatch is rolled back to the actual emitted sequence. Only after output completion may the component reserve a memory token, bound to the output digest and source-cell IDs. The one-token draft is never persisted.
+
+**Acceptance:** Verify deterministic replay, multiple-position predictions, exact-match acceptance, mismatch rollback, incomplete-stream handling, evidence provenance, and zero persistent writes. Run targeted plus adjacent Orion stage regressions. Do not claim memory precision or LongMemEval accuracy from this synthetic stage; the 97% gate remains 485/500 under the fixed full benchmark.
+
+**Runtime boundary:** The current provider runtime exposes completed text and not incremental token logits/KV state, so this module is an experimental component and is not wired into provider chat generation. A future local-runtime integration needs its own accuracy and latency ablation before enablement.
+
+**Commit:** `feat: add stochastic memory token reservation and regression`
+
+## Module 11: Expand inflected terms for episodic search
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/common/mem0_client.py` and `benchmarks/longmemeval/run.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_civilization_adapter.py` and `tests/test_longmemeval_run.py`
+- Evidence: Stage219's 11 answer-marked pairs missing from Top-200
+
+**Design:** Keep the exact question intact and optionally append only simple English inflection forms (plural/singular and regular verb forms) to the Civilization search query. Do not rewrite the answer prompt or mutate stored memories. Make the behavior opt-in and record it in benchmark metadata so existing runs remain reproducible.
+
+**Acceptance:** Test plural/verb forms, unchanged queries with the feature disabled, and other backends. Run retrieval-only against the 14 fixed questions missing answer-marked pairs; compare Top-20 answer accuracy and Top-200 answer-pair recall with Stage219. Keep the module only if it improves evidence recall without unacceptable answer regressions.
+
+**Commit:** `feat: expand inflected query terms for Civilization search`
