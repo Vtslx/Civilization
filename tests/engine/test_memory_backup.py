@@ -369,6 +369,60 @@ def test_replicate_memory_backup_rejects_plaintext_and_existing_generations(tmp_
     assert existing.read_bytes() == b"preserve this generation"
 
 
+def test_replicate_memory_backup_rejects_corrupt_source_before_writing_target(tmp_path: Path) -> None:
+    state = _state_fixture(tmp_path)
+    source = tmp_path / "memory.enc"
+    target_directory = tmp_path / "replicas"
+    target_directory.mkdir()
+    create_memory_backup(state, source, passphrase=_TEST_PASSPHRASE)
+    changed = bytearray(source.read_bytes())
+    changed[-1] ^= 1
+    source.write_bytes(changed)
+
+    with pytest.raises(MemoryBackupError, match="authentication failed"):
+        replicate_memory_backup(source, target_directory, passphrase=_TEST_PASSPHRASE)
+
+    assert list(target_directory.iterdir()) == []
+
+
+def test_replicate_memory_backup_cleans_temporary_file_when_replica_verification_fails(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    import civilization.engine.persistence.backup as backup_module
+
+    state = _state_fixture(tmp_path)
+    source = tmp_path / "memory.enc"
+    target_directory = tmp_path / "replicas"
+    target_directory.mkdir()
+    create_memory_backup(state, source, passphrase=_TEST_PASSPHRASE)
+    real_device_id = backup_module._filesystem_device_id
+    target = target_directory.resolve()
+
+    def simulated_distinct_device(path: Path) -> int:
+        resolved = Path(path).resolve()
+        device_id = real_device_id(resolved)
+        return device_id + 1 if resolved == target else device_id
+
+    real_verify = backup_module.verify_memory_backup
+    calls = 0
+
+    def fail_replica_verification(path, *, passphrase=None):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise MemoryBackupError("simulated replica verification failure")
+        return real_verify(path, passphrase=passphrase)
+
+    monkeypatch.setattr(backup_module, "_filesystem_device_id", simulated_distinct_device)
+    monkeypatch.setattr(backup_module, "verify_memory_backup", fail_replica_verification)
+
+    with pytest.raises(MemoryBackupError, match="simulated replica verification failure"):
+        replicate_memory_backup(source, target_directory, passphrase=_TEST_PASSPHRASE)
+
+    assert list(target_directory.iterdir()) == []
+
+
 def test_encrypted_memory_backup_rejects_tampering_and_truncation(tmp_path: Path) -> None:
     state = _state_fixture(tmp_path)
     backup = tmp_path / "memory.enc"
