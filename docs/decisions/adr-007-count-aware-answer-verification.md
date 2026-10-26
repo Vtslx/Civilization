@@ -11,6 +11,7 @@ LongMemEval Stage232's Top-20 evidence covered all answer-marked pairs in 453/47
 
 - Add an opt-in numeric verification contract that returns an answer, citations, a complete item inventory, a total/unit, and temporal events when required.
 - Run the existing validation pipeline over a candidate copy. For counts, require exact citations, distinct qualifying items, compatible units, matching item totals, and a numeric answer equal to `count_value`.
+- For explicit current-year count questions, reject an audit that omits a relevant user-authored event described as “last month” when its observation date falls in the same calendar year; also reject counting that event when it belongs to the prior year.
 - Preserve the original structured answer intact when the audit is missing, invalid, or inconsistent.
 - Keep the feature disabled by default. The frozen 94-question pilot must show positive paired net gain before committing or recommending a full run.
 
