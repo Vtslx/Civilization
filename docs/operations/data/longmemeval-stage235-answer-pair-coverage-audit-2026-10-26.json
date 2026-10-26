@@ -1,0 +1,288 @@
+{
+  "metadata": {
+    "benchmark": "longmemeval",
+    "cutoff": "top_20",
+    "total_dataset_questions": 500,
+    "pair_label_method": "Only non-abstention questions; answer-marked pairs are message pairs with has_answer=true inside answer_session_ids sessions. Pair index is zero-based as used by the ingestion adapter.",
+    "retrieval_snapshot_sha256": "d3e8bf56bc1a4432f27373d03f17f729b8bbdd9597709d3bffc7d96b92122eca",
+    "diagnostic_only": true,
+    "note": "Pair recall is evidence coverage, not answer accuracy or factual precision. This report identifies questions where all annotated answer-bearing pairs are absent from Top-20, but it does not grade unsupported reasoning when all pairs are present.",
+    "answerable_questions": 470,
+    "abstention_questions": 30,
+    "answer_marked_pairs": 883
+  },
+  "runs": [
+    {
+      "scorecard": "longmemeval-stage227-provider-seed-baseline-top20-2026-10-26.json",
+      "model": "group/auto-gpt-6-luna",
+      "openai_seed": 42,
+      "accuracy": {
+        "total": 500,
+        "correct": 385,
+        "accuracy": 77.0,
+        "avg_score": 77.0
+      },
+      "annotated_answerable_questions": 470,
+      "answer_marked_pairs": 883,
+      "top20_pair_hits": 732,
+      "top20_pair_recall": 0.8289920724801813,
+      "questions_with_all_answer_pairs_in_top20": 365,
+      "answerable_wrong_answers": 104,
+      "wrong_answers_with_all_answer_pairs_in_top20": 33,
+      "by_question_type": {
+        "single-session-user": {
+          "questions": 64,
+          "answer_pairs": 64,
+          "top20_hits": 63,
+          "all_pairs_present": 63,
+          "wrong": 2,
+          "wrong_all_pairs_present": 2
+        },
+        "multi-session": {
+          "questions": 121,
+          "answer_pairs": 322,
+          "top20_hits": 251,
+          "all_pairs_present": 81,
+          "wrong": 44,
+          "wrong_all_pairs_present": 11
+        },
+        "single-session-preference": {
+          "questions": 30,
+          "answer_pairs": 44,
+          "top20_hits": 33,
+          "all_pairs_present": 19,
+          "wrong": 6,
+          "wrong_all_pairs_present": 2
+        },
+        "temporal-reasoning": {
+          "questions": 127,
+          "answer_pairs": 253,
+          "top20_hits": 209,
+          "all_pairs_present": 94,
+          "wrong": 37,
+          "wrong_all_pairs_present": 10
+        },
+        "knowledge-update": {
+          "questions": 72,
+          "answer_pairs": 144,
+          "top20_hits": 122,
+          "all_pairs_present": 54,
+          "wrong": 10,
+          "wrong_all_pairs_present": 4
+        },
+        "single-session-assistant": {
+          "questions": 56,
+          "answer_pairs": 56,
+          "top20_hits": 54,
+          "all_pairs_present": 54,
+          "wrong": 5,
+          "wrong_all_pairs_present": 4
+        }
+      }
+    },
+    {
+      "scorecard": "longmemeval-stage227-provider-seed-four-type-reranker-top20-2026-10-26.json",
+      "model": "group/auto-gpt-6-luna",
+      "openai_seed": 42,
+      "accuracy": {
+        "total": 500,
+        "correct": 433,
+        "accuracy": 86.6,
+        "avg_score": 86.6
+      },
+      "annotated_answerable_questions": 470,
+      "answer_marked_pairs": 883,
+      "top20_pair_hits": 866,
+      "top20_pair_recall": 0.9807474518686297,
+      "questions_with_all_answer_pairs_in_top20": 456,
+      "answerable_wrong_answers": 60,
+      "wrong_answers_with_all_answer_pairs_in_top20": 50,
+      "by_question_type": {
+        "single-session-user": {
+          "questions": 64,
+          "answer_pairs": 64,
+          "top20_hits": 63,
+          "all_pairs_present": 63,
+          "wrong": 2,
+          "wrong_all_pairs_present": 2
+        },
+        "multi-session": {
+          "questions": 121,
+          "answer_pairs": 322,
+          "top20_hits": 316,
+          "all_pairs_present": 117,
+          "wrong": 25,
+          "wrong_all_pairs_present": 21
+        },
+        "single-session-preference": {
+          "questions": 30,
+          "answer_pairs": 44,
+          "top20_hits": 43,
+          "all_pairs_present": 29,
+          "wrong": 4,
+          "wrong_all_pairs_present": 3
+        },
+        "temporal-reasoning": {
+          "questions": 127,
+          "answer_pairs": 253,
+          "top20_hits": 247,
+          "all_pairs_present": 122,
+          "wrong": 20,
+          "wrong_all_pairs_present": 16
+        },
+        "knowledge-update": {
+          "questions": 72,
+          "answer_pairs": 144,
+          "top20_hits": 143,
+          "all_pairs_present": 71,
+          "wrong": 5,
+          "wrong_all_pairs_present": 5
+        },
+        "single-session-assistant": {
+          "questions": 56,
+          "answer_pairs": 56,
+          "top20_hits": 54,
+          "all_pairs_present": 54,
+          "wrong": 4,
+          "wrong_all_pairs_present": 3
+        }
+      }
+    },
+    {
+      "scorecard": "longmemeval-stage230-relative-order-four-type-candidate-top20-2026-10-26.json",
+      "model": "group/auto-gpt-6-luna",
+      "openai_seed": 42,
+      "accuracy": {
+        "total": 500,
+        "correct": 427,
+        "accuracy": 85.39999999999999,
+        "avg_score": 85.39999999999999
+      },
+      "annotated_answerable_questions": 470,
+      "answer_marked_pairs": 883,
+      "top20_pair_hits": 867,
+      "top20_pair_recall": 0.9818799546998868,
+      "questions_with_all_answer_pairs_in_top20": 457,
+      "answerable_wrong_answers": 64,
+      "wrong_answers_with_all_answer_pairs_in_top20": 55,
+      "by_question_type": {
+        "single-session-user": {
+          "questions": 64,
+          "answer_pairs": 64,
+          "top20_hits": 63,
+          "all_pairs_present": 63,
+          "wrong": 5,
+          "wrong_all_pairs_present": 5
+        },
+        "multi-session": {
+          "questions": 121,
+          "answer_pairs": 322,
+          "top20_hits": 314,
+          "all_pairs_present": 116,
+          "wrong": 24,
+          "wrong_all_pairs_present": 20
+        },
+        "single-session-preference": {
+          "questions": 30,
+          "answer_pairs": 44,
+          "top20_hits": 43,
+          "all_pairs_present": 29,
+          "wrong": 3,
+          "wrong_all_pairs_present": 3
+        },
+        "temporal-reasoning": {
+          "questions": 127,
+          "answer_pairs": 253,
+          "top20_hits": 249,
+          "all_pairs_present": 123,
+          "wrong": 23,
+          "wrong_all_pairs_present": 19
+        },
+        "knowledge-update": {
+          "questions": 72,
+          "answer_pairs": 144,
+          "top20_hits": 144,
+          "all_pairs_present": 72,
+          "wrong": 4,
+          "wrong_all_pairs_present": 4
+        },
+        "single-session-assistant": {
+          "questions": 56,
+          "answer_pairs": 56,
+          "top20_hits": 54,
+          "all_pairs_present": 54,
+          "wrong": 5,
+          "wrong_all_pairs_present": 4
+        }
+      }
+    },
+    {
+      "scorecard": "longmemeval-stage232-single-session-verification-four-type-candidate-top20-2026-10-26.json",
+      "model": "group/auto-gpt-6-luna",
+      "openai_seed": 42,
+      "accuracy": {
+        "total": 500,
+        "correct": 432,
+        "accuracy": 86.4,
+        "avg_score": 86.4
+      },
+      "annotated_answerable_questions": 470,
+      "answer_marked_pairs": 883,
+      "top20_pair_hits": 863,
+      "top20_pair_recall": 0.9773499433748585,
+      "questions_with_all_answer_pairs_in_top20": 453,
+      "answerable_wrong_answers": 61,
+      "wrong_answers_with_all_answer_pairs_in_top20": 47,
+      "by_question_type": {
+        "single-session-user": {
+          "questions": 64,
+          "answer_pairs": 64,
+          "top20_hits": 63,
+          "all_pairs_present": 63,
+          "wrong": 2,
+          "wrong_all_pairs_present": 2
+        },
+        "multi-session": {
+          "questions": 121,
+          "answer_pairs": 322,
+          "top20_hits": 311,
+          "all_pairs_present": 113,
+          "wrong": 24,
+          "wrong_all_pairs_present": 17
+        },
+        "single-session-preference": {
+          "questions": 30,
+          "answer_pairs": 44,
+          "top20_hits": 43,
+          "all_pairs_present": 29,
+          "wrong": 5,
+          "wrong_all_pairs_present": 4
+        },
+        "temporal-reasoning": {
+          "questions": 127,
+          "answer_pairs": 253,
+          "top20_hits": 248,
+          "all_pairs_present": 122,
+          "wrong": 21,
+          "wrong_all_pairs_present": 16
+        },
+        "knowledge-update": {
+          "questions": 72,
+          "answer_pairs": 144,
+          "top20_hits": 144,
+          "all_pairs_present": 72,
+          "wrong": 5,
+          "wrong_all_pairs_present": 5
+        },
+        "single-session-assistant": {
+          "questions": 56,
+          "answer_pairs": 56,
+          "top20_hits": 54,
+          "all_pairs_present": 54,
+          "wrong": 4,
+          "wrong_all_pairs_present": 3
+        }
+      }
+    }
+  ]
+}

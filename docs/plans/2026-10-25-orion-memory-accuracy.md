@@ -362,3 +362,13 @@
 **Observed result:** Consensus scored 210/266 (78.9%), versus 217/266 (81.6%) for the matched Stage232 selections; paired outcomes were 14 consensus-only and 21 Stage232-only. The consensus order used all three historical votes for 260 questions and Stage232 fallback order for six.
 
 **Decision/status:** Do not implement this consensus policy. It underperformed the matched reference; continue with answer synthesis and evidence-grounded reasoning. Best full score remains 433/500, 52 below the target.
+
+## Module 21: Audit answer-marked pair coverage for Stage227–232
+
+**Artifact:** `docs/operations/data/longmemeval-stage235-answer-pair-coverage-audit-2026-10-26.json`
+
+**Method:** For non-abstention questions, derive answer-bearing pairs from `has_answer=true` messages inside `answer_session_ids` sessions. Match them to Top-20 retrieval metadata `(source_session_id, source_pair_index)`; report coverage separately from the judged answer score.
+
+**Observed Stage232 result:** 863/883 answer-marked pairs were in Top-20 (97.7%), and all answer pairs were present for 453/470 answerable questions. Among 61 incorrect answerable rows, 47 already had all annotated answer pairs in Top-20. This supports answer synthesis and event reasoning as the largest current gap; pair coverage is not factual precision.
+
+**Decision/status:** No code change. Preserve the 485/500 Top-20 gate and target synthesis errors using frozen evidence. The best full score remains 433/500, 52 short.
