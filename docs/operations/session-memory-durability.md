@@ -297,6 +297,12 @@ offsite recovery path until an authorized endpoint and bucket have passed a live
 synthetic restore drill. The repository currently has no configured S3 target,
 schedule, or alerting policy.
 
+Configure the provider's lifecycle rule to abort incomplete multipart uploads
+after a window longer than expected retry/resume gaps. The adapter can recover
+one active content-addressed upload from its listing if a checkpoint is lost;
+multiple active uploads for the same key fail closed and require cleanup. AWS
+describes this rule in [Abort incomplete multipart uploads](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpu-abort-incomplete-mpu-lifecycle-config.html).
+
 ## Limits and non-goals
 
 - **Replication is manual.** Journals and snapshots survive restarts on this

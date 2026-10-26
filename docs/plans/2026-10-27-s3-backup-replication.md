@@ -46,13 +46,13 @@
 
 Add a command accepting endpoint URL, region, bucket, prefix, checkpoint directory, and optional Object Lock policy. Never accept an access key or backup passphrase as a CLI argument. Record checkpoint path, VersionId, source hash, bytes, checksum verification, and remote read-back verification without recording credentials.
 
-Fake-client tests must cover successful multipart upload, checkpoint resume, remote-part reconciliation, retry state after a part failure, source mutation rejection, no overwrite, remote read-back corruption, Object Lock retention skips, retention dry-run, explicit version deletion, and credential-free reports.
+Fake-client tests must cover successful multipart upload, checkpoint resume, remote-part reconciliation, retry state after a part failure, lost upload-creation response recovery, expired-upload restart, source mutation rejection, no overwrite, remote read-back corruption, Object Lock retention skips, fail-closed lock inspection, retention dry-run, explicit version deletion, and credential-free reports.
 
 Run focused tests, `compileall`, and `git diff --check`. Keep the optional dependency absent from the default install.
 
-**Local implementation result:** Commit `474ec9e feat: add resumable S3 encrypted backup replication` adds the optional `backup-s3` extra, CLI upload/retention commands, durable 0600 multipart checkpoints, content-addressed keys, remote read-back verification, and lock-aware retention planning. Fake-client tests passed along with the existing backup suite: 39 total tests. `compileall`, TOML parsing, and `git diff --check` passed. No boto3 package was installed and no S3 object was uploaded.
+**Local implementation result:** Commit `474ec9e feat: add resumable S3 encrypted backup replication` adds the optional `backup-s3` extra, two CLI commands, versioned content-addressed uploads, mode-0600 durable checkpoints, part reconciliation, Object Lock-aware retention planning, and an independent remote read-back verifier. Fake-client tests cover resuming after a lost `CreateMultipartUpload` response and restarting after an expired upload ID when no active upload remains. The combined S3/backup suite passed 41 tests; compileall, TOML validation, and diff checks passed. Boto3 remains optional; no package was installed and no S3 object was uploaded.
 
-**Local implementation result:** Commit `474ec9e feat: add resumable S3 encrypted backup replication` adds the optional `backup-s3` extra, two CLI commands, versioned content-addressed uploads, mode-0600 durable checkpoints, part reconciliation, Object Lock-aware retention planning, and an independent remote read-back verifier. The S3 fake-client suite and encrypted backup suite passed 39 tests; compileall, TOML validation, and diff checks passed. Boto3 remains optional; no package was installed and no object was uploaded.
+Configure the target bucket's lifecycle to abort incomplete multipart uploads after a window longer than expected retry/resume gaps. The adapter resumes an expired upload from source/checkpoint state when the key has no active multipart upload; multiple active uploads under one content-addressed key are rejected for manual cleanup.
 
 ## Task 5: Authorized live recovery drill
 

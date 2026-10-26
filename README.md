@@ -106,7 +106,9 @@ the backup passphrase remains in `CIVILIZATION_BACKUP_PASSPHRASE`. The separate
 `civilization s3-backup-retention` command is dry-run by default and requires
 `--apply` to delete eligible object versions. These commands do not schedule
 replication or prove an offsite recovery path until an authorized target has
-passed a live restore drill.
+passed a live restore drill. Configure the bucket to abort incomplete multipart
+uploads after a window longer than the expected retry/resume period; see
+[AWS incomplete-upload lifecycle guidance](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpu-abort-incomplete-mpu-lifecycle-config.html).
 `civilization scorecard` checks full LongMemEval answerer results against the
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 

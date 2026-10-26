@@ -38,6 +38,7 @@ class FakeS3Client:
         self.objects = {}
         self.versioning_enabled = True
         self.object_lock_enabled = True
+        self.deny_lock_inspection = False
         self.fail_after_part_once = False
         self.failed_part_once = False
         self.fail_after_create_once = False
@@ -46,6 +47,7 @@ class FakeS3Client:
         self.part_upload_calls = []
         self.complete_calls = 0
         self.create_calls = 0
+        self.upload_sequence = 0
         self.delete_calls = []
 
     def get_bucket_versioning(self, *, Bucket):
@@ -55,6 +57,24 @@ class FakeS3Client:
         if not self.object_lock_enabled:
             raise FakeS3Error("ObjectLockConfigurationNotFoundError")
         return {"ObjectLockConfiguration": {"ObjectLockEnabled": "Enabled"}}
+
+    def get_object_retention(self, *, Bucket, Key, VersionId):
+        if self.deny_lock_inspection:
+            raise FakeS3Error("AccessDenied", 403)
+        version = next(item for item in self.objects[(Bucket, Key)] if item["VersionId"] == VersionId)
+        retention = {}
+        if version.get("ObjectLockMode") and version.get("ObjectLockRetainUntilDate"):
+            retention = {
+                "Mode": version["ObjectLockMode"],
+                "RetainUntilDate": version["ObjectLockRetainUntilDate"],
+            }
+        return {"Retention": retention}
+
+    def get_object_legal_hold(self, *, Bucket, Key, VersionId):
+        if self.deny_lock_inspection:
+            raise FakeS3Error("AccessDenied", 403)
+        version = next(item for item in self.objects[(Bucket, Key)] if item["VersionId"] == VersionId)
+        return {"LegalHold": {"Status": version.get("ObjectLockLegalHoldStatus", "OFF")}}
 
     def head_object(self, *, Bucket, Key, VersionId=None):
         versions = self.objects.get((Bucket, Key), [])
@@ -77,7 +97,8 @@ class FakeS3Client:
         return result
 
     def create_multipart_upload(self, **request):
-        upload_id = f"upload-{len(self.uploads) + 1}"
+        self.upload_sequence += 1
+        upload_id = f"upload-{self.upload_sequence}"
         self.uploads[upload_id] = {**request, "UploadId": upload_id, "Parts": {}}
         self.create_calls += 1
         if self.fail_after_create_once and not self.failed_create_once:
@@ -270,6 +291,26 @@ def test_s3_recovers_if_create_multipart_response_is_lost_before_checkpoint(tmp_
     assert client.uploads == {}
 
 
+def test_s3_restarts_upload_after_lifecycle_abort_of_checkpointed_upload(tmp_path: Path) -> None:
+    state = _state_fixture(tmp_path)
+    backup = tmp_path / "memory.enc"
+    checkpoint_dir = tmp_path / "checkpoints"
+    create_memory_backup(state, backup, passphrase=_TEST_PASSPHRASE)
+    client = FakeS3Client()
+    client.fail_after_part_once = True
+
+    with pytest.raises(TimeoutError, match="response loss"):
+        _replicate(client, backup, checkpoint_dir)
+    assert len(client.uploads) == 1
+    client.uploads.clear()  # Simulate a lifecycle rule aborting an expired multipart upload.
+
+    report = _replicate(client, backup, checkpoint_dir)
+    assert report["verified"] is True
+    assert client.create_calls == 2
+    assert client.complete_calls == 1
+    assert client.uploads == {}
+
+
 def test_s3_readback_failure_preserves_remote_version_and_checkpoint(tmp_path: Path) -> None:
     state = _state_fixture(tmp_path)
     backup = tmp_path / "memory.enc"
@@ -316,6 +357,25 @@ def test_s3_retention_dry_run_preserves_latest_locked_and_held_versions() -> Non
     assert client.delete_calls == [("memory-backups", "civilization/orion/old.enc", "v-old")]
     assert client.head_object(Bucket="memory-backups", Key="civilization/orion/locked.enc", VersionId="v-locked")
     assert client.head_object(Bucket="memory-backups", Key="civilization/orion/held.enc", VersionId="v-held")
+
+
+def test_s3_retention_fails_closed_when_object_lock_state_cannot_be_read() -> None:
+    client = FakeS3Client()
+    now = datetime(2026, 10, 27, tzinfo=timezone.utc)
+    client.add_test_version("memory-backups", "civilization/orion/old.enc", "v-old", last_modified=now - timedelta(days=90))
+    client.add_test_version("memory-backups", "civilization/orion/latest.enc", "v-latest", last_modified=now - timedelta(days=1))
+    client.deny_lock_inspection = True
+
+    with pytest.raises(MemoryBackupError, match="could not inspect S3 object retention"):
+        plan_s3_backup_retention(
+            client,
+            bucket="memory-backups",
+            prefix="civilization/orion",
+            keep_latest=1,
+            older_than_days=30,
+            now=now,
+        )
+    assert client.delete_calls == []
 
 
 def test_s3_cli_uses_environment_passphrase_and_emits_no_credentials(tmp_path: Path, monkeypatch, capsys) -> None:

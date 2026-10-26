@@ -209,6 +209,9 @@ S3-compatible versioned bucket，持久保存 multipart checkpoint，并对远�
 
 这些命令不配置定时任务、告警或异地目标。必须对获准的远端 bucket 完成实时恢复演练，
 才能将该路径视为异地灾备；同一主机或同一物理站点的另一个文件系统不能防范站点级故障。
+S3 bucket 还应配置超过预期重试/续传窗口的 incomplete multipart abort lifecycle 规则。
+适配器可通过 ListMultipartUploads 恢复唯一的 content-addressed 上传；同一 key 存在多个
+未完成上传时会失败关闭，需人工清理。
 
 ## 边界与非目标
 

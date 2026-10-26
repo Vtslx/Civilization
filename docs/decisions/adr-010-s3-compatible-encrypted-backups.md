@@ -33,7 +33,8 @@ The existing bundle is encrypted before replication. The S3 adapter therefore mo
 
 ### Negative
 
-- A local checkpoint directory must be durable and protected; losing it may leave an incomplete remote multipart upload that requires operator cleanup.
+- A local checkpoint directory must be durable and protected. If it is lost, the adapter can recover a single incomplete upload by key; multiple ambiguous uploads fail closed and require operator cleanup.
+- Configure an S3 Lifecycle `AbortIncompleteMultipartUpload` rule with a window longer than normal retry/resume delays to limit storage charges from abandoned parts.
 - S3-compatible providers vary in checksum, versioning, and Object Lock support; unsupported behavior must fail closed.
 - The implementation alone does not provide a geographic offsite copy, schedule, alerts, retention application, RPO/RTO, or a production restore drill.
 
@@ -43,6 +44,16 @@ The existing bundle is encrypted before replication. The S3 adapter therefore mo
 - **Integrity:** source verification, SHA-256 per part, SHA-256 of the completed remote read-back, and authenticated bundle verification are required before success.
 - **Durability:** checkpoint updates are atomic and fsynced after each confirmed part; object completion is idempotently recovered by checking a matching content-addressed object.
 - **Retention:** no deletion occurs in upload; pruning is an explicit dry-run/confirm workflow and never removes locked or held versions.
+
+## Expected S3 permissions
+
+- Upload/resume: `s3:GetBucketVersioning`, `s3:PutObject`, `s3:ListBucketMultipartUploads`, and `s3:ListMultipartUploadParts`.
+- Remote read-back: `s3:GetObjectVersion`.
+- Object Lock inspection: `s3:GetBucketObjectLockConfiguration`, `s3:GetObjectRetention`, and `s3:GetObjectLegalHold`.
+- Setting per-object retention: `s3:PutObjectRetention`.
+- Applying the explicitly requested retention plan: `s3:ListBucketVersions` and `s3:DeleteObjectVersion`.
+
+The adapter fails closed if it cannot inspect lock state for a bucket with Object Lock enabled. AWS maps these API operations to IAM permissions in its [S3 required-permissions table](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-with-s3-policy-actions.html).
 
 ## Alternatives considered
 

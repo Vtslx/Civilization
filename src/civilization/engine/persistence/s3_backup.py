@@ -240,24 +240,15 @@ def replicate_encrypted_backup_to_s3(
                 checkpoint.update({"state": "uploading", "upload_id": upload_id, "parts": {}})
                 _save_s3_checkpoint(checkpoint_path, checkpoint)
             else:
-                create_request: dict[str, Any] = {
-                    "Bucket": bucket,
-                    "Key": key,
-                    "Metadata": {
-                        "civilization-backup-format": "encrypted-v2",
-                        "civilization-backup-sha256": source_sha256,
-                        "civilization-backup-size": str(source_size),
-                    },
-                    "ChecksumAlgorithm": "SHA256",
-                    "ChecksumType": "COMPOSITE",
-                }
-                if object_lock_mode is not None:
-                    create_request["ObjectLockMode"] = object_lock_mode
-                    create_request["ObjectLockRetainUntilDate"] = _retention_datetime(checkpoint["retention_until"])
-                created = client.create_multipart_upload(**create_request)
-                upload_id = created.get("UploadId")
-                if not isinstance(upload_id, str) or not upload_id:
-                    raise MemoryBackupError("S3 did not return a multipart upload ID")
+                upload_id = _create_s3_multipart_upload(
+                    client,
+                    bucket=bucket,
+                    key=key,
+                    source_sha256=source_sha256,
+                    source_size=source_size,
+                    object_lock_mode=object_lock_mode,
+                    retention_until=checkpoint.get("retention_until"),
+                )
                 checkpoint.update({"state": "uploading", "upload_id": upload_id, "parts": {}})
                 _save_s3_checkpoint(checkpoint_path, checkpoint)
 
@@ -274,28 +265,45 @@ def replicate_encrypted_backup_to_s3(
         except Exception as error:
             existing = _head_existing_object(client, bucket=bucket, key=key)
             if existing is None:
-                raise S3BackupError(f"could not resume S3 multipart upload: {_safe_s3_error(error)}") from error
-            _assert_remote_object_identity(existing, source_sha256=source_sha256, source_size=source_size)
-            version_id = existing.get("VersionId")
-            if not version_id:
-                raise MemoryBackupError("versioned S3 object is missing its VersionId") from error
-            checkpoint.update({"state": "remote_validation", "version_id": version_id, "upload_id": None})
-            _save_s3_checkpoint(checkpoint_path, checkpoint)
-            report = _verify_remote_s3_version(
-                client,
-                bucket=bucket,
-                key=key,
-                version_id=version_id,
-                source_sha256=source_sha256,
-                source_size=source_size,
-                passphrase=passphrase,
-                checkpoint_directory=checkpoint_dir,
-                expected_lock_mode=object_lock_mode,
-                expected_retain_until=checkpoint.get("retention_until"),
-            )
-            checkpoint.update({"state": "verified", "verified_at": datetime.now(timezone.utc).isoformat()})
-            _save_s3_checkpoint(checkpoint_path, checkpoint)
-            return _s3_replication_report(checkpoint, report)
+                if _s3_error_code(error) not in {"NoSuchUpload", "NoSuchUploadException"}:
+                    raise S3BackupError(f"could not resume S3 multipart upload: {_safe_s3_error(error)}") from error
+                active_uploads = _list_s3_multipart_uploads(client, bucket=bucket, key=key)
+                if active_uploads:
+                    raise MemoryBackupError("S3 upload ID expired but another incomplete upload exists for this key") from error
+                replacement_upload_id = _create_s3_multipart_upload(
+                    client,
+                    bucket=bucket,
+                    key=key,
+                    source_sha256=source_sha256,
+                    source_size=source_size,
+                    object_lock_mode=object_lock_mode,
+                    retention_until=checkpoint.get("retention_until"),
+                )
+                checkpoint.update({"state": "uploading", "upload_id": replacement_upload_id, "parts": {}})
+                _save_s3_checkpoint(checkpoint_path, checkpoint)
+                remote_parts = {}
+            else:
+                _assert_remote_object_identity(existing, source_sha256=source_sha256, source_size=source_size)
+                version_id = existing.get("VersionId")
+                if not version_id:
+                    raise MemoryBackupError("versioned S3 object is missing its VersionId") from error
+                checkpoint.update({"state": "remote_validation", "version_id": version_id, "upload_id": None})
+                _save_s3_checkpoint(checkpoint_path, checkpoint)
+                report = _verify_remote_s3_version(
+                    client,
+                    bucket=bucket,
+                    key=key,
+                    version_id=version_id,
+                    source_sha256=source_sha256,
+                    source_size=source_size,
+                    passphrase=passphrase,
+                    checkpoint_directory=checkpoint_dir,
+                    expected_lock_mode=object_lock_mode,
+                    expected_retain_until=checkpoint.get("retention_until"),
+                )
+                checkpoint.update({"state": "verified", "verified_at": datetime.now(timezone.utc).isoformat()})
+                _save_s3_checkpoint(checkpoint_path, checkpoint)
+                return _s3_replication_report(checkpoint, report)
 
         part_records = dict(checkpoint.get("parts", {}))
         completed_parts: list[dict[str, Any]] = []
@@ -418,6 +426,7 @@ def plan_s3_backup_retention(
     prefix = _validate_s3_key_prefix(prefix)
     if client.get_bucket_versioning(Bucket=bucket).get("Status") != "Enabled":
         raise MemoryBackupError("S3 backup retention requires bucket versioning")
+    object_lock_enabled = _s3_bucket_object_lock_enabled(client, bucket=bucket)
     current_time = now or datetime.now(timezone.utc)
     if current_time.tzinfo is None:
         raise ValueError("now must be timezone-aware")
@@ -449,8 +458,15 @@ def plan_s3_backup_retention(
         if last_modified >= cutoff:
             preserved.append({"key": key, "version_id": version_id, "reason": "within_retention_window"})
             continue
-        retain_until = head.get("ObjectLockRetainUntilDate")
-        legal_hold = head.get("ObjectLockLegalHoldStatus") == "ON"
+        if object_lock_enabled:
+            retain_until, legal_hold = _s3_version_lock_state(
+                client,
+                bucket=bucket,
+                key=key,
+                version_id=version_id,
+            )
+        else:
+            retain_until, legal_hold = None, False
         if legal_hold or (isinstance(retain_until, datetime) and _as_utc(retain_until) > _as_utc(current_time)):
             preserved.append({"key": key, "version_id": version_id, "reason": "object_lock_or_legal_hold"})
             continue
@@ -462,6 +478,7 @@ def plan_s3_backup_retention(
         "older_than_days": older_than_days,
         "planned_at": current_time.isoformat(),
         "cutoff": cutoff.isoformat(),
+        "object_lock_enabled": object_lock_enabled,
         "candidate_versions": candidates,
         "preserved_versions": preserved,
         "delete_markers_preserved": True,
@@ -530,10 +547,16 @@ def apply_s3_backup_retention(client: Any, plan: dict[str, Any], *, apply: bool 
         if metadata.get("civilization-backup-format") != "encrypted-v2":
             preserved.append({"key": key, "version_id": version_id, "reason": "not_a_civilization_backup"})
             continue
-        retain_until = head.get("ObjectLockRetainUntilDate")
-        if head.get("ObjectLockLegalHoldStatus") == "ON" or (
-            isinstance(retain_until, datetime) and _as_utc(retain_until) > now
-        ):
+        if current_plan["object_lock_enabled"]:
+            retain_until, legal_hold = _s3_version_lock_state(
+                client,
+                bucket=bucket,
+                key=key,
+                version_id=version_id,
+            )
+        else:
+            retain_until, legal_hold = None, False
+        if legal_hold or (isinstance(retain_until, datetime) and _as_utc(retain_until) > now):
             preserved.append({"key": key, "version_id": version_id, "reason": "object_lock_or_legal_hold"})
             continue
         client.delete_object(Bucket=bucket, Key=key, VersionId=version_id)
@@ -678,13 +701,101 @@ def _list_s3_multipart_uploads(client: Any, *, bucket: str, key: str) -> list[st
         key_marker, upload_id_marker = next_key, next_upload_id
 
 
+def _create_s3_multipart_upload(
+    client: Any,
+    *,
+    bucket: str,
+    key: str,
+    source_sha256: str,
+    source_size: int,
+    object_lock_mode: str | None,
+    retention_until: str | None,
+) -> str:
+    request: dict[str, Any] = {
+        "Bucket": bucket,
+        "Key": key,
+        "Metadata": {
+            "civilization-backup-format": "encrypted-v2",
+            "civilization-backup-sha256": source_sha256,
+            "civilization-backup-size": str(source_size),
+        },
+        "ChecksumAlgorithm": "SHA256",
+        "ChecksumType": "COMPOSITE",
+    }
+    if object_lock_mode is not None:
+        request["ObjectLockMode"] = object_lock_mode
+        request["ObjectLockRetainUntilDate"] = _retention_datetime(retention_until or "")
+    created = client.create_multipart_upload(**request)
+    upload_id = created.get("UploadId")
+    if not isinstance(upload_id, str) or not upload_id:
+        raise MemoryBackupError("S3 did not return a multipart upload ID")
+    return upload_id
+
+
 def _is_s3_not_found(error: Exception) -> bool:
     response = getattr(error, "response", None)
     if not isinstance(response, dict):
         return False
     error_code = str(response.get("Error", {}).get("Code", ""))
     status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
-    return status == 404 or error_code in {"404", "NoSuchKey", "NotFound", "NoSuchUpload"}
+    return status == 404 or error_code in {
+        "404",
+        "NoSuchKey",
+        "NotFound",
+        "NoSuchUpload",
+        "NoSuchObjectLockConfiguration",
+        "ObjectLockConfigurationNotFoundError",
+    }
+
+
+def _s3_bucket_object_lock_enabled(client: Any, *, bucket: str) -> bool:
+    try:
+        response = client.get_object_lock_configuration(Bucket=bucket)
+    except Exception as error:
+        code = _s3_error_code(error)
+        if code in {"NoSuchObjectLockConfiguration", "ObjectLockConfigurationNotFoundError"}:
+            return False
+        raise MemoryBackupError(f"could not inspect S3 Object Lock configuration: {_safe_s3_error(error)}") from error
+    config = response.get("ObjectLockConfiguration", {})
+    return config.get("ObjectLockEnabled") == "Enabled"
+
+
+def _s3_version_lock_state(
+    client: Any,
+    *,
+    bucket: str,
+    key: str,
+    version_id: str,
+) -> tuple[datetime | None, bool]:
+    try:
+        retention_response = client.get_object_retention(Bucket=bucket, Key=key, VersionId=version_id)
+    except Exception as error:
+        if _s3_error_code(error) in {"NoSuchObjectLockConfiguration", "NoSuchRetentionConfiguration"}:
+            retention_response = {}
+        else:
+            raise MemoryBackupError(f"could not inspect S3 object retention: {_safe_s3_error(error)}") from error
+    retention = retention_response.get("Retention", {})
+    retain_until = retention.get("RetainUntilDate")
+    if retain_until is not None and not isinstance(retain_until, datetime):
+        raise MemoryBackupError("S3 object retention date has an invalid type")
+
+    try:
+        hold_response = client.get_object_legal_hold(Bucket=bucket, Key=key, VersionId=version_id)
+    except Exception as error:
+        raise MemoryBackupError(f"could not inspect S3 legal-hold state: {_safe_s3_error(error)}") from error
+    hold_status = hold_response.get("LegalHold", {}).get("Status")
+    if hold_status not in {"ON", "OFF"}:
+        raise MemoryBackupError("S3 did not return an explicit legal-hold status")
+    return retain_until, hold_status == "ON"
+
+
+def _s3_error_code(error: Exception) -> str:
+    response = getattr(error, "response", None)
+    if isinstance(response, dict):
+        code = response.get("Error", {}).get("Code")
+        if isinstance(code, str):
+            return code
+    return ""
 
 
 def _head_existing_object(client: Any, *, bucket: str, key: str) -> dict[str, Any] | None:
@@ -757,7 +868,16 @@ def _verify_remote_s3_version(
         report = verify_memory_backup(temporary, passphrase=passphrase)
         if report.get("encrypted") is not True:
             raise MemoryBackupError("remote S3 backup read-back is not encrypted")
-        return {**report, "version_id": version_id, "sha256": digest.hexdigest(), "total_bytes": total}
+        retain_until = head.get("ObjectLockRetainUntilDate")
+        return {
+            **report,
+            "version_id": version_id,
+            "sha256": digest.hexdigest(),
+            "total_bytes": total,
+            "object_lock_mode": head.get("ObjectLockMode"),
+            "retention_until": _as_utc(retain_until).isoformat() if isinstance(retain_until, datetime) else None,
+            "legal_hold_status": head.get("ObjectLockLegalHoldStatus"),
+        }
     except Exception:
         if descriptor >= 0:
             os.close(descriptor)
@@ -847,8 +967,10 @@ def _s3_replication_report(checkpoint: dict[str, Any], remote_report: dict[str, 
         "entry_count": remote_report["entry_count"],
         "session_count": remote_report["session_count"],
         "checkpoint": checkpoint["checkpoint_path"],
-        "object_lock_mode": checkpoint.get("object_lock_mode"),
-        "retention_until": checkpoint.get("retention_until"),
+        "requested_object_lock_mode": checkpoint.get("object_lock_mode"),
+        "object_lock_mode": remote_report.get("object_lock_mode"),
+        "retention_until": remote_report.get("retention_until"),
+        "legal_hold_status": remote_report.get("legal_hold_status"),
     }
 
 
