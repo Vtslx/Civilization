@@ -1,0 +1,19 @@
+{
+  "stage": "stage226_temporal_resolver_frozen_output_pilot",
+  "benchmark": "longmemeval",
+  "source_run": "stage225 selective reranker full 500-question result",
+  "judge_model": "group/auto-gpt-6-luna",
+  "temporal_duration_questions": 20,
+  "valid_deterministic_resolutions": 16,
+  "unresolved_insufficient_or_ambiguous_evidence": 4,
+  "baseline_correct": 15,
+  "resolver_correct": 17,
+  "candidate_only_correct": 2,
+  "baseline_only_correct": 0,
+  "validation_errors_after_resolution": 0,
+  "corrected_patterns": [
+    "Use the user-authored date for an explicit `when I ...` anchor instead of the question date.",
+    "Compute trip duration from matching user-authored start and return events with trusted observation dates."
+  ],
+  "interpretation": "Both corrected answers passed the benchmark judge; four cases remained unchanged because direct user-authored date evidence was missing or ambiguous. This is a frozen-output pilot, not a fresh 500-question release score."
+}

@@ -219,3 +219,20 @@
 **Count policy:** A separate 15-question evidence-complete multi-session count pilot scored 6/15 under each inventory policy, with one win each. Keep the default `skip_multi_session`; the pilot did not justify changing it globally.
 
 **Commit:** `6cc4f45 feat: scope memory reranking by question type`; result record: `docs/operations/data/longmemeval-stage225-selective-four-type-reranker-top20-2026-10-26.json`.
+
+## Module 14: Resolve cited user-event anchors and trip durations
+
+**Files:**
+- Modify: `/Users/yikewang/Documents/本机操作/memory-benchmarks/benchmarks/longmemeval/prompts.py` and `benchmarks/longmemeval/run.py`
+- Test: `/Users/yikewang/Documents/本机操作/memory-benchmarks/tests/test_longmemeval_prompts.py` and `tests/test_longmemeval_run.py`
+- Design: `docs/plans/2026-10-26-longmemeval-deterministic-temporal-completion.md`
+- Decision: `docs/decisions/adr-002-citation-backed-temporal-resolvers.md`
+- Frozen-output pilot: `docs/operations/data/longmemeval-stage226-temporal-resolver-pilot-2026-10-26.json`
+
+**Design:** Compute an elapsed interval from an explicit “when I …” anchor only when an exact user-authored quote supports the anchor date. For trip-duration questions, require matching user-authored start and return events with dates supported by explicit dates or relative phrases tied to observation-date metadata. Reject assistant-only, unstructured, missing, or ambiguous dates and leave the answer unresolved.
+
+**Acceptance:** Cover explicit user anchors, observation-date relative phrases, assistant-only/ambiguous anchors, trip start/return, mismatched destinations, missing dates, citation validity, and run-time integration. Run a paired temporal pilot, then a fresh full 500-question Top-20 scorecard before claiming any accuracy gain.
+
+**Observed frozen-output pilot:** 20 elapsed/trip questions were eligible; 16 had valid direct user-date resolutions, including 14 already-correct answers. Two previously wrong answers were corrected and both passed the benchmark judge; four ambiguous or unsupported cases stayed unchanged. Pilot record: `docs/operations/data/longmemeval-stage226-temporal-resolver-pilot-2026-10-26.json`. This is not a full-run release score.
+
+**Commit:** `74cc7e9 fix: resolve citation-backed temporal intervals`
