@@ -1,0 +1,121 @@
+{
+  "stage": 251,
+  "date": "2026-10-27",
+  "experiment": "Question-scoped composite discrete count-unit compatibility",
+  "pilot_only": true,
+  "question_count": 94,
+  "dataset_sha256": "d81661f7ecc073fa48d611d3a4b1de1e9a9b27077ee3eb6c1aa194f0e3546460",
+  "question_id_set_sha256": "e5cc44da19596169ba411bba0a29a4972c512f8c43f838116db932d75223ec56",
+  "retrieval_source": "Stage243 saved per-question retrieval; exact Top-20 order reused in both arms",
+  "frozen_top20_order_matches": 94,
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "shared_settings": {
+    "mode": "answerer; evaluate-only over frozen retrievals",
+    "top_k": 200,
+    "cutoff": "top_20",
+    "reranker": "disabled in both arms",
+    "count_inventory_policy": "skip_multi_session",
+    "answer_verification_question_types": [
+      "multi-session"
+    ],
+    "max_workers": 8,
+    "openai_seed": 42
+  },
+  "feature": {
+    "description": "Map discrete category labels to item_count only for explicit composite count questions; preserve measurement and currency dimensions and original display labels.",
+    "adapter_tests": "123 passed, 25 subtests passed",
+    "compileall": "passed",
+    "git_diff_check": "passed",
+    "implementation_discarded": true
+  },
+  "control": {
+    "run_id": "37e02797",
+    "timestamp": "20261027_164903",
+    "project_name": "stage251-ms-count-control",
+    "feature_enabled": false,
+    "prompt_source_sha256": "5688475bb499691b0e6617693107dba246fb326ecdcb4a32fc82acf0d760519c",
+    "correct": 71,
+    "total": 94,
+    "accuracy": 0.755319,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0,
+    "count_completeness_status_counts": {
+      "reviewed": 80,
+      "invalid_response": 5,
+      "invalid_evidence": 3,
+      "incompatible_units": 6
+    },
+    "answer_verification_status_counts": {
+      "rejected_unverified_revision": 48,
+      "verified_count_audit": 4,
+      "revised": 38,
+      "unchanged": 1,
+      "invalid_response": 2,
+      "rejected_invalid_evidence": 1
+    }
+  },
+  "candidate": {
+    "run_id": "13ad9440",
+    "timestamp": "20261027_165737",
+    "project_name": "stage251-ms-count-candidate",
+    "feature_enabled": true,
+    "prompt_source_sha256": "7273125cfd8b7a6a9b8579fc9ac3e08ec578bfaff5861081d5a6efbfc5aa7d35",
+    "correct": 70,
+    "total": 94,
+    "accuracy": 0.744681,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0,
+    "count_completeness_status_counts": {
+      "reviewed": 86,
+      "invalid_response": 4,
+      "invalid_evidence": 1,
+      "incompatible_units": 3
+    },
+    "answer_verification_status_counts": {
+      "rejected_unverified_revision": 39,
+      "verified_count_audit": 14,
+      "revised": 37,
+      "invalid_response": 2,
+      "rejected_invalid_evidence": 2
+    }
+  },
+  "paired_outcomes": {
+    "both_correct": 63,
+    "both_wrong": 16,
+    "candidate_only_correct": 7,
+    "control_only_correct": 8,
+    "net_candidate_answers": -1
+  },
+  "accuracy_delta_percentage_points": -1.06383,
+  "audit_observations": {
+    "count_completeness_incompatible_units": {
+      "control": 6,
+      "candidate": 3
+    },
+    "verifier_rejected_invalid_evidence": {
+      "control": 1,
+      "candidate": 2
+    },
+    "target_question": {
+      "question_id": "4adc0475",
+      "control_count_completeness_status": "incompatible_units",
+      "candidate_count_completeness_status": "reviewed",
+      "control_answer": "5",
+      "candidate_answer": "5",
+      "control_judgment": "PASS",
+      "candidate_judgment": "PASS",
+      "score_change": 0
+    }
+  },
+  "result_files": {
+    "control": "/Volumes/Net/civilization-stage251-composite-count-units-20261027/control/longmemeval_results_20261027_164903.json",
+    "candidate": "/Volumes/Net/civilization-stage251-composite-count-units-20261027/candidate/longmemeval_results_20261027_165737.json"
+  },
+  "decision": "Reject and discard the adapter implementation. The candidate resolved some incompatible-unit audit statuses, including the target goals-plus-assists example, but it scored one fewer answer and had one more verifier rejection for invalid evidence. The predeclared positive paired accuracy gate was not met.",
+  "limitations": "Single provider run per arm; both clients accepted seed 42, but generated answers still varied. This 94-question pilot is not a full benchmark score and does not measure memory precision. Stage243 remains the best verified full Top-20 score at 438/500 (87.6%)."
+}

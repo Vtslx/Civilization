@@ -31,3 +31,11 @@ Stage243 wrong multi-session question `4adc0475` asks for the total number of go
 ## Recovery
 
 If the question does not clearly ask for a composite count, or a unit has a physical dimension/currency, use the existing key. If the pilot fails, restore the adapter and keep only the result record.
+
+## Stage251 result
+
+The adapter test suite passed (123 tests and 25 subtests); `compileall` and `git diff --check` passed. The candidate was evaluated against the same 94 frozen Stage243 multi-session count questions and exact Top-20 order, with seed 42 accepted by both clients. Top-20 order matched in 94/94 questions.
+
+Control scored 71/94; candidate scored 70/94. Paired outcomes were 63 both-correct, 16 both-wrong, 7 candidate-only, and 8 control-only (net −1 answer, −1.06 percentage points). Count-completeness `incompatible_units` statuses fell from 6 to 3, and the target `4adc0475` audit changed from `incompatible_units` to `reviewed`; both arms answered 5 and were judged correct on that row. However, the candidate had one more verifier `rejected_invalid_evidence` status (2 vs 1), no positive paired accuracy, and provider-generated answers varied despite accepted seeds. Both arms completed all rows with no unresolved API errors.
+
+Decision: reject and discard the adapter implementation. Keep this scorecard as a negative pilot; do not claim score improvement or change the best full Top-20 result of Stage243 (438/500, 87.6%). Artifact: `docs/operations/data/longmemeval-stage251-composite-count-unit-compatibility-pilot-2026-10-27.json`.
