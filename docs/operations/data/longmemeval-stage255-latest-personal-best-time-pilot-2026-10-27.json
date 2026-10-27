@@ -1,0 +1,67 @@
+{
+  "stage": 255,
+  "date": "2026-10-27",
+  "experiment": "Latest user-reported personal-best time resolution",
+  "saved_answer_replay_only": true,
+  "fresh_generation_run": false,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "f038965c54b03632f86a59104dd77848b66e3f80c08d5fbabdd3984d16457811",
+  "question_count": 500,
+  "feature": {
+    "cli_flag": "--latest-personal-best-time-resolution",
+    "default_enabled": false,
+    "adapter_commit": "63a3ea9 feat: resolve latest user-reported personal-best time",
+    "scope": "Current personal-best-time questions with an exact user-authored time for the same event and a unique observation date.",
+    "safety_conditions": [
+      "Assistant-authored statements are ignored.",
+      "Previous-best questions are left unchanged.",
+      "Conflicting values on the latest observation date are unresolved.",
+      "Observations after the question date are ignored.",
+      "The rewritten answer must pass the existing citation validator."
+    ],
+    "adapter_test_result": "140 passed, 25 subtests passed",
+    "compileall": "passed",
+    "git_diff_check": "passed"
+  },
+  "frozen_replays": {
+    "target_question_id": "6a1eabeb",
+    "question": "What was my personal best time in the charity 5K run?",
+    "older_user_reported_time": "27:12",
+    "latest_user_reported_time": "25:50",
+    "latest_observation_date": "2023-05-30",
+    "question_date": "2023-06-25",
+    "candidate_validation_errors": [],
+    "candidate_judgment": "PASS",
+    "judge_model": "group/auto-gpt-6-luna",
+    "judge_seed": 42,
+    "judge_seed_accepted": true,
+    "stage243": {
+      "source_run_id": "c2ff8d94",
+      "source_result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/control/longmemeval_results_20261027_120957.json",
+      "baseline_correct": 438,
+      "candidate_correct": 439,
+      "total": 500,
+      "paired_outcomes": {
+        "both_correct": 438,
+        "both_wrong": 61,
+        "candidate_only_correct": 1,
+        "baseline_only_correct": 0
+      }
+    },
+    "stage252": {
+      "source_run_id": "4589c940",
+      "source_result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/candidate/longmemeval_results_20261027_173550.json",
+      "baseline_correct": 428,
+      "candidate_correct": 429,
+      "total": 500,
+      "paired_outcomes": {
+        "both_correct": 428,
+        "both_wrong": 71,
+        "candidate_only_correct": 1,
+        "baseline_only_correct": 0
+      }
+    }
+  },
+  "decision": "Keep the resolver opt-in. It corrected one saved answer using a later exact user-authored personal-best statement, passed the judge and answer validator, and did not change any other saved answer in either replay.",
+  "limitations": "This is a deterministic postprocessor replay over two saved 500-answer runs, not fresh answer generation. Stage243 remains the best fresh full Top-20 result at 438/500 (87.6%). The 97% accuracy target and 100% memory precision target remain unmet."
+}
