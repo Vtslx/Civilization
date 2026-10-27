@@ -34,3 +34,7 @@ The prior broad fact-ledger prompt lost 4/133 and was reverted. This experiment 
 ## Recovery
 
 If the detector cannot establish exact/vague overlap on user-authored evidence, it does not inject instructions. If the pilot fails, restore the adapter and retain only the experiment record.
+
+## Stage250 outcome
+
+The candidate triggered the rule on 8 of 133 multi-session questions. Both control and candidate scored 106/133 (79.70%); paired outcomes were 100 both-correct, 21 both-wrong, 6 candidate-only, and 6 control-only. Within the eight triggered questions, both arms were correct on 7 and wrong on 1, with no correctness changes. The answer-audit and verifier-response counts shifted slightly, but the accuracy gate did not pass. The adapter code was discarded without a feature commit. Artifact: `/Volumes/Net/Civilization/docs/operations/data/longmemeval-stage250-multisession-explicit-count-priority-pilot-2026-10-27.json`.

@@ -1,0 +1,100 @@
+{
+  "stage": 250,
+  "date": "2026-10-27",
+  "experiment": "Opt-in explicit-count priority for repeated vague multi-session counts",
+  "pilot_only": true,
+  "question_count": 133,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "102b7f6220a8ba340902ed1914955daeef79bb3a7101c29179ce4359cfba1f1f",
+  "retrieval_source": "Stage243 per-question retrieval files; exact saved Top-20 order reused in both arms",
+  "frozen_top20_order_matches": 133,
+  "eligible_evidence_pattern": {
+    "definition": "A multi-session count-inventory question whose Top-20 user-authored memories contain an exact numeric quantity and a vague quantity for the same normalized noun in different memory records, with the noun present in the question",
+    "eligible_count": 8,
+    "eligible_question_ids": [
+      "2311e44b",
+      "2311e44b_abs",
+      "4adc0475",
+      "55241a1f",
+      "aae3761f",
+      "c4a1ceb8",
+      "edced276",
+      "edced276_abs"
+    ],
+    "baseline_correct": 7,
+    "candidate_correct": 7,
+    "candidate_only_correct": 0,
+    "control_only_correct": 0
+  },
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "shared_settings": {
+    "mode": "answerer",
+    "top_k": 200,
+    "cutoff": "top_20",
+    "reranker": "disabled in both arms; Stage243 selected order reused",
+    "count_inventory_policy": "skip_multi_session",
+    "answer_verification_question_types": [
+      "multi-session"
+    ],
+    "max_workers": 8,
+    "openai_seed": 42
+  },
+  "control": {
+    "run_id": "2b32201c",
+    "timestamp": "20261027_162205",
+    "feature_enabled": false,
+    "correct": 106,
+    "total": 133,
+    "accuracy": 0.796992,
+    "invalid_answer_audits": 9,
+    "verifier_invalid_responses": 1,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0
+  },
+  "candidate": {
+    "run_id": "ebadc9bc",
+    "timestamp": "20261027_162951",
+    "feature_enabled": true,
+    "prompt_source_sha256": "8674050ffb7b0aaa9b51c238c7fac3b3e7de20272db4d1a9c70aec8d6b65da43",
+    "correct": 106,
+    "total": 133,
+    "accuracy": 0.796992,
+    "invalid_answer_audits": 8,
+    "verifier_invalid_responses": 0,
+    "feature_triggered_rows": 8,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0
+  },
+  "paired_outcomes": {
+    "both_correct": 100,
+    "both_wrong": 21,
+    "candidate_only_correct": 6,
+    "control_only_correct": 6
+  },
+  "accuracy_delta_percentage_points": 0.0,
+  "verification_status_counts": {
+    "control": {
+      "rejected_unverified_revision": 49,
+      "verified_count_audit": 12,
+      "revised": 59,
+      "unchanged": 9,
+      "rejected_invalid_evidence": 3,
+      "invalid_response": 1
+    },
+    "candidate": {
+      "rejected_unverified_revision": 47,
+      "revised": 63,
+      "verified_count_audit": 13,
+      "rejected_invalid_evidence": 4,
+      "unchanged": 6,
+      "invalid_response": 0
+    }
+  },
+  "decision": "Reject and discard the implementation. The feature triggered on 8 questions but produced no candidate-only accuracy wins inside that eligible set, and the full paired score remained 106/133 in both arms. Audit counts shifted, but they did not yield an accuracy gain.",
+  "limitations": "Single provider run per arm; seed acceptance does not guarantee identical generations. This is a 133-question pilot, not a full LongMemEval score. Stage243 remains the best verified full Top-20 score at 438/500 (87.6%)."
+}
