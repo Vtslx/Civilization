@@ -167,6 +167,19 @@ Home GPT-6 成员，保留组 ID 和 Codex 成员。该运行时配置修复让�
 经过完整性校验的成绩卡：
 [longmemeval-stage243-relative-week-top20-2026-10-27.json](data/longmemeval-stage243-relative-week-top20-2026-10-27.json)。
 
+## Stage245 多会话计数清单冻结 A/B（子集试验）
+
+为判断是否重启多会话计数清单，在 Stage243 的 94 道多会话计数题上复用完全相同的
+Top-20 证据顺序，并使用同一模型、接受 seed 42 的答题器和裁判，只改变
+`count_inventory_policy`。`skip_multi_session` 对照为 73/94；`all` 候选为 70/94。
+配对结果为 8 题仅候选版答对、11 题仅对照答对、62 题两者都对、13 题两者都错，净差
+−3 题（−3.19 个百分点）。两个变体均完成 94 行；各出现结构化计数输出重试，重试后
+继续完成。
+
+结论：保留 `skip_multi_session` 默认，不启用广泛计数清单。此结果是冻结证据的 94 题
+A/B，不是全量成绩或发布门结果。详细数据和题集哈希见
+[longmemeval-stage245-multisession-count-inventory-pilot-2026-10-27.json](data/longmemeval-stage245-multisession-count-inventory-pilot-2026-10-27.json)。
+
 69.8% 是历史基线，不代表当前代码。只有当两份结果来自同一套 500 题数据集且评测
 协议未变时，成绩差值才有意义。基线的答题器和裁判使用同一个模型，因此存在裁判
 自我偏差。检索精度、证据覆盖、答案准确率和成绩卡完整性是不同指标，不能相互

@@ -1,0 +1,50 @@
+{
+  "stage": 245,
+  "date": "2026-10-27",
+  "experiment": "Frozen multi-session count inventory policy A/B",
+  "pilot_only": true,
+  "question_count": 94,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "9e1080bb2cc2981dcd777fc1560585ad98b26b2b1346cb2a3d077bc262bc1844",
+  "retrieval_source": "Stage243 per-question retrieval results; reranked Top-20 order was reused without reranking in either variant",
+  "frozen_top20_order_matches": 94,
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "shared_settings": {
+    "mode": "answerer",
+    "top_k": 200,
+    "cutoff": "top_20",
+    "reranker": "disabled for both variants; Stage243 selected order reused",
+    "answer_verification_question_types": [
+      "multi-session"
+    ],
+    "temporal_event_list_order_resolution": true
+  },
+  "baseline": {
+    "count_inventory_policy": "skip_multi_session",
+    "correct": 73,
+    "total": 94,
+    "accuracy": 0.776596
+  },
+  "candidate": {
+    "count_inventory_policy": "all",
+    "correct": 70,
+    "total": 94,
+    "accuracy": 0.744681
+  },
+  "paired_outcomes": {
+    "both_correct": 62,
+    "both_wrong": 13,
+    "candidate_only_correct": 8,
+    "baseline_only_correct": 11
+  },
+  "accuracy_delta_percentage_points": -3.19,
+  "structured_output_parse_retries_observed": true,
+  "all_rows_completed": true,
+  "decision": "Do not enable the all policy for multi-session counting. Preserve skip_multi_session; it had 3 more correct answers on identical frozen Top-20 evidence and the same accepted seed.",
+  "limitations": "A 94-question pilot only, not a full LongMemEval accuracy score or release gate. The provider logged a structured-output parse retry in each variant; retry recovery completed all rows."
+}

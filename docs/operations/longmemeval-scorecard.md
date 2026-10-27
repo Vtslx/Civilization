@@ -292,6 +292,21 @@ answer diagnostic was run in this stage.
 Validated artifact:
 [longmemeval-stage243-relative-week-top20-2026-10-27.json](data/longmemeval-stage243-relative-week-top20-2026-10-27.json).
 
+## Stage245 multi-session count-inventory frozen A/B (subset pilot)
+
+To test whether multi-session count inventory should be re-enabled, the 94 multi-session
+count questions were replayed from Stage243 with the exact same Top-20 evidence order,
+model, and seed-42 answerer/judge; only `count_inventory_policy` changed. The
+`skip_multi_session` control scored 73/94, while `all` scored 70/94. Paired outcomes were
+8 candidate-only correct, 11 control-only correct, 62 correct in both, and 13 wrong in
+both: a net loss of 3 answers (-3.19 percentage points). Both variants completed all 94
+rows; each logged a structured count-output retry and recovered.
+
+Decision: retain `skip_multi_session` and do not enable broad count inventory. This is a
+frozen-evidence 94-question A/B, not a full score or release-gate result. The artifact and
+question-set hash are in
+[longmemeval-stage245-multisession-count-inventory-pilot-2026-10-27.json](data/longmemeval-stage245-multisession-count-inventory-pilot-2026-10-27.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
