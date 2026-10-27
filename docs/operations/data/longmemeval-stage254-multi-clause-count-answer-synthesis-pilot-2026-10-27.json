@@ -1,0 +1,89 @@
+{
+  "stage": 254,
+  "date": "2026-10-27",
+  "experiment": "Start/current multi-clause count answer synthesis",
+  "saved_answer_replay_only": true,
+  "fresh_generation_run": false,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "f038965c54b03632f86a59104dd77848b66e3f80c08d5fbabdd3984d16457811",
+  "question_count": 500,
+  "feature": {
+    "cli_flag": "--multi-clause-count-answer-synthesis",
+    "default_enabled": false,
+    "adapter_commit": "d8bfd4f feat: preserve multi-clause count answers",
+    "scope": "Exactly two `how many` clauses asking for a start/initial count and a current count, with exactly two distinct count items.",
+    "acceptance": "Each clause maps uniquely to a cited count item, units are compatible, and the rewritten answer passes the existing full validator.",
+    "adapter_test_result": "135 passed, 25 subtests passed",
+    "compileall": "passed",
+    "git_diff_check": "passed"
+  },
+  "frozen_replay": {
+    "source_stage243_run_id": "c2ff8d94",
+    "source_stage243_result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/control/longmemeval_results_20261027_120957.json",
+    "source_stage243_result_sha256": "1b078951d7e882aedc93f3c34095fbcf012b6238beff0c50c62f7d8cd809e861",
+    "source_stage252_run_id": "4589c940",
+    "source_stage252_result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/candidate/longmemeval_results_20261027_173550.json",
+    "question_type": "knowledge-update",
+    "changed_question_ids": [
+      "031748ae"
+    ],
+    "resolver_applied_rows": 1,
+    "baseline_answer": "5 engineers",
+    "candidate_answer": "At the start: 4 engineers; now: 5 engineers.",
+    "candidate_validation_errors": [],
+    "candidate_judgment": "PASS",
+    "judge_model": "group/auto-gpt-6-luna",
+    "judge_seed": 42,
+    "judge_seed_accepted": true,
+    "stage243_baseline_correct": 438,
+    "stage243_candidate_correct": 439,
+    "stage243_paired_outcomes": {
+      "both_correct": 438,
+      "both_wrong": 61,
+      "candidate_only_correct": 1,
+      "baseline_only_correct": 0
+    },
+    "stage252_baseline_correct": 428,
+    "stage252_candidate_correct": 429,
+    "stage252_paired_outcomes": {
+      "both_correct": 428,
+      "both_wrong": 71,
+      "candidate_only_correct": 1,
+      "baseline_only_correct": 0
+    }
+  },
+  "combined_saved_answer_replays": {
+    "stage243_with_stage253_and_stage254": {
+      "correct": 441,
+      "total": 500,
+      "paired_outcomes": {
+        "both_correct": 438,
+        "both_wrong": 59,
+        "candidate_only_correct": 3,
+        "baseline_only_correct": 0
+      },
+      "changed_question_ids": [
+        "edced276_abs",
+        "e5ba910e_abs",
+        "031748ae"
+      ]
+    },
+    "stage252_with_stage253_and_stage254": {
+      "correct": 431,
+      "total": 500,
+      "paired_outcomes": {
+        "both_correct": 428,
+        "both_wrong": 69,
+        "candidate_only_correct": 3,
+        "baseline_only_correct": 0
+      },
+      "changed_question_ids": [
+        "edced276_abs",
+        "e5ba910e_abs",
+        "031748ae"
+      ]
+    }
+  },
+  "decision": "Keep the resolver opt-in. It preserves the start and current values from an already validated structured audit, corrected one wrong saved answer, passed the judge, and caused no regressions in the two complete saved answer sets.",
+  "limitations": "These are postprocessor replays over saved answers with rejudging of the changed row, not fresh full answer-generation runs. Stage243 remains the best fresh full Top-20 result at 438/500 (87.6%). The 97% objective and 100% memory precision target remain unmet."
+}
