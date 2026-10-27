@@ -1,0 +1,98 @@
+{
+  "stage": 252,
+  "date": "2026-10-27",
+  "experiment": "Bounded immediate-event intervals for month-difference answers",
+  "pilot_only": false,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "f038965c54b03632f86a59104dd77848b66e3f80c08d5fbabdd3984d16457811",
+  "question_count": 500,
+  "temporal_question_count": 133,
+  "temporal_question_id_set_sha256": "51088e7a1fc8ae67150e50a8c5befc59c92b2cde7b1a6ab823c890842a4e78ac",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "feature": {
+    "cli_flag": "--temporal-immediate-event-month-resolution",
+    "default_enabled": false,
+    "adapter_commit": "db72119 feat: resolve bounded immediate event month intervals",
+    "description": "Use an interval from six days before the observation date through the observation date for a user-cited just-completed or just-finished event. Rewrite a between-event month answer only when every possible date pair rounds to the same integer month count.",
+    "adapter_test_result": "123 passed, 25 subtests passed",
+    "compileall": "passed",
+    "git_diff_check": "passed"
+  },
+  "frozen_temporal_replay": {
+    "source_stage": 243,
+    "question_count": 133,
+    "baseline_correct": 114,
+    "candidate_correct": 115,
+    "paired_outcomes": {
+      "both_correct": 114,
+      "both_wrong": 18,
+      "candidate_only_correct": 1,
+      "baseline_only_correct": 0
+    },
+    "resolver_returned_true_rows": 2,
+    "answer_changes": 1,
+    "changed_question_id": "gpt4_21adecb5",
+    "baseline_answer": "The number of months cannot be determined because the memories do not give the completion date of your undergraduate degree.",
+    "candidate_answer": "6 months",
+    "candidate_answer_validation_errors": [],
+    "candidate_judgment": "PASS",
+    "judge_seed": 42,
+    "judge_seed_accepted": true,
+    "unchanged_resolved_question_ids": [
+      "6613b389"
+    ]
+  },
+  "full_candidate": {
+    "run_id": "4589c940",
+    "timestamp": "20261027_173550",
+    "project_name": "stage252-immediate-month-interval-full-top20",
+    "result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/candidate/longmemeval_results_20261027_173550.json",
+    "result_sha256": "5d65816eaf933de03f0255036ca9dfb8a31c3323f71a871e951af3802b7fb0d9",
+    "result_bytes": 243909791,
+    "prompt_source_sha256": "0d08fabb045ca040974005ad15e23281f017b574a27fdb393547a4487695e04e",
+    "correct": 428,
+    "total": 500,
+    "accuracy": 0.856,
+    "per_question_type": {
+      "knowledge-update": "67/78",
+      "multi-session": "100/133",
+      "single-session-assistant": "52/56",
+      "single-session-preference": "28/30",
+      "single-session-user": "67/70",
+      "temporal-reasoning": "114/133"
+    },
+    "paired_against_stage243": {
+      "stage243_correct": 438,
+      "candidate_correct": 428,
+      "both_correct": 409,
+      "both_wrong": 43,
+      "candidate_only_correct": 19,
+      "stage243_only_correct": 29,
+      "net_candidate_answers": -10,
+      "accuracy_delta_percentage_points": -2.0
+    },
+    "stored_top20_order_matches_stage243": 500,
+    "reranker": "disabled; the saved Stage243 retrieval records were reused",
+    "answerer_seed": 42,
+    "answerer_seed_accepted": true,
+    "judge_seed": 42,
+    "judge_seed_accepted": true,
+    "feature_enabled": true,
+    "feature_applied_question_ids": [
+      "gpt4_21adecb5"
+    ],
+    "all_rows_completed": true,
+    "unresolved_api_errors": 0,
+    "answer_validation_failure_rows": 26
+  },
+  "preserved_inputs": {
+    "source_stage243_results": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/control/longmemeval_results_20261027_120957.json",
+    "source_stage243_results_sha256": "1b078951d7e882aedc93f3c34095fbcf012b6238beff0c50c62f7d8cd809e861",
+    "frozen_retrieval_directory": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/input/predicted_stage243-relative-week",
+    "frozen_retrieval_question_files": 500
+  },
+  "decision": "Keep the narrowly bounded feature opt-in. The frozen replay corrected one Stage243 wrong answer, passed the judge and validators, and caused no regression. The regenerated full candidate scored below Stage243, but the feature applied to only one question and its changed row was corrected; the overall full-run delta is confounded by regenerated answer variance.",
+  "limitations": "This is one frozen answer replay and one regenerated 500-question provider run. Seed acceptance does not guarantee deterministic generation. Stage243 remains the best verified full Top-20 score at 438/500 (87.6%). The 97% accuracy target and 100% memory precision target remain unmet."
+}
