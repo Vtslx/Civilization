@@ -1,0 +1,103 @@
+{
+  "stage": 261,
+  "date": "2026-10-27",
+  "experiment": "Explicit ordinal temporal event-list order support",
+  "adapter_commit": "b7ae170 fix: order source-backed ordinal temporal lists",
+  "run_id": "stage261-ordinal",
+  "timestamp": "20261027_221406",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "reranker": "disabled; frozen Stage243 retrieval order reused",
+  "retrieval_order_matches_stage243": {
+    "top_20": 500,
+    "top_200": 500
+  },
+  "enabled_features": [
+    "temporal-event-list-order-resolution",
+    "temporal-immediate-event-month-resolution",
+    "composite-count-evidence-coverage",
+    "multi-clause-count-answer-synthesis",
+    "latest-personal-best-time-resolution",
+    "temporal-choice-audit-consistency",
+    "relative-time-event-answer-resolution"
+  ],
+  "full_candidate": {
+    "correct": 432,
+    "incorrect": 68,
+    "accuracy": 0.864,
+    "target_correct": 485,
+    "shortfall": 53,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 72, "total": 78},
+      "multi-session": {"correct": 105, "total": 133},
+      "single-session-assistant": {"correct": 51, "total": 56},
+      "single-session-preference": {"correct": 25, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 111, "total": 133}
+    },
+    "valid_answer_audits": 468,
+    "invalid_answer_audits": 32,
+    "temporal_event_list_resolved_rows": 2,
+    "ordinal_rank_row": {
+      "question_id": "gpt4_7ca326fa",
+      "judgment": "PASS",
+      "citation_validation": "PASS",
+      "event_order": ["Emma", "Rachel", "Alex"]
+    }
+  },
+  "frozen_stage260_temporal_replay": {
+    "question_count": 133,
+    "baseline_correct": 110,
+    "candidate_correct": 111,
+    "paired_outcomes": {
+      "both_correct": 110,
+      "both_wrong": 22,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_row": {
+      "question_id": "gpt4_7ca326fa",
+      "baseline_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "validation_errors": [],
+      "judge_seed": 42,
+      "judge_seed_accepted": true
+    }
+  },
+  "paired_against_stage260_full": {
+    "baseline_correct": 432,
+    "candidate_correct": 432,
+    "paired_outcomes": {
+      "both_correct": 408,
+      "both_wrong": 44,
+      "candidate_only_correct": 24,
+      "baseline_only_correct": 24
+    }
+  },
+  "paired_against_stage243_full": {
+    "baseline_correct": 438,
+    "candidate_correct": 432,
+    "accuracy_delta_percentage_points": -1.2,
+    "paired_outcomes": {
+      "both_correct": 411,
+      "both_wrong": 41,
+      "candidate_only_correct": 21,
+      "baseline_only_correct": 27
+    }
+  },
+  "unified_result_file": {
+    "path": "/Volumes/Net/civilization-stage261-ordinal-event-order-20261027/candidate/longmemeval_results_20261027_221406.json",
+    "sha256": "054d9ae8b61f1e34d586dfcb892d28646800273f1c04ba0be6eb59bcef7908fd"
+  },
+  "decision": "Keep explicit ordinal-rank support in the existing opt-in temporal event-list resolver. It fixed the source-backed Stage260 ordinal-ranking error and passed a frozen judge replay with no temporal regression. The fresh full run remained 432/500, tied with Stage260 and below Stage243's 438/500; the overall difference includes provider run variability.",
+  "memory_precision_measured": false,
+  "limitations": "The frozen temporal replay is a saved-answer postprocessing result, not a fresh score. The fresh candidate is a single provider run and the 97% release gate remains unmet."
+}

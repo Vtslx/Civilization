@@ -185,7 +185,7 @@ A/B，不是全量成绩或发布门结果。详细数据和题集哈希见
 自我偏差。检索精度、证据覆盖、答案准确率和成绩卡完整性是不同指标，不能相互
 替代 485/500 的发布门槛。
 
-## 后续试验：Stage256–260（2026-10-27）
+## 后续试验：Stage256–261（2026-10-27）
 
 Stage256 的时间审计一致性保护器在冻结答案回放中修正了 1 道题，并通过裁判：114/133→115/133，没有回退。这是已保存答案回放，不是全量重新生成。详情见[Stage256 成绩卡](data/longmemeval-stage256-temporal-choice-audit-consistency-pilot-2026-10-27.json)。
 
@@ -197,6 +197,6 @@ Stage259 将同一 verifier 账本进一步限制到非数值多会话题，在 
 
 Stage260 新增默认关闭的、来源日期约束相对时间实体答案 resolver。Stage243 冻结答案回放修正 2 道时间题，均通过引用验证和裁判，没有回退（114/133→116/133）。fresh 500 题候选得分 432/500，Stage243 的 Top-20 与 Top-200 检索顺序均 500/500 相同；resolver 在本轮新生成答案中没有改写任何行，因此不能把总体分差归因于它。Stage243 仍是最佳已验证全量结果。详情见[Stage260 成绩卡](data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json)。
 
-Stage260 新增默认关闭的、来源日期约束相对时间实体答案 resolver。Stage243 的冻结答案回放修正 2 道时间题，均通过引用验证和 live judge，没有回退（114/133→116/133）。fresh 500 题候选得分 432/500，Stage243 的 Top-20 与 Top-200 检索顺序均 500/500 相同；本轮新生成答案中 resolver 未触发，因此不能把总体分差归因于它。Stage243 仍是最佳已验证全量结果。详情见[Stage260 成绩卡](data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json)。
+Stage261 将现有 opt-in 时间列表 resolver 扩展到 first/second/third 显式排序，并仅识别本轮观察到的 `yesterady` 拼写转置。Stage260 冻结时间题回放只修正 1 道错题，通过引用验证和裁判；该子集从 110/133 提升到 111/133，零回退。fresh 500 题候选得分 432/500，与 Stage260 持平，低于 Stage243 的 438/500；Top-20/Top-200 检索顺序 500/500 相同。该规则继续保持 opt-in，不宣称带来全量成绩提升。详情见[Stage261 成绩卡](data/longmemeval-stage261-ordinal-temporal-event-order-top20-2026-10-27.json)。
 
 发布门仍为 **485/500（97%）**。当前最佳已验证全量成绩仍为 **438/500（87.6%）**，还差 47 题；100% 记忆精准度尚未测量。
