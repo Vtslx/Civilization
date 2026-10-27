@@ -314,7 +314,7 @@ model in the baseline, so judge self-bias remains a limitation. Retrieval
 precision, evidence coverage, answer accuracy, and scorecard integrity are
 separate measurements; none can substitute for the 485/500 gate.
 
-## Later pilots: Stages256–258 (2026-10-27)
+## Later pilots: Stages256–260 (2026-10-27)
 
 Stage256's temporal audit consistency guard corrected one saved temporal answer on frozen evidence and passed the judge: 114/133→115/133 with zero regressions. This is a saved-answer replay, not a full-generation score. Details: [Stage256 scorecard](data/longmemeval-stage256-temporal-choice-audit-consistency-pilot-2026-10-27.json).
 
@@ -323,5 +323,9 @@ Stage257 regenerated all 500 answers with six opt-in resolvers and the reranker 
 Stage258 isolated the fact ledger to the second-pass verifier. On all 133 frozen multi-session questions, control scored 108/133 and candidate 106/133; paired outcomes were 6 candidate-only and 8 control-only. Candidate invalid answer audits increased from 8 to 9, and verifier invalid-evidence rejections increased from 2 to 5. The adapter implementation was reverted after this negative pilot. Details: [Stage258 scorecard](data/longmemeval-stage258-multisession-verifier-only-fact-ledger-pilot-2026-10-27.json).
 
 Stage259 restricted the same verifier ledger to nonnumeric multi-session questions and paired 22 questions across seeds 42, 43, and 44. Across 66 question-seed cases, control scored 46/66 and candidate 45/66; there were 6 candidate-only and 7 control-only outcomes. Candidate invalid answer audits fell from 3 to 2, but strict accuracy fell by one answer. The feature was reverted. Details: [Stage259 scorecard](data/longmemeval-stage259-nonnumeric-multisession-ledger-pilot-2026-10-27.json).
+
+Stage260 added a default-off source-backed relative-time entity resolver. A frozen replay corrected two temporal answers; both passed citation validation and the judge, with zero regressions (114/133→116/133). A fresh 500-question candidate scored 432/500 and matched Stage243's Top-20 and Top-200 order in 500/500. The resolver did not revise any newly generated answer in that run, so the aggregate delta is not attributable to it. Stage243 remains the best verified full result. Details: [Stage260 scorecard](data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json).
+
+Stage260 added a default-off source-backed relative-time entity resolver. A frozen replay corrected two temporal answers and both passed citation validation and judge, with no regressions (114/133→116/133). Its fresh 500-question candidate scored 432/500 and matched Stage243's Top-20 and Top-200 order in 500/500; the resolver did not fire in the freshly generated answers, so the aggregate delta cannot be attributed to it. Stage243 remains the best verified full result. Details: [Stage260 scorecard](data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json).
 
 The release gate remains **485/500 (97%)**. The best verified full result remains **438/500 (87.6%)**, 47 answers short; 100% memory precision has not been measured.

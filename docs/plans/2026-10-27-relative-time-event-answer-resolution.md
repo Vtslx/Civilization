@@ -49,3 +49,9 @@ The answerer returned an abstention and an unrelated influencer event respective
 ## Recovery
 
 The feature is opt-in and has no memory-store write path. Stage243 saved per-question files are immutable rollback inputs. Pilot outputs belong on `/Volumes/Net`, not the nearly full system volume. Never put provider credentials in commands, logs, scorecards, or commits.
+
+## Stage260 outcome
+
+The frozen replay changed exactly two incorrect saved answers: `2ebe6c92` (finished *The Nightingale* seven days before the question) and `eac54add` (signed the first-client contract 27 days before the question, matching the four-week window). Both answers passed exact-citation validation and the live judge with seed 42 accepted; no other saved answer changed. The temporal slice moved 114/133→116/133 with zero regressions.
+
+The default-off resolver was committed as `61ba405 fix: resolve source-backed relative-time event answers`. Full adapter verification passed 151 tests and 25 subtests; `compileall` and `git diff --check` passed. A fresh 500-question candidate with the validated resolver and other opt-in resolvers enabled scored 432/500 (86.4%), versus Stage243 438/500 and Stage257 434/500. Top-20 and Top-200 retrieval order matched Stage243 in 500/500. The resolver itself revised zero rows in that fresh run; both target answers were already generated correctly or lacked a matching event audit. The full-run score delta therefore cannot be attributed to the resolver. Keep the resolver opt-in; Stage243 remains the best full score and the 97% gate remains unmet. Artifact: `docs/operations/data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json`.

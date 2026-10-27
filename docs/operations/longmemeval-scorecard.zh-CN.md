@@ -185,7 +185,7 @@ A/B，不是全量成绩或发布门结果。详细数据和题集哈希见
 自我偏差。检索精度、证据覆盖、答案准确率和成绩卡完整性是不同指标，不能相互
 替代 485/500 的发布门槛。
 
-## 后续试验：Stage256–258（2026-10-27）
+## 后续试验：Stage256–260（2026-10-27）
 
 Stage256 的时间审计一致性保护器在冻结答案回放中修正了 1 道题，并通过裁判：114/133→115/133，没有回退。这是已保存答案回放，不是全量重新生成。详情见[Stage256 成绩卡](data/longmemeval-stage256-temporal-choice-audit-consistency-pilot-2026-10-27.json)。
 
@@ -194,5 +194,9 @@ Stage257 在关闭 reranker 的情况下，用 6 个 opt-in resolver 重新生�
 Stage258 将事实账本限制在第二轮 verifier 提示中。在同一批 133 道冻结多会话题上，对照为 108/133，候选为 106/133；6 题仅候选答对，8 题仅对照答对。候选无效答案审计从 8 增至 9，verifier 无效证据拒绝从 2 增至 5。该实现因试验结果为负而回滚。详情见[Stage258 成绩卡](data/longmemeval-stage258-multisession-verifier-only-fact-ledger-pilot-2026-10-27.json)。
 
 Stage259 将同一 verifier 账本进一步限制到非数值多会话题，在 seed 42、43、44 下对 22 题执行配对试验，共 66 个题目-seed 案例。对照为 46/66，候选为 45/66；6 例仅候选答对，7 例仅对照答对。候选无效答案审计从 3 降到 2，但严格准确率净降 1 题，因此回滚该功能。详情见[Stage259 成绩卡](data/longmemeval-stage259-nonnumeric-multisession-ledger-pilot-2026-10-27.json)。
+
+Stage260 新增默认关闭的、来源日期约束相对时间实体答案 resolver。Stage243 冻结答案回放修正 2 道时间题，均通过引用验证和裁判，没有回退（114/133→116/133）。fresh 500 题候选得分 432/500，Stage243 的 Top-20 与 Top-200 检索顺序均 500/500 相同；resolver 在本轮新生成答案中没有改写任何行，因此不能把总体分差归因于它。Stage243 仍是最佳已验证全量结果。详情见[Stage260 成绩卡](data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json)。
+
+Stage260 新增默认关闭的、来源日期约束相对时间实体答案 resolver。Stage243 的冻结答案回放修正 2 道时间题，均通过引用验证和 live judge，没有回退（114/133→116/133）。fresh 500 题候选得分 432/500，Stage243 的 Top-20 与 Top-200 检索顺序均 500/500 相同；本轮新生成答案中 resolver 未触发，因此不能把总体分差归因于它。Stage243 仍是最佳已验证全量结果。详情见[Stage260 成绩卡](data/longmemeval-stage260-relative-time-event-answer-resolution-top20-2026-10-27.json)。
 
 发布门仍为 **485/500（97%）**。当前最佳已验证全量成绩仍为 **438/500（87.6%）**，还差 47 题；100% 记忆精准度尚未测量。

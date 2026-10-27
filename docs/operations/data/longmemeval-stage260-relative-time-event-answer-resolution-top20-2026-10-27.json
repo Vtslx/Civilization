@@ -1,0 +1,146 @@
+{
+  "stage": 260,
+  "date": "2026-10-27",
+  "experiment": "Source-backed relative-time event answer resolution",
+  "adapter_commit": "61ba405 fix: resolve source-backed relative-time event answers",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "answerer_seed": 42,
+  "judge_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "full_candidate": {
+    "run_id": "stage260-relative-time",
+    "timestamp": "20261027_213324",
+    "mode": "answerer",
+    "evaluate_only": true,
+    "rejudge": true,
+    "top_k": 200,
+    "cutoff": "top_20",
+    "question_count": 500,
+    "correct": 432,
+    "incorrect": 68,
+    "accuracy": 0.864,
+    "target_correct": 485,
+    "shortfall": 53,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 109, "total": 133},
+      "single-session-assistant": {"correct": 50, "total": 56},
+      "single-session-preference": {"correct": 25, "total": 30},
+      "single-session-user": {"correct": 67, "total": 70},
+      "temporal-reasoning": {"correct": 110, "total": 133}
+    },
+    "retrieval_order_matches_stage243": {
+      "top_20": 500,
+      "top_200": 500
+    },
+    "enabled_features": [
+      "temporal-event-list-order-resolution",
+      "temporal-immediate-event-month-resolution",
+      "composite-count-evidence-coverage",
+      "multi-clause-count-answer-synthesis",
+      "latest-personal-best-time-resolution",
+      "temporal-choice-audit-consistency",
+      "relative-time-event-answer-resolution"
+    ],
+    "answer_audit_valid": 478,
+    "answer_audit_invalid": 22,
+    "answer_verification_statuses": {
+      "not_applicable": 219,
+      "invalid_response": 1,
+      "rejected_invalid_evidence": 11,
+      "rejected_unverified_revision": 49,
+      "revised": 152,
+      "unchanged": 57,
+      "verified_count_audit": 11
+    },
+    "count_inventory_statuses": {
+      "not_numeric": 292,
+      "reviewed": 132,
+      "event_interval_resolved": 21,
+      "elapsed_interval_resolved": 16,
+      "event_month_interval_resolved": 2,
+      "event_interval_unresolved": 14,
+      "incompatible_units": 6,
+      "elapsed_interval_unresolved": 3,
+      "invalid_response": 10,
+      "invalid_evidence": 3,
+      "trip_duration_resolved": 1
+    },
+    "relative_time_event_answer_resolution_statuses": {
+      "not_enabled": 367,
+      "not_applicable": 125,
+      "no_source_matched_event": 5,
+      "already_supported": 3,
+      "revised": 0
+    },
+    "result_file": "/Volumes/Net/civilization-stage260-relative-time-20261027/candidate/longmemeval_results_20261027_213324.json",
+    "result_file_size_bytes": 244373430,
+    "result_file_sha256": "7f50dab97e74a884ded30c9bc492214b9953917730ab51192d9f91e2df24d191"
+  },
+  "frozen_stage243_temporal_replay": {
+    "question_count": 133,
+    "baseline_correct": 114,
+    "candidate_correct": 116,
+    "paired_outcomes": {
+      "both_correct": 114,
+      "both_wrong": 17,
+      "candidate_only_correct": 2,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "2ebe6c92",
+        "event_date": "2023-01-31",
+        "question_date": "2023-02-07",
+        "elapsed_days": 7,
+        "answer": "The Nightingale by Kristin Hannah",
+        "citation_validation": "PASS",
+        "judge": "PASS",
+        "judge_seed_accepted": true
+      },
+      {
+        "question_id": "eac54add",
+        "event_date": "2023-03-01",
+        "question_date": "2023-03-28",
+        "elapsed_days": 27,
+        "answer": "Signed a contract with the first client",
+        "citation_validation": "PASS",
+        "judge": "PASS",
+        "judge_seed_accepted": true
+      }
+    ],
+    "unchanged_rows": 131,
+    "regressions": 0,
+    "revised_rows": 2
+  },
+  "paired_against_stage243_full": {
+    "baseline_correct": 438,
+    "candidate_correct": 432,
+    "accuracy_delta_percentage_points": -1.2,
+    "paired_outcomes": {
+      "both_correct": 412,
+      "both_wrong": 42,
+      "candidate_only_correct": 20,
+      "baseline_only_correct": 26
+    }
+  },
+  "paired_against_stage257_full": {
+    "baseline_correct": 434,
+    "candidate_correct": 432,
+    "accuracy_delta_percentage_points": -0.4,
+    "paired_outcomes": {
+      "both_correct": 414,
+      "both_wrong": 48,
+      "candidate_only_correct": 18,
+      "baseline_only_correct": 20
+    }
+  },
+  "decision": "Keep the resolver opt-in. The deterministic frozen replay corrected two source-backed temporal entity errors with zero regressions. In the fresh full candidate, the answerer already produced correct answers or omitted a matching event audit for those two rows, so the resolver did not revise any answer. The 432/500 aggregate does not improve the best verified Stage243 score of 438/500.",
+  "memory_precision_measured": false,
+  "limitations": "The frozen replay is not a full fresh-generation score. The full candidate was regenerated with several previously tested opt-in resolvers and one provider seed; differences from Stage243 and Stage257 include provider answer variation. The 97% release goal remains unmet."
+}
