@@ -1,6 +1,8 @@
 # Multi-session Fact Reconciliation Prompt Plan
 
-> **For Codex:** Implement in the `memory-benchmarks` checkout after the frozen pilot gate. Keep the feature opt-in and preserve Stage243's retrieval evidence for paired comparison.
+> **Record:** Proposed implementation and paired-pilot plan. Stage246 completed the experiment; the feature did not pass the acceptance gate.
+
+> **Status:** Stage246 implementation and frozen pilot completed on 2026-10-27. The candidate did not pass the gate and was reverted; details are recorded below.
 
 **Goal:** Improve multi-session answer synthesis by making the answerer and verifier reconcile entity, role, date, and state evidence across retrieved sessions before answering.
 
@@ -46,3 +48,13 @@ The first option is the smallest reversible experiment. Keep it behind `--multi-
 ## Risks and recovery
 
 The fact ledger is private reasoning guidance and can still cause hallucinations; citations and existing validators remain the authority. The flag stays off outside the pilot. Each pilot writes to its own temporary output directory; Stage243 files remain the rollback source.
+
+## Stage246 outcome
+
+The adapter implementation was committed as `aa340a9 feat: add opt-in multi-session fact ledger` and then reverted as `6e86ec5 Revert "feat: add opt-in multi-session fact ledger"` after the pilot failed its acceptance gate. The adapter has no remaining fact-ledger flag or prompt instructions.
+
+The paired control and candidate each reran all 133 Stage243 multi-session questions at Top-20 with the same model alias, accepted seed 42, answer-verification settings, and frozen reranked retrieval order. The Top-20 order matched in 133/133 questions. Control scored 103/133 (77.44%); candidate scored 99/133 (74.44%), a net loss of four answers (−3.01 percentage points). Paired outcomes were 92 both correct, 23 both wrong, 7 candidate-only correct, and 11 control-only correct.
+
+The candidate also had 10 invalid answer audits versus 9 in control, plus one verifier `invalid_response` versus zero. Both arms completed all rows without unresolved API errors; transient connection retries recovered during control. Both answerer and judge accepted the requested seed, but this remains one provider run and seed acceptance does not guarantee identical generation. The feature was therefore rejected. This pilot does not change the verified full Top-20 score of 438/500 (87.6%).
+
+Artifact: `/Volumes/Net/Civilization/docs/operations/data/longmemeval-stage246-multisession-fact-ledger-pilot-2026-10-27.json`.
