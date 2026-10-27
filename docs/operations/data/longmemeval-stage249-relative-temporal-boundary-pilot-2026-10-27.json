@@ -1,0 +1,77 @@
+{
+  "stage": 249,
+  "date": "2026-10-27",
+  "experiment": "Citation-bound adjacent approximate-duration ordering",
+  "adapter_commit": "019b31b feat: resolve adjacent relative temporal order",
+  "default_enabled": false,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "temporal_question_count": 133,
+  "temporal_question_id_set_sha256": "51088e7a1fc8ae67150e50a8c5befc59c92b2cde7b1a6ab823c890842a4e78ac",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "retrieval_source": "Stage243 saved retrieval; saved Top-20 rankings reused without reranking",
+  "frozen_output_replay": {
+    "question_count": 133,
+    "top20_order_matches": 133,
+    "baseline_correct": 114,
+    "candidate_correct": 115,
+    "paired_outcomes": {
+      "both_correct": 114,
+      "candidate_only_correct": 1,
+      "baseline_only_correct": 0,
+      "both_wrong": 18
+    },
+    "changed_question_ids": [
+      "gpt4_213fd887"
+    ],
+    "candidate_answer": "The volleyball league happened first.",
+    "candidate_judgment": "PASS",
+    "judge_seed_accepted": true,
+    "candidate_validation_errors": [],
+    "unchanged_rows": 132,
+    "interpretation": "The pure resolver changed one Stage243 wrong answer. The existing benchmark judge passed the corrected answer; no other frozen answer changed."
+  },
+  "full_500_question_candidate": {
+    "run_id": "8b7f65d8",
+    "timestamp": "20261027_153844",
+    "project_name": "stage249-temporal-relative-boundary-full-top20",
+    "prompt_source_sha256": "5688475bb499691b0e6617693107dba246fb326ecdcb4a32fc82acf0d760519c",
+    "temporal_relative_duration_order_resolution_enabled": true,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "top20_cutoff": "top_20",
+    "reranker": "disabled; Stage243 selected order reused",
+    "correct": 429,
+    "total": 500,
+    "accuracy": 0.858,
+    "by_question_type": {
+      "knowledge-update": "66/78",
+      "multi-session": "108/133",
+      "single-session-assistant": "52/56",
+      "single-session-preference": "25/30",
+      "single-session-user": "67/70",
+      "temporal-reasoning": "111/133"
+    },
+    "top20_order_matches_stage243": 500,
+    "fallback_applications": 0,
+    "invalid_answer_audits": 30,
+    "all_rows_completed": true,
+    "unresolved_api_errors": 0,
+    "paired_against_stage243": {
+      "stage243_correct": 438,
+      "candidate_correct": 429,
+      "both_correct": 409,
+      "candidate_only": 20,
+      "stage243_only": 29,
+      "both_wrong": 42,
+      "net_delta": -9,
+      "interpretation": "The new fallback did not execute on any generated candidate row. This full rerun reflects provider/output variation and is not evidence of resolver benefit or harm."
+    }
+  },
+  "decision": "Keep the bounded resolver opt-in: frozen-output replay corrected one saved wrong answer with no regression, but the full 500-question rerun did not invoke it and scored below Stage243. Do not enable by default or claim a full-score gain.",
+  "limitations": "This deterministic postprocessor applies only to two distinct, user-cited numeric about-durations with the same observation date and unit, differing by one unit, whose conservative intervals overlap by no more than one elapsed day. It does not cover general temporal ordering. Best verified full Top-20 remains Stage243 at 438/500 (87.6%); memory precision remains unmeasured."
+}
