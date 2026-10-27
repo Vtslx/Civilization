@@ -1,0 +1,94 @@
+{
+  "stage": 253,
+  "date": "2026-10-27",
+  "experiment": "Conjunctive numeric-total evidence coverage guard",
+  "saved_answer_replay_only": true,
+  "fresh_generation_run": false,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "f038965c54b03632f86a59104dd77848b66e3f80c08d5fbabdd3984d16457811",
+  "question_count": 500,
+  "provider": "openai-compatible Magpie gateway",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "feature": {
+    "cli_flag": "--composite-count-evidence-coverage",
+    "default_enabled": false,
+    "adapter_commit": "5f6a8ac feat: abstain on unsupported composite totals",
+    "scope": "Numeric aggregate questions with an explicit total cue, one `and`, and an existing count-item audit.",
+    "coverage_rule": "Every distinct conjunct must be represented by a validated CountedItem with exact user-authored evidence from the supporting user message.",
+    "failure_behavior": "If one or more components are missing, retain partial count items, clear count_value/count_unit, and abstain.",
+    "adapter_test_result": "131 passed, 25 subtests passed",
+    "compileall": "passed",
+    "git_diff_check": "passed"
+  },
+  "stage243_frozen_answer_replay": {
+    "source_run_id": "c2ff8d94",
+    "source_result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/control/longmemeval_results_20261027_120957.json",
+    "source_result_sha256": "1b078951d7e882aedc93f3c34095fbcf012b6238beff0c50c62f7d8cd809e861",
+    "total_questions": 500,
+    "coverage_gate_rows": 15,
+    "complete_component_rows_unchanged": 13,
+    "baseline_correct": 438,
+    "candidate_correct": 440,
+    "paired_outcomes": {
+      "both_correct": 438,
+      "both_wrong": 60,
+      "candidate_only_correct": 2,
+      "baseline_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "edced276_abs",
+        "baseline_judgment": "FAIL",
+        "candidate_answer": "I cannot determine the total because the supplied user-authored memories do not establish every requested component (Hawaii, Seattle).",
+        "missing_components": [
+          "Hawaii",
+          "Seattle"
+        ],
+        "candidate_validation_errors": [],
+        "candidate_judgment": "PASS",
+        "judge_seed": 42,
+        "judge_seed_accepted": true
+      },
+      {
+        "question_id": "e5ba910e_abs",
+        "baseline_judgment": "FAIL",
+        "candidate_answer": "I cannot determine the total because the supplied user-authored memories do not establish every requested component (iPad).",
+        "missing_components": [
+          "iPad"
+        ],
+        "candidate_validation_errors": [],
+        "candidate_judgment": "PASS",
+        "judge_seed": 42,
+        "judge_seed_accepted": true
+      }
+    ],
+    "baseline_correct_rows_changed": 0
+  },
+  "stage252_full_saved_answer_replay": {
+    "source_run_id": "4589c940",
+    "source_result_path": "/Volumes/Net/civilization-stage252-immediate-month-interval-20261027/candidate/longmemeval_results_20261027_173550.json",
+    "source_result_sha256": "5d65816eaf933de03f0255036ca9dfb8a31c3323f71a871e951af3802b7fb0d9",
+    "source_correct": 428,
+    "candidate_correct": 430,
+    "total_questions": 500,
+    "paired_outcomes": {
+      "both_correct": 428,
+      "both_wrong": 70,
+      "candidate_only_correct": 2,
+      "baseline_only_correct": 0
+    },
+    "coverage_gate_rows": 16,
+    "complete_component_rows_unchanged": 14,
+    "changed_question_ids": [
+      "edced276_abs",
+      "e5ba910e_abs"
+    ],
+    "changed_answers_judged_pass": 2,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "unresolved_api_errors": 0
+  },
+  "decision": "Keep the default-off evidence-coverage guard. On both the Stage243 frozen answers and the Stage252 saved full candidate, it changed exactly two wrong composite totals to validated, judge-passed abstentions and caused no regressions.",
+  "limitations": "These are saved-answer postprocessor replays; no new answer generation was run for Stage253. The best fresh full Top-20 score remains Stage243 at 438/500 (87.6%). The 97% target and 100% memory precision target remain unmet."
+}
