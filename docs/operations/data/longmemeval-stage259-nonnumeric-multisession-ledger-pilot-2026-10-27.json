@@ -1,0 +1,100 @@
+{
+  "stage": 259,
+  "date": "2026-10-27",
+  "experiment": "Nonnumeric multi-session verifier-only fact-ledger A/B across three seeds",
+  "pilot_only": true,
+  "question_count_per_seed": 22,
+  "seed_count": 3,
+  "paired_question_seed_count": 66,
+  "question_type": "multi-session-nonnumeric",
+  "selection_rule": "All rows with question_type=multi-session and is_numeric_aggregate_question(question)=false; selection did not use correctness labels",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "f02b9e13ba2507608544b69fe6f235a358a3a9eee11bd4d146b3f039f77a028b",
+  "retrieval_source": "Stage243 frozen per-question Top-200 files",
+  "top_20_order_matches": 66,
+  "top_200_order_matches": 66,
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "shared_settings": {
+    "mode": "answerer",
+    "evaluate_only": true,
+    "rejudge": true,
+    "top_k": 200,
+    "cutoff": "top_20",
+    "reranker": "disabled",
+    "count_inventory_policy": "skip_multi_session",
+    "answer_verification_question_types": ["multi-session"],
+    "max_workers": 8
+  },
+  "seeds": {
+    "42": {
+      "control_correct": 17,
+      "candidate_correct": 15,
+      "both_correct": 14,
+      "both_wrong": 4,
+      "candidate_only_correct": 1,
+      "control_only_correct": 3,
+      "answerer_seed_accepted": true,
+      "judge_seed_accepted": true
+    },
+    "43": {
+      "control_correct": 16,
+      "candidate_correct": 14,
+      "both_correct": 13,
+      "both_wrong": 5,
+      "candidate_only_correct": 1,
+      "control_only_correct": 3,
+      "answerer_seed_accepted": true,
+      "judge_seed_accepted": true
+    },
+    "44": {
+      "control_correct": 13,
+      "candidate_correct": 16,
+      "both_correct": 12,
+      "both_wrong": 5,
+      "candidate_only_correct": 4,
+      "control_only_correct": 1,
+      "answerer_seed_accepted": true,
+      "judge_seed_accepted": true
+    }
+  },
+  "control": {
+    "correct": 46,
+    "total": 66,
+    "accuracy": 0.69697,
+    "invalid_answer_audits": 3,
+    "ledger_enabled_rows": 0,
+    "answer_verification_statuses": {
+      "revised": 42,
+      "unchanged": 21,
+      "rejected_unverified_revision": 2,
+      "rejected_invalid_evidence": 1
+    }
+  },
+  "candidate": {
+    "correct": 45,
+    "total": 66,
+    "accuracy": 0.681818,
+    "invalid_answer_audits": 2,
+    "ledger_enabled_rows": 66,
+    "answer_verification_statuses": {
+      "revised": 44,
+      "unchanged": 19,
+      "rejected_unverified_revision": 2,
+      "rejected_invalid_evidence": 1
+    }
+  },
+  "paired_outcomes": {
+    "both_correct": 39,
+    "both_wrong": 14,
+    "candidate_only_correct": 6,
+    "control_only_correct": 7
+  },
+  "accuracy_delta_percentage_points": -1.515152,
+  "decision": "Reject and revert the nonnumeric-only ledger prompt. It reduced invalid answer audits from 3 to 2 but produced one fewer correct answer across the 66 paired question-seed cases.",
+  "adapter_commit": "017c903 feat: scope fact ledger to nonnumeric verifier",
+  "revert_commit": "bfdf7bd Revert \"feat: scope fact ledger to nonnumeric verifier\"",
+  "artifacts_root": "/Volumes/Net/civilization-stage259-nonnumeric-ledger-20261027",
+  "limitations": "Three paired provider seeds on a 22-question diagnostic slice; this is not a full LongMemEval result. The best verified full Top-20 score remains Stage243 at 438/500 (87.6%). Memory precision remains unmeasured."
+}

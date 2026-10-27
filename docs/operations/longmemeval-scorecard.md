@@ -322,4 +322,6 @@ Stage257 regenerated all 500 answers with six opt-in resolvers and the reranker 
 
 Stage258 isolated the fact ledger to the second-pass verifier. On all 133 frozen multi-session questions, control scored 108/133 and candidate 106/133; paired outcomes were 6 candidate-only and 8 control-only. Candidate invalid answer audits increased from 8 to 9, and verifier invalid-evidence rejections increased from 2 to 5. The adapter implementation was reverted after this negative pilot. Details: [Stage258 scorecard](data/longmemeval-stage258-multisession-verifier-only-fact-ledger-pilot-2026-10-27.json).
 
+Stage259 restricted the same verifier ledger to nonnumeric multi-session questions and paired 22 questions across seeds 42, 43, and 44. Across 66 question-seed cases, control scored 46/66 and candidate 45/66; there were 6 candidate-only and 7 control-only outcomes. Candidate invalid answer audits fell from 3 to 2, but strict accuracy fell by one answer. The feature was reverted. Details: [Stage259 scorecard](data/longmemeval-stage259-nonnumeric-multisession-ledger-pilot-2026-10-27.json).
+
 The release gate remains **485/500 (97%)**. The best verified full result remains **438/500 (87.6%)**, 47 answers short; 100% memory precision has not been measured.

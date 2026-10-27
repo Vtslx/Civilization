@@ -44,3 +44,9 @@ Stage258's verifier-only ledger A/B scored 106/133 versus 108/133 in control. It
 ## Recovery
 
 Every seed and arm has a separate immutable output directory. Stage243 retrieval files remain the rollback source. No credentials or raw provider secrets may be written to scorecards, memory, or commits.
+
+## Stage259 outcome
+
+The nonnumeric-only variant also failed its accuracy gate. Across 66 paired question-seed cases (22 questions × seeds 42, 43, and 44), control scored 46/66 and candidate 45/66. Paired outcomes were 39 both-correct, 14 both-wrong, 6 candidate-only, and 7 control-only. Top-20 and Top-200 orders matched in all 66 cases. Candidate invalid answer audits fell from 3 to 2, but strict accuracy fell by one answer; keep the flag reverted.
+
+The adapter feature commit `017c903 feat: scope fact ledger to nonnumeric verifier` was reverted by `bfdf7bd Revert "feat: scope fact ledger to nonnumeric verifier"`. The full adapter suite passed 148 tests and 25 subtests with the experiment; after revert it passed 144 tests and 25 subtests. `compileall` and `git diff --check` passed. No flag remains in the current adapter. Scorecard: `docs/operations/data/longmemeval-stage259-nonnumeric-multisession-ledger-pilot-2026-10-27.json`.

@@ -193,4 +193,6 @@ Stage257 在关闭 reranker 的情况下，用 6 个 opt-in resolver 重新生�
 
 Stage258 将事实账本限制在第二轮 verifier 提示中。在同一批 133 道冻结多会话题上，对照为 108/133，候选为 106/133；6 题仅候选答对，8 题仅对照答对。候选无效答案审计从 8 增至 9，verifier 无效证据拒绝从 2 增至 5。该实现因试验结果为负而回滚。详情见[Stage258 成绩卡](data/longmemeval-stage258-multisession-verifier-only-fact-ledger-pilot-2026-10-27.json)。
 
+Stage259 将同一 verifier 账本进一步限制到非数值多会话题，在 seed 42、43、44 下对 22 题执行配对试验，共 66 个题目-seed 案例。对照为 46/66，候选为 45/66；6 例仅候选答对，7 例仅对照答对。候选无效答案审计从 3 降到 2，但严格准确率净降 1 题，因此回滚该功能。详情见[Stage259 成绩卡](data/longmemeval-stage259-nonnumeric-multisession-ledger-pilot-2026-10-27.json)。
+
 发布门仍为 **485/500（97%）**。当前最佳已验证全量成绩仍为 **438/500（87.6%）**，还差 47 题；100% 记忆精准度尚未测量。
