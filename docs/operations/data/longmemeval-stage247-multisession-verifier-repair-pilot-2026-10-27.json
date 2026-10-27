@@ -1,0 +1,93 @@
+{
+  "stage": 247,
+  "date": "2026-10-27",
+  "experiment": "Frozen multi-session verifier repair retry A/B",
+  "pilot_only": true,
+  "question_count": 133,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "102b7f6220a8ba340902ed1914955daeef79bb3a7101c29179ce4359cfba1f1f",
+  "retrieval_source": "Stage243 per-question retrieval files; both arms reused the saved retrieval ranking without reranking",
+  "frozen_top20_order_matches": 133,
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "prompt_source_sha256": "d20d7a61c2c71e21c42fe2f369061c66410ec0967e2c6a7fa2d27d6d2c9d844b",
+  "shared_settings": {
+    "mode": "answerer",
+    "top_k": 200,
+    "cutoff": "top_20",
+    "reranker": "disabled in both arms; Stage243 retrieval order reused",
+    "count_inventory_policy": "skip_multi_session",
+    "answer_verification_question_types": [
+      "multi-session"
+    ],
+    "max_workers": 8,
+    "openai_seed": 42
+  },
+  "control": {
+    "run_id": "713e9a1f",
+    "timestamp": "20261027_142839",
+    "multi_session_verifier_repair_enabled": false,
+    "correct": 106,
+    "total": 133,
+    "accuracy": 0.796992,
+    "invalid_answer_audits": 9,
+    "verifier_invalid_responses": 1,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0,
+    "transient_retries": "One structured-call timeout and one structured-output parse retry recovered; all rows completed"
+  },
+  "candidate": {
+    "run_id": "7a6bde13",
+    "timestamp": "20261027_143722",
+    "multi_session_verifier_repair_enabled": true,
+    "correct": 106,
+    "total": 133,
+    "accuracy": 0.796992,
+    "invalid_answer_audits": 11,
+    "verifier_invalid_responses": 1,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0,
+    "repair_attempts": 59,
+    "repair_accepted_by_validators": 26,
+    "repair_rejected": 33
+  },
+  "paired_outcomes": {
+    "both_correct": 100,
+    "both_wrong": 21,
+    "candidate_only_correct": 6,
+    "control_only_correct": 6
+  },
+  "accuracy_delta_percentage_points": 0.0,
+  "diagnostic_by_numeric_aggregate_classification": {
+    "classification": "is_numeric_aggregate_question",
+    "numeric_aggregate": {
+      "total": 111,
+      "control_correct": 92,
+      "candidate_correct": 90,
+      "both_correct": 86,
+      "candidate_only_correct": 4,
+      "control_only_correct": 6,
+      "both_wrong": 15
+    },
+    "other": {
+      "total": 22,
+      "control_correct": 14,
+      "candidate_correct": 16,
+      "both_correct": 14,
+      "candidate_only_correct": 2,
+      "control_only_correct": 0,
+      "both_wrong": 6,
+      "candidate_repair_attempts": 0,
+      "interpretation": "The two candidate-only wins had no verifier repair attempt; this subgroup difference cannot be attributed to the feature."
+    }
+  },
+  "candidate_answer_text_identical_to_control": 27,
+  "all_rows_completed": true,
+  "discarded_interrupted_attempt": "An initial control attempt stopped at 16/133 because the temporary disk filled. Its outputs were discarded; both scorecard arms were restarted from compact copies of the unchanged Stage243 retrieval rows and completed fully.",
+  "decision": "Reject the retry feature. It produced no net accuracy gain, had two more invalid answer audits, and lost two net answers in the numeric-aggregate subset. The two apparent non-numeric wins had no repair attempts and are run variance, not feature evidence. The uncommitted adapter implementation was discarded; no feature flag remains.",
+  "limitations": "One provider A/B run per arm; accepted seeds do not force identical generation (exact final answer text matched in only 27/133). This is a pilot, not a new full 500-question score or release gate."
+}

@@ -2,6 +2,8 @@
 
 > **For Codex:** Implement in the existing `memory-benchmarks` checkout. Use this plan task by task; keep the feature opt-in and discard it if the frozen pilot fails.
 
+> **Status:** Stage247 implementation and frozen pilot completed. The feature failed the acceptance gate and was discarded; see the outcome below.
+
 **Goal:** Recover supported cross-session answer revisions that the current citation or answer validators reject, without changing valid verifier results.
 
 **Architecture:** Add one opt-in retry only for `multi-session` answer verification. Trigger it only after the first verifier response fails parsing, citation checks, or full answer validation. Include the exact validation errors and the previous response as data, request the existing schema, and rerun the same validators. Accept the retry only if every check passes; otherwise preserve the original answer and record the repair outcome. Do not add a memory write, answer field, reranker call, or global behavior change.
@@ -34,3 +36,13 @@ The repair retry is narrower than a new verifier or prompt strategy: it runs onl
 ## Recovery
 
 If the retry is malformed or still fails validation, discard it and keep the original answer. If the paired pilot fails its gate, restore the adapter to its pre-experiment state; retain only the experiment record in Civilization documentation.
+
+## Stage247 outcome
+
+The opt-in implementation was evaluated but not committed. Control and candidate each reran the same 133 Stage243 multi-session questions with identical frozen Top-20 order, model alias, verification configuration, and seed 42 accepted by answerer and judge. Both arms scored 106/133 (79.70%). Paired outcomes were 100 both-correct, 21 both-wrong, 6 candidate-only, and 6 control-only; net gain was zero.
+
+The candidate retried verification 59 times: 26 retried responses passed validation and 33 remained rejected. The candidate had 11 invalid answer audits versus 9 in control; verifier invalid-response counts were 1 in each arm. Numeric-aggregate questions moved from 92/111 to 90/111. The other 22 questions moved from 14/22 to 16/22, but the repair feature was never triggered in that subgroup, so those two wins cannot be attributed to the retry.
+
+The first control attempt stopped at 16 rows when temporary storage filled. That incomplete output was discarded; the final control and candidate were both restarted from compact Stage243 retrieval snapshots and completed 133/133. A transient control timeout and structured-output parse retry recovered, with no unresolved API failures. The adapter code was discarded after the gate failed; no repair flag remains.
+
+Artifact: `/Volumes/Net/Civilization/docs/operations/data/longmemeval-stage247-multisession-verifier-repair-pilot-2026-10-27.json`.
