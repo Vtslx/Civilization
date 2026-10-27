@@ -54,6 +54,29 @@ The existing N-event list-order resolver was also replayed on the frozen tempora
 
 ## Task 4: Commit the code and validate the full candidate
 
-Stage242 passed the isolated gate and the adapter change is committed. Stage243 resumed over all 500 frozen Stage221 retrieval inputs and reached 253 completed rows. It was stopped after repeated HTTP 400 errors: Chat Completions, Responses, and Messages all route the requested alias to `Home` at `http://192.168.3.11:8080/v1/chat/completions`, which reports that the model does not support this protocol. `/models` still lists the alias with `owned_by=home`. Three saved rows have empty judge responses (`bf659f65`, `gpt4_1916e0ea`, `gpt4_a1b77f9c`). The partial checkpoint remains at `/tmp/civilization-stage243-relative-week-20261027`; no full scorecard exists, so do not treat the 253-row prefix as an accuracy result. Resume and rejudge the affected rows after a Chat Completions-compatible backend route is provided. Remove bulky temporary predictions only after a compact full scorecard is validated.
+Stage242 passed its isolated gate and the adapter change is committed. Stage243 originally
+stopped after 253 completed answers because the local Magpie auto group routed the alias to
+a Home GPT-6 model that rejected Chat Completions. With user authorization, the Home member
+was disabled for `group/auto-gpt-6-luna`; the group ID and Codex member remain enabled. The
+change repaired the route but converted this auto-discovered group to user-managed state.
 
-If Stage242 fails the gate, revert the parser change and record the negative pilot without running Stage243.
+The full Stage243 run resumed over all 500 frozen Stage221 retrieval records. It used
+Top-200 retrieval with Top-20 answer context, the Stage241 reranker allowlist, multi-session
+answer verification, `skip_multi_session` count inventory policy, temporal event-list
+ordering, and seed 42. Three saved rows with empty judge responses were retried using their
+existing generated answers; 2 passed and 1 failed, with answer text unchanged.
+
+**Stage243 result:** 438/500 (87.6%) at Top-20, 47 below the 485-answer gate. Against
+Stage241 (433/500), paired outcomes were 21 candidate-only, 16 baseline-only, 417 both
+correct, and 46 both wrong (+5 net). The full per-type counts are knowledge-update 72/78,
+multi-session 106/133, single-session-assistant 51/56, single-session-preference 27/30,
+single-session-user 68/70, and temporal-reasoning 114/133. Top-20 source-session recall was
+470/470; 871/883 annotated answer-message pairs (98.6%) were retrieved, and 47 answers were
+still wrong despite all annotated pairs appearing in Top-20. API errors: zero. This paired
+delta includes routing and model variability; it does not isolate the relative-week resolver.
+Stage243 did not measure Top-200 answer accuracy or the separate 100% memory-precision goal.
+
+Validated scorecard: `docs/operations/data/longmemeval-stage243-relative-week-top20-2026-10-27.json`.
+The candidate does not meet 97%; retain temporal resolvers as opt-in and use the per-type and
+pair-coverage diagnostics to choose the next experiment. Do not treat a Top-200 diagnostic as
+the Top-20 release gate.

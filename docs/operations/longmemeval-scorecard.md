@@ -261,6 +261,37 @@ paired replay has one candidate-only win and no regressions. This is a
 one-question subset replay, not a new all-500 generation run:
 [longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json](data/longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json).
 
+## Latest Top-20 candidate: Stage243 (2026-10-27)
+
+Stage243 regenerated and judged Top-20 answers over Stage221's frozen Top-200 retrieval
+results. The complete 500-question score is **438/500 (87.6%)**, 47 answers below the
+485/500 Top-20 release gate. Against Stage241's 433/500, paired outcomes were 21
+candidate-only correct, 16 Stage241-only correct, 417 correct in both, and 46 wrong in
+both: a net gain of 5 answers (+1.0 percentage point). Stage241's raw retrieval results
+were archived, so this paired comparison checks matching question IDs, categories, and
+strict Top-20 scores; it does not compare raw retrieval lists.
+
+Per type: knowledge-update 72/78 (92.3%), multi-session 106/133 (79.7%),
+single-session-assistant 51/56 (91.1%), single-session-preference 27/30 (90.0%),
+single-session-user 68/70 (97.1%), and temporal-reasoning 114/133 (85.7%). Top-20
+retrieved a source-session chunk for 470/470 annotated questions and 871/883
+answer-marked message pairs (98.6%). Of 460 questions with every annotated answer pair
+in Top-20, 47 were still wrong. This points to multi-session synthesis and answer
+reasoning as the larger remaining gap; source or evidence coverage is not answer
+accuracy. The run recorded zero API errors. Three saved rows with empty judge responses
+were rejudged from their saved answers without changing answer text; two passed and one
+remained incorrect.
+
+To restore Chat Completions, Magpie's `group/auto-gpt-6-luna` route disabled its
+protocol-incompatible Home GPT-6 member while preserving the group ID and Codex member.
+The alias then returned HTTP 200 through Codex. This repaired route availability; the
+paired score delta cannot be attributed to the route change alone. Stage243 did not meet
+97%, and it did not measure the separate “100% memory precision” target. No Top-200
+answer diagnostic was run in this stage.
+
+Validated artifact:
+[longmemeval-stage243-relative-week-top20-2026-10-27.json](data/longmemeval-stage243-relative-week-top20-2026-10-27.json).
+
 That 69.8% run is a baseline, not a claim about the current code. A scorecard
 comparison is meaningful only when both inputs came from the same 500-question
 dataset and unchanged evaluator protocol. The answerer and judge used the same
