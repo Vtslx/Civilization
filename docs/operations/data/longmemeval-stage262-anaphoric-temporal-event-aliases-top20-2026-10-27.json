@@ -1,0 +1,127 @@
+{
+  "stage": 262,
+  "date": "2026-10-27",
+  "experiment": "Conservative same-session temporal event alias consolidation",
+  "plan_commit": "316444b docs: plan temporal event alias deduplication",
+  "adapter_commit": "554e68f fix: merge adjacent anaphoric temporal event aliases",
+  "run_id": "stage262-anaphoric-temporal",
+  "timestamp": "20261027_232240",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage261 per-question results; frozen retrieval order reused",
+  "retrieval_order_matches_stage261": {
+    "top_20": 500,
+    "top_200": 500
+  },
+  "enabled_features": [
+    "temporal-event-list-order-resolution",
+    "temporal-recent-event-order-resolution",
+    "temporal-immediate-event-month-resolution",
+    "composite-count-evidence-coverage",
+    "multi-clause-count-answer-synthesis",
+    "latest-personal-best-time-resolution",
+    "temporal-choice-audit-consistency",
+    "relative-time-event-answer-resolution",
+    "multi-session-answer-verification"
+  ],
+  "module_behavior": {
+    "requires": [
+      "exact user-authored citations validated against chronological Top-20 context",
+      "same source session and adjacent source pair indexes",
+      "matching event kind and named location",
+      "an earlier a/an mention followed by a later the reference",
+      "an unambiguous one-to-one alias match"
+    ],
+    "preserves_all_source_citations": true,
+    "rejects_conflicting_event_dates": true,
+    "rewrites_only_after_all_remaining_event_intervals_are_disjoint": true
+  },
+  "frozen_stage261_temporal_replay": {
+    "question_count": 133,
+    "baseline_correct": 111,
+    "candidate_correct": 112,
+    "paired_outcomes": {
+      "both_correct": 110,
+      "both_wrong": 22,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "gpt4_d6585ce8",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "candidate_citation_validation": "PASS",
+        "candidate_answer": "1. Billie Eilish concert at Wells Fargo Center in Philadelphia\n2. Free outdoor concert series in the park\n3. Music festival in Brooklyn with favorite indie bands\n4. Jazz night at a local bar\n5. Queen with Adam Lambert at Prudential Center in Newark"
+      },
+      {
+        "question_id": "gpt4_f420262c",
+        "baseline_judgment": "PASS",
+        "candidate_judgment": "PASS",
+        "candidate_citation_validation": "PASS"
+      }
+    ],
+    "note": "Saved-answer replay with the existing recent-event interval option enabled; one answer changed FAIL to PASS and none regressed."
+  },
+  "full_candidate": {
+    "correct": 431,
+    "total": 500,
+    "accuracy": 0.862,
+    "target_correct": 485,
+    "shortfall": 54,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 103, "total": 133},
+      "single-session-assistant": {"correct": 51, "total": 56},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "single-session-user": {"correct": 66, "total": 70},
+      "temporal-reasoning": {"correct": 113, "total": 133}
+    },
+    "valid_answer_audits": 470,
+    "invalid_answer_audits": 30,
+    "temporal_event_lists_resolved": 4
+  },
+  "paired_against_stage261_full": {
+    "baseline_correct": 432,
+    "candidate_correct": 431,
+    "accuracy_delta_percentage_points": -0.2,
+    "paired_outcomes": {
+      "both_correct": 412,
+      "both_wrong": 49,
+      "candidate_only_correct": 19,
+      "baseline_only_correct": 20
+    },
+    "answer_text_changed_rows": 266,
+    "by_question_type": {
+      "knowledge-update": {"baseline_correct": 72, "candidate_correct": 71, "candidate_only": 3, "baseline_only": 4},
+      "multi-session": {"baseline_correct": 105, "candidate_correct": 103, "candidate_only": 5, "baseline_only": 7},
+      "single-session-assistant": {"baseline_correct": 51, "candidate_correct": 51, "candidate_only": 1, "baseline_only": 1},
+      "single-session-preference": {"baseline_correct": 25, "candidate_correct": 27, "candidate_only": 2, "baseline_only": 0},
+      "single-session-user": {"baseline_correct": 68, "candidate_correct": 66, "candidate_only": 0, "baseline_only": 2},
+      "temporal-reasoning": {"baseline_correct": 111, "candidate_correct": 113, "candidate_only": 8, "baseline_only": 6}
+    }
+  },
+  "unified_result_file": {
+    "path": "/Volumes/Net/civilization-stage262-anaphoric-temporal-20261027/candidate/longmemeval_results_stage262_anaphoric_temporal.json",
+    "size_bytes": 230153081,
+    "sha256": "e60578df3e8ca030aadb4e16c69c0dc3ce4e793b26947e9f51d9bbb52470cf66"
+  },
+  "best_verified_full_score": {
+    "stage": 243,
+    "correct": 438,
+    "total": 500,
+    "accuracy": 0.876,
+    "shortfall": 47
+  },
+  "decision": "Keep the alias resolver behind the existing opt-in temporal event-list gate. It repaired the source-backed Brooklyn festival ordering in the frozen temporal replay and the 500-question candidate. The overall candidate scored 431/500, one below Stage261 and seven below Stage243; the full-run delta is not attributable to this narrow resolver because answers changed on 266 rows while the accepted seed did not guarantee deterministic generations.",
+  "memory_precision_measured": false,
+  "limitations": "The 97% Top-20 gate remains unmet. The 100% memory-precision target remains unmeasured. This module only changes evidence-backed event-list synthesis; it does not write memories."
+}
