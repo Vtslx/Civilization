@@ -261,7 +261,7 @@ paired replay has one candidate-only win and no regressions. This is a
 one-question subset replay, not a new all-500 generation run:
 [longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json](data/longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json).
 
-## Latest Top-20 candidate: Stage243 (2026-10-27)
+## Best verified full Top-20 result: Stage243 (2026-10-27)
 
 Stage243 regenerated and judged Top-20 answers over Stage221's frozen Top-200 retrieval
 results. The complete 500-question score is **438/500 (87.6%)**, 47 answers below the
@@ -313,3 +313,13 @@ dataset and unchanged evaluator protocol. The answerer and judge used the same
 model in the baseline, so judge self-bias remains a limitation. Retrieval
 precision, evidence coverage, answer accuracy, and scorecard integrity are
 separate measurements; none can substitute for the 485/500 gate.
+
+## Later pilots: Stages256–258 (2026-10-27)
+
+Stage256's temporal audit consistency guard corrected one saved temporal answer on frozen evidence and passed the judge: 114/133→115/133 with zero regressions. This is a saved-answer replay, not a full-generation score. Details: [Stage256 scorecard](data/longmemeval-stage256-temporal-choice-audit-consistency-pilot-2026-10-27.json).
+
+Stage257 regenerated all 500 answers with six opt-in resolvers and the reranker disabled. It scored 434/500, compared with Stage243's 438/500; paired outcomes were 22 candidate-only and 26 Stage243-only. The Top-20 and Top-200 ordered retrieval IDs matched in 500/500. All per-question results were valid, but the unified result JSON was truncated when the system volume ran out of space; the scorecard records that limitation and the per-question aggregation. Stage243 remains the best verified full score. Details: [Stage257 scorecard](data/longmemeval-stage257-combined-opt-in-top20-2026-10-27.json).
+
+Stage258 isolated the fact ledger to the second-pass verifier. On all 133 frozen multi-session questions, control scored 108/133 and candidate 106/133; paired outcomes were 6 candidate-only and 8 control-only. Candidate invalid answer audits increased from 8 to 9, and verifier invalid-evidence rejections increased from 2 to 5. The adapter implementation was reverted after this negative pilot. Details: [Stage258 scorecard](data/longmemeval-stage258-multisession-verifier-only-fact-ledger-pilot-2026-10-27.json).
+
+The release gate remains **485/500 (97%)**. The best verified full result remains **438/500 (87.6%)**, 47 answers short; 100% memory precision has not been measured.

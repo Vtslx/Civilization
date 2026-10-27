@@ -47,3 +47,9 @@ Stage243 had 27 wrong multi-session rows, including abstention questions. Among 
 ## Safety and recovery
 
 The option is disabled by default. The emitted answer remains subject to the existing exact-quote validator and numeric audit. Stage243 retrieval files remain the immutable rollback input. No secret, raw provider credential, or raw prompt payload belongs in the plan or scorecard.
+
+## Stage258 outcome
+
+The verifier-only variant failed its paired acceptance gate and was reverted. On the same 133 Stage243 multi-session questions with identical Top-20 and Top-200 retrieval orders, control scored 108/133 and candidate scored 106/133. Paired outcomes were 100 both-correct, 19 both-wrong, 6 candidate-only, and 8 control-only (net -2; -1.50 percentage points). Candidate invalid answer audits rose from 8 to 9, and verifier `rejected_invalid_evidence` rose from 2 to 5. Both arms completed all rows; answerer and judge accepted seed 42. The feature commit `54dfa75` was reverted by `add0b67`; no flag remains in the current adapter.
+
+The candidate-only gain was confined to 2 of 22 non-numeric questions; numeric questions moved 92/111 to 89/111. This is a single provider run per arm, and seed acceptance does not guarantee deterministic generation. The best full Top-20 score remains Stage243 at 438/500 (87.6%). Detailed results: `docs/operations/data/longmemeval-stage258-multisession-verifier-only-fact-ledger-pilot-2026-10-27.json`.

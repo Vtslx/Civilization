@@ -1,0 +1,67 @@
+{
+  "stage": 257,
+  "date": "2026-10-27",
+  "experiment": "Fresh 500-question combined opt-in answerer candidate",
+  "run_id": "be7ced91",
+  "timestamp": "20261027_191637",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai",
+  "answerer_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "question_count": 500,
+  "candidate": {
+    "correct": 434,
+    "incorrect": 66,
+    "accuracy": 0.868,
+    "target_correct": 485,
+    "shortfall": 51,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 108, "total": 133},
+      "single-session-assistant": {"correct": 50, "total": 56},
+      "single-session-preference": {"correct": 25, "total": 30},
+      "single-session-user": {"correct": 65, "total": 70},
+      "temporal-reasoning": {"correct": 115, "total": 133}
+    },
+    "invalid_answer_audits": 26,
+    "valid_answer_audits": 474
+  },
+  "paired_against_stage243": {
+    "baseline_correct": 438,
+    "candidate_correct": 434,
+    "accuracy_delta_percentage_points": -0.8,
+    "paired_outcomes": {
+      "both_correct": 412,
+      "both_wrong": 40,
+      "candidate_only_correct": 22,
+      "baseline_only_correct": 26
+    },
+    "top_20_order_identical": 500,
+    "top_200_order_identical": 500,
+    "top_200_rows_with_200_results_in_both": 495
+  },
+  "enabled_experiments": [
+    "temporal-event-list-order-resolution",
+    "temporal-immediate-event-month-resolution",
+    "composite-count-evidence-coverage",
+    "multi-clause-count-answer-synthesis",
+    "latest-personal-best-time-resolution",
+    "temporal-choice-audit-consistency"
+  ],
+  "result_integrity": {
+    "valid_per_question_files": 500,
+    "per_question_judgments_complete": true,
+    "unified_result_file": "/Volumes/Net/civilization-stage257-combined-opt-in-20261027/candidate/longmemeval_results_20261027_191637.json",
+    "unified_result_file_valid_json": false,
+    "unified_file_size_bytes": 166021644,
+    "json_decode_error_character": 165955626,
+    "note": "The system volume ran out of space during result aggregation. The 500 individual answer and judgment files remained parseable and were aggregated directly. The incomplete aggregate is retained for provenance."
+  },
+  "decision": "Do not replace the best verified full score. Stage243 remains the best complete Top-20 score at 438/500 (87.6%). The 434/500 result is a fresh candidate, but its unified result artifact was truncated and its paired delta reflects regenerated-answer variance across multiple enabled features.",
+  "memory_precision_measured": false
+}

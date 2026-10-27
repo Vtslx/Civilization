@@ -1,0 +1,105 @@
+{
+  "stage": 258,
+  "date": "2026-10-27",
+  "experiment": "Frozen multi-session verifier-only fact-ledger prompt A/B",
+  "pilot_only": true,
+  "question_count": 133,
+  "question_type": "multi-session",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "question_id_set_sha256": "102b7f6220a8ba340902ed1914955daeef79bb3a7101c29179ce4359cfba1f1f",
+  "retrieval_source": "Stage243 per-question retrieval files copied into independent control and candidate output directories",
+  "top_20_order_matches": 133,
+  "top_200_order_matches": 133,
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "shared_settings": {
+    "mode": "answerer",
+    "evaluate_only": true,
+    "rejudge": true,
+    "top_k": 200,
+    "cutoff": "top_20",
+    "reranker": "disabled in both arms; saved Top-200 order reused",
+    "count_inventory_policy": "skip_multi_session",
+    "answer_verification_question_types": ["multi-session"],
+    "max_workers": 8,
+    "openai_seed": 42
+  },
+  "control": {
+    "run_id": "stage258-control",
+    "timestamp": "20261027_195229",
+    "multi_session_verifier_fact_ledger_enabled": false,
+    "correct": 108,
+    "total": 133,
+    "accuracy": 0.81203,
+    "invalid_answer_audits": 8,
+    "answer_verification_statuses": {
+      "verified_count_audit": 13,
+      "rejected_unverified_revision": 54,
+      "revised": 54,
+      "unchanged": 10,
+      "rejected_invalid_evidence": 2
+    },
+    "recovered_structured_output_retries": 3,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0
+  },
+  "candidate": {
+    "run_id": "stage258-candidate",
+    "timestamp": "20261027_200018",
+    "multi_session_verifier_fact_ledger_enabled": true,
+    "feature_enabled_rows": 133,
+    "correct": 106,
+    "total": 133,
+    "accuracy": 0.796992,
+    "invalid_answer_audits": 9,
+    "answer_verification_statuses": {
+      "verified_count_audit": 17,
+      "rejected_unverified_revision": 55,
+      "revised": 43,
+      "unchanged": 13,
+      "rejected_invalid_evidence": 5
+    },
+    "recovered_structured_output_retries": 1,
+    "unresolved_rows": 0,
+    "unresolved_api_errors": 0
+  },
+  "paired_outcomes": {
+    "both_correct": 100,
+    "both_wrong": 19,
+    "candidate_only_correct": 6,
+    "control_only_correct": 8
+  },
+  "accuracy_delta_percentage_points": -1.503759,
+  "diagnostic_by_numericity": {
+    "numeric": {
+      "total": 111,
+      "control_correct": 92,
+      "candidate_correct": 89,
+      "both_correct": 85,
+      "both_wrong": 15,
+      "candidate_only_correct": 4,
+      "control_only_correct": 7
+    },
+    "other": {
+      "total": 22,
+      "control_correct": 16,
+      "candidate_correct": 17,
+      "both_correct": 15,
+      "both_wrong": 4,
+      "candidate_only_correct": 2,
+      "control_only_correct": 1
+    }
+  },
+  "decision": "Reject and revert the verifier-only prompt change. The candidate scored two fewer answers, had one more invalid answer audit, and had three more rejected_invalid_evidence verifier results. The source and generation prompts were otherwise unchanged.",
+  "adapter_commit": "54dfa75 feat: add verifier-only multi-session fact ledger",
+  "revert_commit": "add0b67 Revert \"feat: add verifier-only multi-session fact ledger\"",
+  "artifacts": {
+    "control_results": "/Volumes/Net/civilization-stage258-verifier-ledger-20261027/control/longmemeval_results_20261027_195229.json",
+    "candidate_results": "/Volumes/Net/civilization-stage258-verifier-ledger-20261027/candidate/longmemeval_results_20261027_200018.json"
+  },
+  "limitations": "Single provider run per arm. Seed acceptance does not guarantee deterministic answer generation. This 133-question pilot does not change the best full Top-20 score of 438/500 (87.6%) and is not a full-benchmark accuracy claim. Memory precision remains unmeasured."
+}

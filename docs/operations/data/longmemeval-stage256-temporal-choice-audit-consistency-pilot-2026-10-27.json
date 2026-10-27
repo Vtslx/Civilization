@@ -1,0 +1,49 @@
+{
+  "stage": 256,
+  "date": "2026-10-27",
+  "experiment": "Frozen temporal choice audit consistency replay",
+  "pilot_only": true,
+  "question_count": 133,
+  "question_type": "temporal-reasoning",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage243 saved per-question results; the deterministic resolver read each saved Top-20 input",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "OpenAI-compatible Magpie gateway",
+  "control": {
+    "feature_enabled": false,
+    "correct": 114,
+    "total": 133,
+    "accuracy": 0.857143
+  },
+  "candidate": {
+    "feature_enabled": true,
+    "correct": 115,
+    "total": 133,
+    "accuracy": 0.864662,
+    "changed_rows": 1,
+    "validation_errors_after_change": 0
+  },
+  "paired_outcomes": {
+    "both_correct": 114,
+    "both_wrong": 18,
+    "candidate_only_correct": 1,
+    "control_only_correct": 0
+  },
+  "accuracy_delta_percentage_points": 0.75,
+  "resolver_status_counts": {
+    "abstained_audit_contradiction": 1,
+    "no_audit_contradiction": 27,
+    "not_applicable": 105
+  },
+  "changed_row": {
+    "question_id": "gpt4_70e84552_abs",
+    "baseline_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "answer_validation": "PASS",
+    "judge_seed": 42,
+    "judge_seed_accepted": true
+  },
+  "decision": "Keep the resolver opt-in. It abstains only when a user-cited temporal audit explicitly says the two options cannot be compared because one event is undocumented. This frozen saved-answer replay is not a fresh full benchmark score.",
+  "limitations": "One changed answer was live-judged; the other 132 saved judgments were unchanged. The full Stage243 score remains 438/500 (87.6%), and memory precision was not measured."
+}
