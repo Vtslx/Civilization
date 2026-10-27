@@ -34,3 +34,11 @@ Run the focused tests and full adapter suite, compile the adapter, and run `git 
 ### Task 4: Run the full 500-question candidate
 
 Regenerate all 500 answers over the Stage262 frozen retrieval order with the guard enabled and all other settings fixed. Record paired outcomes, per-type scores, citation/audit results, and artifact provenance. Commit the adapter module with an English message; record the result in Civilization with a separate documentation commit.
+
+## Stage263 outcome
+
+- Adapter module commit: `8adcfa2 fix: require user fares for transport savings`.
+- Adapter verification: 160 tests and 25 subtests passed; `compileall` and `git diff --check` passed.
+- On the frozen Stage262 answers, only the bus-vs-taxi abstention question changed from FAIL to PASS; the train-vs-taxi question remained FAIL. Both revised outputs passed the answer validator. This is a saved-answer replay with two directly relevant questions.
+- The 500-question regeneration over frozen Stage262 retrieval scored 433/500 (86.6%), 52 short of 485/500. Paired outcomes against Stage262 were 28 candidate-only and 26 baseline-only, so the 0.4 pp net change is not attributable to the narrow guard. Stage243 remains best at 438/500 (87.6%). Keep the guard opt-in.
+- Scorecard: `docs/operations/data/longmemeval-stage263-transport-savings-user-evidence-guard-top20-2026-10-28.json`.

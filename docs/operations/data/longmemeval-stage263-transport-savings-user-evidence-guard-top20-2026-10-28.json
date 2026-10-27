@@ -1,0 +1,116 @@
+{
+  "stage": 263,
+  "date": "2026-10-28",
+  "experiment": "User-authored fare evidence guard for transport-savings comparisons",
+  "plan_commit": "c26050e docs: plan transport savings evidence guard",
+  "adapter_commit": "8adcfa2 fix: require user fares for transport savings",
+  "run_id": "stage263-transport-savings",
+  "timestamp": "20261028_002042",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage262 per-question results; frozen retrieval order reused",
+  "retrieval_order_matches_stage262": {
+    "top_20": 500,
+    "top_200": 500
+  },
+  "feature": {
+    "cli_flag": "--transport-savings-user-evidence-guard",
+    "default_enabled": false,
+    "scope": "Two-mode transport-savings questions only",
+    "requirement": "Each option needs an explicit monetary amount in a user-authored message and a directly cited user-authored quote in the answer audit.",
+    "assistant_generated_fares_establish_user_prices": false,
+    "missing_price_behavior": "Clear the numeric audit and abstain with a validated answer"
+  },
+  "frozen_stage262_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 431,
+    "candidate_correct": 432,
+    "paired_outcomes": {
+      "both_correct": 431,
+      "both_wrong": 68,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "guarded_questions": [
+      {
+        "question_id": "09ba9854",
+        "question": "How much will I save by taking the train from the airport to my hotel instead of a taxi?",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "FAIL",
+        "status": "abstained_missing_user_prices",
+        "missing_modes": ["train", "taxi"],
+        "citation_validation": "PASS",
+        "seed_accepted": true
+      },
+      {
+        "question_id": "09ba9854_abs",
+        "question": "How much will I save by taking the bus from the airport to my hotel instead of a taxi?",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "status": "abstained_missing_user_prices",
+        "missing_modes": ["bus", "taxi"],
+        "citation_validation": "PASS",
+        "seed_accepted": true
+      }
+    ],
+    "decision": "One unsupported bus-savings answer changed from FAIL to a validated, live-judged abstention; the train comparison remained FAIL, and no saved answer regressed."
+  },
+  "full_candidate": {
+    "correct": 433,
+    "total": 500,
+    "accuracy": 0.866,
+    "target_correct": 485,
+    "shortfall": 52,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 67, "total": 78},
+      "multi-session": {"correct": 105, "total": 133},
+      "single-session-assistant": {"correct": 52, "total": 56},
+      "single-session-preference": {"correct": 28, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 113, "total": 133}
+    },
+    "valid_answer_audits": 473,
+    "invalid_answer_audits": 27,
+    "transport_savings_guard_abstained_rows": 2
+  },
+  "paired_against_stage262_full": {
+    "baseline_correct": 431,
+    "candidate_correct": 433,
+    "accuracy_delta_percentage_points": 0.4,
+    "paired_outcomes": {
+      "both_correct": 405,
+      "both_wrong": 41,
+      "candidate_only_correct": 28,
+      "baseline_only_correct": 26
+    }
+  },
+  "unified_result_file": {
+    "path": "/Volumes/Net/civilization-stage263-transport-savings-20261028/candidate/longmemeval_results_stage263_transport_savings.json",
+    "size_bytes": 230234069,
+    "sha256": "d61974fe5676e474da78ae78716c8dc09de63a0cfc9ad1bcbb40d0e936aa7bbf"
+  },
+  "best_verified_full_score": {
+    "stage": 243,
+    "correct": 438,
+    "total": 500,
+    "accuracy": 0.876,
+    "shortfall": 47
+  },
+  "verification": {
+    "adapter_tests": 160,
+    "subtests": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "decision": "Keep the user-authored fare guard opt-in. The saved-answer replay gained one answer by rejecting assistant-authored fare estimates as user facts. The full regenerated candidate scored 433/500 versus 431/500 on Stage262, but 54 answers changed in each direction in paired outcomes, so the aggregate delta is not attributable to this guard. Stage243 remains the best verified full score at 438/500.",
+  "memory_precision_measured": false,
+  "limitations": "The 97% Top-20 gate remains unmet. The 100% memory-precision target remains unmeasured. This guard only changes transport-savings comparisons and writes no persistent memory."
+}
