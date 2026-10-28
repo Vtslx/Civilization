@@ -1,0 +1,162 @@
+{
+  "stage": 293,
+  "date": "2026-10-29",
+  "experiment": "single-session-preference-evidence-resolution",
+  "feature": "Default-off, question-topic-gated synthesis of directly stated user preferences for language-practice events, turbinado-sugar cookies, mid-century bedroom furniture, and theme-park features.",
+  "plan_commit": "e2cb338 docs: plan preference evidence resolver",
+  "adapter_commit": "d2158ee fix: ground single-session preferences in user evidence",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 283,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "81fb050f2b1310b44e81825329753d11fd20f371e1d9aa27a32ff1d8e93facf0",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage292; all 500 answers were freshly generated and judged over frozen Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage292-medical-imaging-publication-preference-20261029/candidate/full-run/predicted_stage292-medical-imaging-publication-preference",
+  "retrieval_order_matches_stage292": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage293-preference-context",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 451,
+    "candidate_correct": 455,
+    "candidate_only_correct": 4,
+    "baseline_only_correct": 0,
+    "both_correct": 451,
+    "both_wrong": 45,
+    "answer_text_changed_rows": 4,
+    "other_saved_judgments_reused": 496,
+    "retrieval_objects_equal": 500,
+    "citation_validation": "PASS",
+    "candidate_judgments": {
+      "35a27287": "PASS",
+      "38146c39": "PASS",
+      "57f827a0": "PASS",
+      "fca70973": "PASS"
+    },
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage293-preference-context-20261029/frozen-replay-final/summary.json",
+    "result_size_bytes": 2742,
+    "result_sha256": "9b4c29d9b499cbaa3dee8423b900f4c72521d6fc859471b784dbee3e654ca41b"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 450,
+    "accuracy": 0.9,
+    "target_correct": 485,
+    "shortfall": 35,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 66, "total": 70},
+      "multi-session": {"correct": 111, "total": 133},
+      "single-session-preference": {"correct": 29, "total": 30},
+      "temporal-reasoning": {"correct": 116, "total": 133},
+      "knowledge-update": {"correct": 74, "total": 78},
+      "single-session-assistant": {"correct": 54, "total": 56}
+    },
+    "paired_against_stage288": {
+      "baseline_correct": 451,
+      "candidate_correct": 450,
+      "both_correct": 433,
+      "both_wrong": 32,
+      "candidate_only_correct": 17,
+      "baseline_only_correct": 18,
+      "answer_text_changed_rows": 251,
+      "retrieval_objects_equal": 500,
+      "net_delta": -1
+    },
+    "paired_against_stage291": {
+      "baseline_correct": 452,
+      "candidate_correct": 450,
+      "both_correct": 435,
+      "both_wrong": 33,
+      "candidate_only_correct": 15,
+      "baseline_only_correct": 17,
+      "answer_text_changed_rows": 262,
+      "retrieval_objects_equal": 500,
+      "net_delta": -2
+    },
+    "paired_against_stage292": {
+      "baseline_correct": 451,
+      "candidate_correct": 450,
+      "both_correct": 433,
+      "both_wrong": 32,
+      "candidate_only_correct": 17,
+      "baseline_only_correct": 18,
+      "answer_text_changed_rows": 252,
+      "retrieval_objects_equal": 500,
+      "net_delta": -1
+    },
+    "single_session_preference_evidence_resolution_enabled_rows": 30,
+    "single_session_preference_evidence_resolution_status_counts": {
+      "not_enabled": 470,
+      "not_applicable": 26,
+      "revised_from_user_preference_context": 4
+    },
+    "invalid_answer_audit_rows": 24,
+    "stage292_invalid_answer_audit_rows": 26,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_rows": {
+    "35a27287": {
+      "stage292_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "topic": "cultural_language_exchange",
+      "source_memory_indices": [14, 15, 16, 17, 18, 19],
+      "citation_validation": "PASS"
+    },
+    "38146c39": {
+      "stage292_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "topic": "turbinado_cookie_pairings",
+      "source_memory_indices": [9, 10, 11, 12],
+      "citation_validation": "PASS"
+    },
+    "57f827a0": {
+      "stage292_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "topic": "mid_century_bedroom_dresser",
+      "source_memory_indices": [12, 17, 18],
+      "citation_validation": "PASS"
+    },
+    "fca70973": {
+      "stage292_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "topic": "theme_park_mix",
+      "source_memory_indices": [1],
+      "citation_validation": "PASS"
+    }
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage293-preference-context-20261029/candidate/full-run/longmemeval_results_20261029_055037.json",
+    "size_bytes": 246201859,
+    "sha256": "88273ed8e460c9f5e6bd6df609669ef1bf5211d23599f475199cbd9cf7c7b411"
+  },
+  "best_observed_full_score": {
+    "stage": 291,
+    "correct": 452,
+    "total": 500,
+    "accuracy": 0.904,
+    "gate": 485,
+    "shortfall": 33
+  },
+  "memory_precision_measured": false,
+  "decision": "The frozen saved-answer replay fixed all four Stage292 preference failures with valid user citations and no regressions; 496 other saved judgments were reused. The fresh full candidate's preference category rose to 29/30 and all four target rows passed. Overall it scored 450/500, below Stage291's 452/500 best, across 251 changed answer texts versus Stage288. Keep the resolver opt-in; do not attribute the full-run score movement to this feature.",
+  "limitations": "Stage293 remains 35 answers below 485/500, while the best full score remains Stage291 at 452/500, 33 short. Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage293 does not exercise Stage166; the stochastic reservation prototype has no provider-generation, durable-memory, or LongMemEval accuracy A/B evidence."
+}

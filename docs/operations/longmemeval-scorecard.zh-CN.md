@@ -385,3 +385,15 @@ Stage292 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`6a3828b fix: ground publication suggestions in repeated user interests`；279 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `fa27de249b12a25760714daa4195f61844d3696636fb4cc9619d5e0c4294964d`；冻结目标复放 SHA-256 为 `ddb6f74e9f2bf5d59d729688f526f4c2df19391cf439a19d644b5d21b9e4344e`。详见[Stage292 成绩卡](data/longmemeval-stage292-medical-imaging-publication-preference-top20-2026-10-29.json)。
 
 保留为 opt-in。Stage292 距离 485/500 还差 34；Stage291 仍是最佳 452/500，差 33。记忆精准度尚未测量，异地灾备恢复未验证。Stage292 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage293：单会话偏好证据解析（2026-10-29）
+
+适配器新增默认关闭的 `--single-session-preference-evidence-resolution`。它仅覆盖四类单会话偏好：语言练习类文化活动、turbinado 糖饼干、mid-century 卧室家具和主题乐园偏好；答案依据精确用户原话生成，不虚构当前活动日程、不把助手建议当作用户偏好，也不作用于其他题型。
+
+在 Stage292 冻结答案上，解析器将四个目标题从 FAIL 修正为 PASS：`35a27287`（西班牙语/法语语言练习活动）、`38146c39`（turbinado 糖）、`57f827a0`（mid-century 梳妆台）和 `fca70973`（主题乐园体验组合）。四题引用校验全部通过，其余 496 条保存判定复用且零回退，冻结复放得 455/500，Stage292 为 451/500。
+
+Stage293 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **450/500（90.0%）**，低于 Stage291 的最佳 452/500，距离 485/500 门槛差 35 题。与 Stage292 配对：17 题仅候选答对、18 题仅基线答对、433 题两者都对、32 题两者都错，净差 −1；252 个答案文本变化。与 Stage291 配对：15 题仅候选答对、17 题仅基线答对、435 题两者都对、33 题两者都错，净差 −2；262 个答案文本变化。与 Stage288 配对：17 题仅候选答对、18 题仅基线答对、433 题两者都对、32 题两者都错，净差 −1；251 个答案文本变化。检索对象 500/500 一致。解析器作用于 30 道偏好题，修正 4 题、26 题不适用，其余 470 题范围外。候选无效审计 24 条（Stage292 为 26），API 错误 0。分题型：知识更新 74/78，多会话 111/133，助手事实 54/56，偏好 29/30，用户事实 66/70，时间推理 116/133。全量答案文本变化较多，不能把分数变化归因于这四条冻结修正。
+
+答题器和裁判均接受 seed 42。适配器提交：`d2158ee fix: ground single-session preferences in user evidence`；283 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `88273ed8e460c9f5e6bd6df609669ef1bf5211d23599f475199cbd9cf7c7b411`；冻结复放汇总哈希见 Stage293 JSON。详见[Stage293 成绩卡](data/longmemeval-stage293-single-session-preference-evidence-top20-2026-10-29.json)。
+
+保留为 opt-in。Stage293 未提升全量成绩；Stage291 仍是最佳 452/500，距离 485 还差 33。记忆精准度尚未测量，异地灾备恢复未验证。Stage293 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
