@@ -1,0 +1,141 @@
+{
+  "stage": 290,
+  "date": "2026-10-29",
+  "experiment": "elapsed-days-between-immediate-user-events",
+  "feature": "Default-off resolver computes a days interval between a matching user-authored event described as just completed and a later user-authored anchor event explicitly described as happening today.",
+  "plan_commit": "a9777ad docs: plan immediate user event interval resolver",
+  "adapter_commit": "b7ab731 fix: resolve elapsed days from immediate user events",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 271,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "cbc15df4d3fca97b03a39588dbcb689f81bb798d52ce5c162593c7e597dbcde3",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage288; all 500 answers were freshly generated and judged over frozen Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage288-assistant-authored-evidence-20261029/candidate/full-run/predicted_stage288-assistant-authored-evidence",
+  "retrieval_order_matches_stage288": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage290-elapsed-days-immediate-events",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 1,
+    "baseline_correct": 0,
+    "candidate_correct": 1,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "citation_validation": "PASS",
+    "target_question_id": "eac54adc",
+    "baseline_answer": "0 days ago",
+    "candidate_answer": "19 days ago",
+    "baseline_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "resolver_status": "resolved_from_immediate_user_events",
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage290-elapsed-days-immediate-events-20261029/frozen-replay/target.json",
+    "result_size_bytes": 502904,
+    "result_sha256": "830a2ff1d6383776c5dc57ebbf5ca839b8eebe2578fd8b538dd045a2c57d64a1"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 448,
+    "accuracy": 0.896,
+    "target_correct": 485,
+    "shortfall": 37,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 67, "total": 70},
+      "multi-session": {"correct": 113, "total": 133},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "temporal-reasoning": {"correct": 111, "total": 133},
+      "knowledge-update": {"correct": 76, "total": 78},
+      "single-session-assistant": {"correct": 54, "total": 56}
+    },
+    "paired_against_stage288": {
+      "baseline_correct": 451,
+      "candidate_correct": 448,
+      "both_correct": 430,
+      "both_wrong": 31,
+      "candidate_only_correct": 18,
+      "baseline_only_correct": 21,
+      "answer_text_changed_rows": 259,
+      "retrieval_objects_equal": 500,
+      "net_delta": -3
+    },
+    "paired_against_stage289": {
+      "baseline_correct": 440,
+      "candidate_correct": 448,
+      "both_correct": 424,
+      "both_wrong": 36,
+      "candidate_only_correct": 24,
+      "baseline_only_correct": 16,
+      "answer_text_changed_rows": 266,
+      "retrieval_objects_equal": 500,
+      "net_delta": 8
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 448,
+      "both_correct": 421,
+      "both_wrong": 27,
+      "candidate_only_correct": 27,
+      "baseline_only_correct": 25,
+      "answer_text_changed_rows": 282,
+      "retrieval_objects_equal": 500,
+      "net_delta": 2
+    },
+    "elapsed_days_between_immediate_user_events_enabled_rows": 500,
+    "elapsed_days_between_immediate_user_events_status_counts": {
+      "not_enabled": 367,
+      "not_applicable": 131,
+      "no_user_just_event_for_target": 1,
+      "resolved_from_immediate_user_events": 1
+    },
+    "invalid_answer_audit_rows": 20,
+    "stage288_invalid_answer_audit_rows": 23,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "eac54adc",
+    "question": "How many days ago did I launch my website when I signed a contract with my first client?",
+    "stage289_judgment": "FAIL",
+    "stage289_answer": "0 days ago",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "19 days ago",
+    "target_event_date": "2023-02-10",
+    "anchor_event_date": "2023-03-01",
+    "source_memory_indices": [1, 9],
+    "resolver_status": "resolved_from_immediate_user_events",
+    "citation_validation": "PASS"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage290-elapsed-days-immediate-events-20261029/candidate/full-run/longmemeval_results_20261029_043940.json",
+    "size_bytes": 245916476,
+    "sha256": "6eb5cf219ccb0bd8bd38906a12acc361bbdc141eeb5d264d0657c113ddc8e010"
+  },
+  "best_observed_full_score": {
+    "stage": 288,
+    "correct": 451,
+    "total": 500,
+    "accuracy": 0.902,
+    "gate": 485,
+    "shortfall": 34
+  },
+  "memory_precision_measured": false,
+  "decision": "The frozen Stage289 replay changed only eac54adc from 0 days/FAIL to 19 days/PASS with two exact user citations and a live judge. The fresh 500-question run also triggered once and passed the target, but scored 448/500, three below Stage288's 451/500, across 259 changed answers. Do not attribute the aggregate score movement to the single-row resolver; keep it opt-in based on its bounded, zero-regression target correction.",
+  "limitations": "Stage290 remains 37 answers below the 97% gate, while the best full score remains Stage288 at 451/500, 34 short. The 100% memory-precision target remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage290 does not exercise the Stage166 stochastic-token prototype; the mechanism still has no provider-generation, durable-memory, or accuracy A/B evidence."
+}

@@ -349,3 +349,15 @@ Stage289 在相同 Stage268 冻结 Top-200 检索上重新生成并裁判全部 
 答题器和裁判均接受 seed 42。适配器提交：`4771db6 fix: resolve ordered weekday wake-time updates`；267 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `3b3e89e471066f868a8a13cee5090f1497cd07df74c5315bdc5663f257e06f98`；冻结目标复放 SHA-256 为 `034559b1d4e38b319958f7293139915c10718408a2dc15aefa49ca2042e518af`。详见[Stage289 成绩卡](data/longmemeval-stage289-relative-weekday-wake-time-top20-2026-10-29.json)。
 
 保留为 opt-in：冻结目标修正通过，但 Stage289 未提升全量成绩。当前最佳仍是 Stage288 的 451/500，距 485/500 差 34。记忆精准度尚未测量，异地灾备恢复未验证。Stage289 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage290：从用户原话的“刚发生”和“今天”计算事件间隔（2026-10-29）
+
+适配器新增默认关闭的 `--elapsed-days-between-immediate-user-events`。对于“某事件发生多少天后签约”一类问题，只有匹配到一条用户原话用 “just” 表示事件刚完成、另一条较晚的用户原话明确说锚点事件发生在 “today”，并且事件词、源会话/消息对顺序、日期和 60 天上限均明确时，才计算日期差。助手原话、歧义、顺序不明或证据缺失时不触发。
+
+在 Stage289 冻结题 `eac54adc` 上，2 月 10 日的用户原话说“刚上线网站”，3 月 1 日的后续用户原话说“今天刚签下首位客户”。保存答案从 0 days/FAIL 改为 19 days/PASS。引用校验通过，真实裁判接受 seed 42。
+
+Stage290 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **448/500（89.6%）**，仍低于 Stage288 的最佳成绩 451/500。与 Stage288 配对：18 题仅候选答对、21 题仅 Stage288 答对、430 题两者都对、31 题两者都错，净差 −3；259 个答案文本变化。与 Stage289 配对：24 题仅候选答对、16 题仅基线答对、424 题两者都对、36 题两者都错，净增 8；266 个答案文本变化。检索对象 500/500 一致。全量启用开关；解析器触发 1 次、131 次不适用、1 次缺少目标事件、367 题范围外。候选无效答案审计 20 条（Stage288 为 23），API 错误 0。分题型：知识更新 76/78，多会话 113/133，助手事实 54/56，偏好 27/30，用户事实 67/70，时间推理 111/133。输出变化较大，不能把全量分数变化归因于这条单题解析器。
+
+答题器和裁判均接受 seed 42。适配器提交：`b7ab731 fix: resolve elapsed days from immediate user events`；271 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `6eb5cf219ccb0bd8bd38906a12acc361bbdc141eeb5d264d0657c113ddc8e010`；冻结目标复放 SHA-256 为 `830a2ff1d6383776c5dc57ebbf5ca839b8eebe2578fd8b538dd045a2c57d64a`。详见[Stage290 成绩卡](data/longmemeval-stage290-elapsed-days-immediate-events-top20-2026-10-29.json)。
+
+保留为 opt-in：冻结目标修正通过，但 Stage290 未提升最佳全量成绩。当前最佳仍为 Stage288 的 451/500，距 485 差 34。记忆精准度尚未测量，异地灾备恢复未验证。Stage290 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
