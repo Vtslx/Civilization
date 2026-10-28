@@ -220,3 +220,12 @@ Stage278 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 [longmemeval-stage278-unverified-masters-education-span-top20-2026-10-28.json](data/longmemeval-stage278-unverified-masters-education-span-top20-2026-10-28.json)。
 
 Stage277 仍是最佳全量成绩 **441/500（88.2%）**，比 485/500 发布门槛少 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。
+
+## Stage279：Sephora 剩余积分计算（2026-10-28）
+
+benchmark adapter 新增默认关闭的 `--loyalty-points-remaining-resolution`。它只在用户问题询问还需赚取多少 Sephora 积分才能兑换时工作，并要求余额原句和门槛原句都由用户说出、两句都明确指向 Sephora、日期可解析且在问题日期前 30 天内；最新余额与门槛必须唯一，门槛观察日期不得早于最新余额。assistant 文字、其他商家积分、过期快照、冲突金额或缺少日期均不触发，改写答案会引用两条原话。
+
+目标题 `9ee3ecd6` 的用户来源在 5 月 21 日报告 Sephora 余额 200 分，5 月 29 日报告兑换门槛 300 分，题目日期为 5 月 30 日。解析器算出还需 **100 分**，引用校验通过；最终严格版本的真实单题答题与裁判复放 PASS。最终 Stage279 全量在 Stage268 冻结 Top-200 检索上得分 **434/500（86.8%）**，低于 Stage277 的 441/500 和 Stage268 的 440/500。与 Stage277 配对：23 题仅候选答对、30 题仅基线答对、411 题两者都对、36 题两者都错，净差 −7；262 个答案文本发生变化，整体下降不能归因于该单题规则。与 Stage268 配对净差 −6。Top-20、Top-200 和完整检索对象在 500/500 题上一致；无效答案审计 26 条，API 错误标记 0；解析器触发 1 次。
+
+保留 opt-in。最终代码提交为 `bff133a feat: resolve remaining loyalty points from evidence`；220 项测试、25 个子测试、compileall、diff 检查通过。最佳全量成绩仍为 Stage277 的 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
+[longmemeval-stage279-loyalty-points-remaining-top20-2026-10-28.json](data/longmemeval-stage279-loyalty-points-remaining-top20-2026-10-28.json)。

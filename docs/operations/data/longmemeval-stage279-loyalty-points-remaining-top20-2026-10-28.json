@@ -1,0 +1,136 @@
+{
+  "stage": 279,
+  "date": "2026-10-28",
+  "experiment": "loyalty-points-remaining-resolution",
+  "feature": "Default-off resolver subtracts a recent user-authored Sephora points balance from a user-authored redemption threshold; the balance quote itself must identify Sephora.",
+  "plan_commit": "f882e48 docs: plan loyalty points remaining resolver",
+  "adapter_commit": "bff133a feat: resolve remaining loyalty points from evidence",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 220,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "e53b236a58196c767abb2cb2f9738188afba345f767c0ddae02403b389692919",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation and judging rerun on Top-20 input",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage268": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage279-loyalty-points-remaining-final",
+  "top_k": 200,
+  "cutoff": 20,
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 434,
+    "accuracy": 0.868,
+    "target_correct": 485,
+    "shortfall": 51,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 70, "total": 78},
+      "multi-session": {"correct": 109, "total": 133},
+      "single-session-assistant": {"correct": 52, "total": 56},
+      "single-session-preference": {"correct": 25, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 110, "total": 133}
+    },
+    "paired_against_stage268": {
+      "baseline_correct": 440,
+      "candidate_correct": 434,
+      "both_correct": 412,
+      "both_wrong": 38,
+      "candidate_only_correct": 22,
+      "baseline_only_correct": 28,
+      "net_delta": -6,
+      "answer_text_changed_rows": 272
+    },
+    "paired_against_stage277": {
+      "baseline_correct": 441,
+      "candidate_correct": 434,
+      "both_correct": 411,
+      "both_wrong": 36,
+      "candidate_only_correct": 23,
+      "baseline_only_correct": 30,
+      "net_delta": -7,
+      "answer_text_changed_rows": 262
+    },
+    "paired_against_stage278": {
+      "baseline_correct": 435,
+      "candidate_correct": 434,
+      "both_correct": 411,
+      "both_wrong": 42,
+      "candidate_only_correct": 23,
+      "baseline_only_correct": 24,
+      "net_delta": -1,
+      "answer_text_changed_rows": 272
+    },
+    "loyalty_resolver_status_counts": {
+      "not_applicable": 499,
+      "revised": 1
+    },
+    "invalid_answer_audit_rows": {
+      "stage268": 23,
+      "stage277": 19,
+      "stage278": 23,
+      "candidate": 26
+    },
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "9ee3ecd6",
+    "question": "How many points do I need to earn to redeem a free skincare product at Sephora?",
+    "stage268_judgment": "FAIL",
+    "stage277_judgment": "FAIL",
+    "stage278_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "100 points more.",
+    "resolver_status": "revised",
+    "reported_balance": 200,
+    "balance_date": "2023-05-21",
+    "redemption_threshold": 300,
+    "threshold_date": "2023-05-29",
+    "question_date": "2023-05-30",
+    "source_memory_indices": [2, 16],
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "9ee3ecd6",
+    "correct": 1,
+    "total": 1,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage279-loyalty-points-20261028/strict-target/candidate/longmemeval_results_20261028_232754.json",
+    "result_size_bytes": 507464,
+    "result_sha256": "6d3180d92fa413c1ec596867f151e99c3d68d3501493a71a36ae5663010e2741"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage279-loyalty-points-20261028/final/candidate/longmemeval_results_20261028_234326.json",
+    "size_bytes": 244966425,
+    "sha256": "179e39bcf01cd3444e3737329c0f50a23f640963af2713046576f4da7ddfae2f"
+  },
+  "best_observed_full_score": {
+    "stage": 277,
+    "correct": 441,
+    "total": 500,
+    "accuracy": 0.882,
+    "gate": 485,
+    "shortfall": 44
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the resolver opt-in. It fixed the target row with directly cited same-program balance and threshold evidence, but the final fresh full candidate scored 434/500, below Stage277's 441/500. Because 272 answer texts changed and the paired outcome was 23 candidate-only versus 30 Stage277-only, do not attribute the overall decline solely to this one-row resolver.",
+  "limitations": "Stage279 does not meet the 97% gate and does not replace Stage277 as best. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified."
+}
