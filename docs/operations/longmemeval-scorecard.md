@@ -554,3 +554,15 @@ The reranked answer for `88432d0a` passed, but the boundary resolver did not tri
 Both seeds were accepted. No adapter code changed; the run used adapter commit `975d9d5`. Full result SHA-256: `74bd176c70b8253463d90b7f184333ca57846007c821764f2f55a7d041728066`. See [longmemeval-stage296-selective-reranker-top20-2026-10-29.json](data/longmemeval-stage296-selective-reranker-top20-2026-10-29.json).
 
 Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage296 does not exercise Stage166; the stochastic reservation prototype still has no provider-generation, durable-memory, or accuracy A/B evidence.
+
+## Stage297: rerank multi-session and temporal questions only (2026-10-29)
+
+Stage297 reranked only `multi-session` and `temporal-reasoning` questions from the Stage268 frozen Top-200 candidate pool, keeping the Stage295 answer configuration. It freshly generated and judged all 500 answers and scored **456/500 (91.2%)**, now the best full result: four above Stage291, seven above Stage295, and 29 below the 485/500 gate.
+
+Against Stage295, paired results were 23 candidate-only and 16 baseline-only correct (433 both-correct, 28 both-wrong; net +7) across 247 changed answers. Against Stage291, 18 candidate-only and 14 baseline-only correct (438 both-correct, 30 both-wrong; net +4) across 250 changed answers. Against Stage296's four-type reranker, 23 candidate-only and 15 baseline-only correct (433 both-correct, 29 both-wrong; net +8) across 263 changed answers. The reranker selected 20 from the frozen 200 candidates on 266 rows; 228/266 selected Top-20 orders differed from the original rank. Candidate IDs matched the Stage268 Top-200 sets in 500/500. Both seeds were accepted; a single run does not establish reranker stability.
+
+The known baking-count target `88432d0a` regressed from Stage295 PASS to Stage297 FAIL: the reranker selected evidence that, after the boundary resolver excluded the 14-day-old sourdough event, supported only 3 baking events. The reranker can drop evidence needed for complete event counts. The candidate had 25 invalid audits and zero API-error rows. Per type: knowledge update 74/78, multi-session 113/133, assistant 54/56, preference 30/30, user facts 68/70, temporal reasoning 117/133.
+
+Both seeds were accepted. No adapter code changed; the run used adapter commit `975d9d5`. Full result SHA-256: `83017fb0fe7b04ec090eae618bf6301a84ef7aa45b9de400f2a523e11dd7eb8c`. See [longmemeval-stage297-weak-type-reranker-top20-2026-10-29.json](data/longmemeval-stage297-weak-type-reranker-top20-2026-10-29.json).
+
+Keep reranking opt-in; the Stage297 score is promising but its Top-20 selection regressed a known count target and stability was not tested across repeated runs. The 97% goal remains unmet. Memory precision and live offsite disaster-recovery restore remain unverified. Stage297 does not exercise Stage166; the stochastic reservation prototype still has no provider-generation, durable-memory, or accuracy A/B evidence.
