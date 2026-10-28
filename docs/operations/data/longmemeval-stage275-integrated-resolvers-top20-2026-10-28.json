@@ -1,0 +1,128 @@
+{
+  "stage": "Stage275",
+  "date": "2026-10-28",
+  "experiment": "Combined opt-in evidence-bound answer resolvers over frozen Stage268 retrieval",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation rerun with Top-20 input",
+  "retrieval_equivalence": {
+    "top_20_order_matches_stage268": 500,
+    "top_200_order_matches_stage268": 500
+  },
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "OpenAI-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "enabled_opt_in_resolvers": [
+    "--multi-clause-count-answer-synthesis",
+    "--temporal-event-list-order-resolution",
+    "--temporal-recent-event-order-resolution",
+    "--temporal-immediate-event-month-resolution",
+    "--composite-count-evidence-coverage",
+    "--latest-personal-best-time-resolution",
+    "--temporal-choice-audit-consistency",
+    "--relative-time-event-answer-resolution",
+    "--transport-savings-user-evidence-guard",
+    "--monetary-total-answer-consistency",
+    "--education-year-span-resolution",
+    "--prior-career-tenure-resolution",
+    "--relative-weekday-event-answer-resolution",
+    "--property-offer-anchor-count-resolution",
+    "--jewelry-pair-acquisition-count-resolution"
+  ],
+  "full_candidate": {
+    "run_id": "stage275-combined-resolvers",
+    "question_count": 500,
+    "correct": 440,
+    "accuracy": 0.88,
+    "target_correct": 485,
+    "shortfall": 45,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 109, "total": 133},
+      "single-session-assistant": {"correct": 51, "total": 56},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "single-session-user": {"correct": 69, "total": 70},
+      "temporal-reasoning": {"correct": 113, "total": 133}
+    },
+    "paired_against_stage268": {
+      "baseline_correct": 440,
+      "candidate_correct": 440,
+      "both_correct": 417,
+      "both_wrong": 37,
+      "candidate_only_correct": 23,
+      "baseline_only_correct": 23,
+      "answer_text_changed_rows": 260,
+      "net_delta": 0
+    },
+    "paired_against_stage274": {
+      "baseline_correct": 435,
+      "candidate_correct": 440,
+      "both_correct": 420,
+      "both_wrong": 45,
+      "candidate_only_correct": 20,
+      "baseline_only_correct": 15,
+      "net_delta": 5
+    },
+    "invalid_answer_audit_rows": {
+      "stage268": 23,
+      "candidate": 22
+    },
+    "api_error_marked_rows": 0,
+    "retrieval_order_matches": {
+      "top_20": 500,
+      "top_200": 500
+    },
+    "resolver_status_counts": {
+      "weekday_music_entity": {"not_applicable": 499, "revised": 1},
+      "property_offer": {"not_applicable": 499, "excluded_unique_offer_target": 1},
+      "jewelry_pair": {"not_applicable": 499, "normalized_acquired_earring_pairs": 1},
+      "career_tenure": {
+        "not_applicable": 497,
+        "revised": 1,
+        "missing_named_employer": 1,
+        "no_same_date_user_duration_pair": 1
+      }
+    },
+    "target_rows": {
+      "9d25d4e0": {"stage268": "PASS", "candidate": "PASS", "answer": "3 pieces of jewelry.", "resolver": "normalized_acquired_earring_pairs"},
+      "gpt4_7fce9456": {"stage268": "FAIL", "candidate": "PASS", "resolver": "excluded_unique_offer_target"},
+      "gpt4_fa19884d": {"stage268": "FAIL", "candidate": "PASS", "resolver": "revised"},
+      "gpt4_93159ced": {"stage268": "FAIL", "candidate": "PASS", "resolver": "revised"},
+      "2ebe6c92": {"stage268": "FAIL", "candidate": "PASS", "resolver": "judge_format_retry"}
+    },
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage275-combined-resolvers-20261028/candidate/longmemeval_results_20261028_202616.json",
+      "size_bytes": 244705432,
+      "sha256": "7849ef0b101095f9ab8124ea2fdb16e6006d21d9dadcf8253617ed781d33448d"
+    }
+  },
+  "composed_saved_answer_replay": {
+    "source_full_score": 440,
+    "candidate_score": 444,
+    "total": 500,
+    "rows_corrected": 4,
+    "other_saved_judgments_reused": 496,
+    "candidate_only_correct": 4,
+    "baseline_only_correct": 0,
+    "question_ids": ["2ebe6c92", "gpt4_7fce9456", "gpt4_93159ced", "gpt4_fa19884d"],
+    "is_fresh_generation": false
+  },
+  "verification": {
+    "adapter_tests_passed": 204,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "all_500_rows_completed": true
+  },
+  "decision": "Keep the narrow resolvers opt-in. The integrated full candidate ties Stage268 at 440/500; 260 answers changed and paired outcomes were balanced 23/23, so do not attribute the tie to the resolver set. Four isolated fixes combine to a 444/500 saved-answer replay, which is diagnostic only. Stage268 remains the best verified fresh full score.",
+  "current_best_verified_fresh_full_score": 440,
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "offsite_restore_verified": false,
+  "limitations": "The 485/500 Top-20 target remains 45 answers above the best full score. The 100% memory-precision objective and live offsite disaster-recovery restore remain unverified."
+}
