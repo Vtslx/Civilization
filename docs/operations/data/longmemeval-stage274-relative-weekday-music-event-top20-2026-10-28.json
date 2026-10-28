@@ -1,0 +1,128 @@
+{
+  "stage": "Stage274",
+  "date": "2026-10-28",
+  "experiment": "Resolve music artist descriptions from exact user events on the prior weekday",
+  "adapter_repo": "memory-benchmarks",
+  "adapter_branch": "codex/relative-weekday-music-entity-resolution",
+  "adapter_commit": "e8cb2e0 feat: resolve weekday-matched music events",
+  "plan_commit": "eed2d5c docs: plan weekday event answer resolver",
+  "feature": {
+    "flag": "--relative-weekday-event-answer-resolution",
+    "default_enabled": false,
+    "requirements": [
+      "Question asks for an artist, band, or musician on last <weekday>",
+      "A cited user-authored event date re-derives to the previous occurrence of that weekday",
+      "One unique music entity description appears in the user quote",
+      "The rewritten answer passes the shared evidence validator"
+    ],
+    "persistent_memory_writes": 0
+  },
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation rerun with Top-20 input",
+  "retrieval_equivalence": {
+    "top_20_order_matches_stage268": 500,
+    "top_200_order_matches_stage268": 500
+  },
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "OpenAI-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "full_candidate": {
+    "run_id": "stage274-weekday-music-event",
+    "question_count": 500,
+    "correct": 435,
+    "accuracy": 0.87,
+    "target_correct": 485,
+    "shortfall": 50,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 73, "total": 78},
+      "multi-session": {"correct": 106, "total": 133},
+      "single-session-assistant": {"correct": 49, "total": 56},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 112, "total": 133}
+    },
+    "paired_against_stage268": {
+      "baseline_correct": 440,
+      "candidate_correct": 435,
+      "both_correct": 418,
+      "both_wrong": 43,
+      "candidate_only_correct": 17,
+      "baseline_only_correct": 22,
+      "answer_text_changed_rows": 258,
+      "net_delta": -5
+    },
+    "paired_against_stage273": {
+      "baseline_correct": 430,
+      "candidate_correct": 435,
+      "both_correct": 409,
+      "both_wrong": 44,
+      "candidate_only_correct": 26,
+      "baseline_only_correct": 21,
+      "net_delta": 5
+    },
+    "invalid_answer_audit_rows": {
+      "stage268": 23,
+      "candidate": 20
+    },
+    "api_error_marked_rows": 0,
+    "resolver_status_counts": {
+      "not_applicable": 499,
+      "revised": 1
+    },
+    "target_row": {
+      "question_id": "gpt4_fa19884d",
+      "baseline_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "candidate_answer": "A bluegrass band that features a banjo player.",
+      "resolver_status": "revised",
+      "target_event_date": "2023-03-31",
+      "question_date": "2023-04-05",
+      "user_citation_validated": true,
+      "judge_seed_accepted": true
+    },
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage274-weekday-music-event-20261028/candidate/longmemeval_results_20261028_200123.json",
+      "size_bytes": 244699660,
+      "sha256": "09b1299e1e639d379beeedc03d2cd3792bc0b2331c43f30406bb322fc15ac7b4"
+    }
+  },
+  "isolated_saved_answer_replay": {
+    "source_full_score": 440,
+    "candidate_score": 441,
+    "total": 500,
+    "rows_changed": 1,
+    "other_saved_judgments_reused": 499,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "question_id": "gpt4_fa19884d",
+    "judge_seed_accepted": true,
+    "is_fresh_generation": false
+  },
+  "composed_saved_answer_replay": {
+    "candidate_score": 443,
+    "total": 500,
+    "rows_corrected": 3,
+    "other_saved_judgments_reused": 497,
+    "question_ids": ["2ebe6c92", "gpt4_93159ced", "gpt4_fa19884d"],
+    "is_fresh_generation": false
+  },
+  "verification": {
+    "adapter_tests_passed": 204,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "all_500_rows_completed": true
+  },
+  "decision": "Keep the weekday resolver opt-in. It corrected one explicitly cited row in the full candidate and passed the isolated live judge replay. Stage274 scored 435/500, five below Stage268; 258 answer texts changed, so the aggregate movement is not attributed to this one-row feature. Stage268 remains the best fresh full score at 440/500.",
+  "current_best_verified_fresh_full_score": 440,
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "offsite_restore_verified": false,
+  "limitations": "The 485/500 Top-20 target remains 45 answers above the best full score. The 100% memory-precision objective and live offsite disaster-recovery restore remain unverified."
+}
