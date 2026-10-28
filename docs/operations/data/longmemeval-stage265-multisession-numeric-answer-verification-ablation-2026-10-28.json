@@ -1,0 +1,60 @@
+{
+  "stage": 265,
+  "date": "2026-10-28",
+  "experiment": "Additional numeric multi-session answer-verification ablation",
+  "pilot_only": true,
+  "question_count": 111,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage264 per-question results; identical frozen Top-20 evidence in both arms",
+  "top20_order_matches": 111,
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "seed": 42,
+  "control_answerer_seed_accepted": true,
+  "control_judge_seed_accepted": true,
+  "candidate_answerer_seed_accepted": true,
+  "candidate_judge_seed_accepted": true,
+  "shared_settings": {
+    "mode": "answerer",
+    "top_k": 200,
+    "cutoff": "top_20",
+    "count_inventory_policy": "skip_multi_session",
+    "reranker": "disabled for both arms",
+    "temporal_and_numeric_resolvers": "same settings in both arms",
+    "cross_session_verifier_for_nonnumeric_questions": "unchanged"
+  },
+  "control": {
+    "answer_verification_question_types": ["multi-session"],
+    "correct": 89,
+    "total": 111,
+    "accuracy": 0.801802,
+    "verification_statuses": {
+      "rejected_unverified_revision": 46,
+      "revised": 55,
+      "rejected_invalid_evidence": 6,
+      "invalid_response": 1,
+      "verified_count_audit": 3
+    }
+  },
+  "candidate": {
+    "answer_verification_question_types": [],
+    "correct": 84,
+    "total": 111,
+    "accuracy": 0.756757,
+    "verification_statuses": {"not_applicable": 111}
+  },
+  "paired_outcomes": {
+    "both_correct": 82,
+    "both_wrong": 20,
+    "control_only_correct": 7,
+    "candidate_only_correct": 2
+  },
+  "changed_answer_rows": 81,
+  "accuracy_delta_percentage_points": -4.5,
+  "decision": "Keep the additional multi-session numeric verifier enabled in this benchmark configuration. Disabling it scored five fewer answers on the matched 111-question slice, with seven control-only wins and two candidate-only wins. This is a subset A/B, not a full LongMemEval score or proof of the verifier's causal effect under a nondeterministic provider.",
+  "best_verified_full_score": {"stage": 243, "correct": 438, "total": 500, "accuracy": 0.876},
+  "memory_precision_measured": false,
+  "artifact_path": "/Volumes/Net/civilization-stage265-multisession-verifier-ablation-20261028/comparison.json",
+  "artifact_sha256": "59cc9d154cd84e89ee776277a32766293f7e87a36c46a30c7fb11f2ab01749bc"
+}
