@@ -1,0 +1,161 @@
+{
+  "stage": 295,
+  "date": "2026-10-29",
+  "experiment": "relative-event-count-window-boundary-resolution",
+  "feature": "Default-off resolver for user-cited incremental count items exactly on the open lower boundary of a relative past-day/week window.",
+  "plan_commit": "6198b76 docs: plan relative event count boundary resolver",
+  "adapter_commit": "975d9d5 fix: exclude exact lower-bound events from relative counts",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "pytest_tests_passed": 293,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "26b56200154650138b6c140d150811c4a907f90e4220768d10d2babb04369ca5",
+  "retrieval_source": "Stage268 frozen Top-200 result files; full search-result objects match Stage268, Stage291, Stage293, and Stage294 in all 500 rows.",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage268": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "0177be90",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_id": "88432d0a",
+    "question_type": "multi-session",
+    "baseline_stage294_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "answerer_regenerated": false,
+    "baseline_answer": "5 times",
+    "candidate_answer": "4 baking occasions",
+    "resolver_status": "excluded_open_lower_boundary_events",
+    "boundary_date": "2023-05-16",
+    "excluded_item": "Sourdough bread",
+    "source_memory_indices": [7],
+    "citation_validation": "PASS",
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage295-relative-event-boundary-20261029/candidate/frozen-replay-saved-answer.json",
+    "result_size_bytes": 738,
+    "result_sha256": "da5ed6503efaec8dc3c8fde64f5feb8b4a9299ecd97ba3b053700c03c04a3fda"
+  },
+  "single_row_regeneration_diagnostic": {
+    "question_id": "88432d0a",
+    "candidate_judgment": "FAIL",
+    "candidate_answer": "5 baking events",
+    "resolver_status": "excluded_open_lower_boundary_events",
+    "boundary_date": "2023-05-16",
+    "remaining_counted_items": [
+      "Apple pie",
+      "Whole wheat baguette",
+      "Batch of cookies (May 18)",
+      "Batch of cookies (May 25)",
+      "Chocolate cake"
+    ],
+    "result_artifact": "/Volumes/Net/civilization-stage295-relative-event-boundary-20261029/candidate/frozen-replay/predicted_stage295-relative-event-replay/88432d0a.json",
+    "result_size_bytes": 504806,
+    "result_sha256": "e7c65274fed646d64a9aa5c480b87ab391d88a37ba03d57ba1f99155236b9051"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 449,
+    "accuracy": 0.898,
+    "target_correct": 485,
+    "shortfall": 36,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 68, "total": 70},
+      "multi-session": {"correct": 112, "total": 133},
+      "single-session-preference": {"correct": 26, "total": 30},
+      "temporal-reasoning": {"correct": 115, "total": 133},
+      "knowledge-update": {"correct": 73, "total": 78},
+      "single-session-assistant": {"correct": 55, "total": 56}
+    },
+    "paired_against_stage291": {
+      "baseline_correct": 452,
+      "candidate_correct": 449,
+      "both_correct": 434,
+      "both_wrong": 33,
+      "candidate_only_correct": 15,
+      "baseline_only_correct": 18,
+      "answer_text_changed_rows": 251,
+      "retrieval_objects_equal": 500,
+      "net_delta": -3
+    },
+    "paired_against_stage293": {
+      "baseline_correct": 450,
+      "candidate_correct": 449,
+      "both_correct": 431,
+      "both_wrong": 32,
+      "candidate_only_correct": 18,
+      "baseline_only_correct": 19,
+      "answer_text_changed_rows": 266,
+      "retrieval_objects_equal": 500,
+      "net_delta": -1
+    },
+    "paired_against_stage294": {
+      "baseline_correct": 448,
+      "candidate_correct": 449,
+      "both_correct": 426,
+      "both_wrong": 29,
+      "candidate_only_correct": 23,
+      "baseline_only_correct": 22,
+      "answer_text_changed_rows": 255,
+      "retrieval_objects_equal": 500,
+      "target_row_corrected": true,
+      "other_candidate_only_correct": 22,
+      "other_baseline_only_correct": 22,
+      "net_delta": 1
+    },
+    "relative_event_count_window_boundary_resolution_scoped_rows": 266,
+    "relative_event_count_window_boundary_resolution_status_counts": {
+      "not_enabled": 234,
+      "not_applicable": 263,
+      "excluded_open_lower_boundary_events": 1,
+      "missing_numeric_count_audit": 1,
+      "unsupported_relative_window": 1
+    },
+    "invalid_answer_audit_rows": 21,
+    "stage294_invalid_answer_audit_rows": 25,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "88432d0a",
+    "stage294_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "4 baking events",
+    "resolver_status": "excluded_open_lower_boundary_events",
+    "boundary_date": "2023-05-16",
+    "excluded_item": "Sourdough bread",
+    "source_memory_indices": [5],
+    "citation_validation": "PASS"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage295-relative-event-boundary-20261029/candidate/full-run/longmemeval_results_20261029_064113.json",
+    "size_bytes": 246400486,
+    "sha256": "1db8c2bbc091e49bc34f1667287cc17f58ad47f542f52dfe8f81d24c15c3bf9b"
+  },
+  "best_observed_full_score": {
+    "stage": 291,
+    "correct": 452,
+    "total": 500,
+    "accuracy": 0.904,
+    "gate": 485,
+    "shortfall": 33
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the resolver opt-in. The frozen saved-answer replay and full candidate both corrected 88432d0a from FAIL to PASS by excluding the user-cited 2023-05-16 event at the exact open 14-day boundary. In the full candidate, this was the only trigger; compared with Stage294, the other paired rows had 22 candidate-only and 22 baseline-only wins, so the net +1 matches the target correction. A separate one-row regeneration produced two cookie items at different dates and still failed after boundary removal, showing an independent event-deduplication error and generation variability.",
+  "limitations": "Stage295 scored 449/500 (89.8%), 36 below the 485/500 gate and three below Stage291's 452/500 best. The single-row regeneration diagnostic did not pass because it produced two separate cookie events; the boundary resolver does not solve duplicate or conflicting event identity. Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage295 does not exercise Stage166; the stochastic reservation protocol still has no provider-generation, durable-memory, or LongMemEval accuracy A/B evidence."
+}
