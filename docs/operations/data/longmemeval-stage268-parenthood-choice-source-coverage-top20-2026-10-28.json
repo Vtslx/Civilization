@@ -23,7 +23,7 @@
   "feature": {
     "existing_cli_flag": "--temporal-choice-audit-consistency",
     "default_enabled": false,
-    "parenthood_behavior": "Abstain only when a compared person is entirely absent from user-authored Top-20 messages; assistant-only name mentions do not count.",
+    "parenthood_behavior": "Abstain only when a compared person's name is absent from all user-authored Top-20 messages; assistant-only mentions do not count.",
     "other_temporal_choice_behavior": "Existing source-audit consistency rules remain unchanged"
   },
   "frozen_stage267_saved_answer_replay": {
@@ -94,8 +94,8 @@
     "correct": 440,
     "total": 500,
     "accuracy": 0.88,
-    "prior_reference_stage": 243,
-    "prior_reference_correct": 438
+    "prior_full_reference_stage": 243,
+    "prior_full_reference_correct": 438
   },
   "verification": {
     "adapter_tests": 173,
@@ -103,7 +103,7 @@
     "compileall": "PASS",
     "git_diff_check": "PASS"
   },
-  "decision": "Keep the parenthood-name coverage check under the existing temporal-choice opt-in guard. The frozen replay fixed the unsupported Tom comparison. The fresh full candidate scored 440/500, but the guard triggered on zero rows because the model already abstained on the target; 271 answer texts changed against Stage267, so the overall +9 paired delta is not attributed to this guard.",
+  "decision": "Keep the parenthood-name coverage check under the existing temporal-choice opt-in guard. The frozen replay fixed the unsupported Tom comparison. The fresh full candidate scored 440/500, the best observed full result so far, but the guard triggered on zero rows because the model already abstained on the target; 271 answer texts changed against Stage267, so the +9 full-run delta is not attributed to this guard.",
   "memory_precision_measured": false,
   "limitations": "The 97% Top-20 gate remains unmet by 45 answers. The 100% memory-precision target remains unmeasured. This guard only addresses parenthood comparisons where a named option is absent from user-authored evidence and does not write persistent memory."
 }
