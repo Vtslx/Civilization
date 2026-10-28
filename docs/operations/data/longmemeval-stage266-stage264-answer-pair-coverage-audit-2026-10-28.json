@@ -1,0 +1,36 @@
+{
+  "stage": 266,
+  "date": "2026-10-28",
+  "experiment": "Answer-bearing pair coverage audit of Stage264",
+  "pilot_only": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "source_result_file": "/Volumes/Net/civilization-stage264-monetary-total-consistency-20261028/candidate/longmemeval_results_stage264_monetary_total_consistency.json",
+  "source_result_sha256": "65d60b190d207dd86dd8888e155ac7422318f5dc90894e7ed63e388536c28b3c",
+  "method": "Use the benchmark's chronological session sort and pair-turn construction, answer_session_ids, and has_answer annotations to compare gold answer-bearing source-session/pair IDs with Stage264 retrieved source metadata. This is a read-only diagnostic; annotations are not used at runtime.",
+  "answerable_questions": 470,
+  "answer_marked_pairs": 883,
+  "top_20": {
+    "answer_marked_pair_hits": 871,
+    "pair_recall": 0.98641,
+    "questions_with_all_answer_pairs": 460
+  },
+  "top_200": {
+    "answer_marked_pair_hits": 876,
+    "pair_recall": 0.992072,
+    "questions_with_all_answer_pairs": 465
+  },
+  "wrong_answerable_questions": 65,
+  "wrong_answerable_with_all_pairs_in_top20": 58,
+  "wrong_answerable_missing_at_least_one_pair_in_top20": 7,
+  "by_question_type": {
+    "single-session-user": {"answerable": 64, "all_pairs_top20": 63, "all_pairs_top200": 64, "wrong_with_all_pairs_top20": 1, "wrong_missing_pair_top20": 0},
+    "multi-session": {"answerable": 121, "all_pairs_top20": 117, "all_pairs_top200": 118, "wrong_with_all_pairs_top20": 28, "wrong_missing_pair_top20": 3},
+    "single-session-preference": {"answerable": 30, "all_pairs_top20": 29, "all_pairs_top200": 30, "wrong_with_all_pairs_top20": 2, "wrong_missing_pair_top20": 1},
+    "temporal-reasoning": {"answerable": 127, "all_pairs_top20": 125, "all_pairs_top200": 125, "wrong_with_all_pairs_top20": 18, "wrong_missing_pair_top20": 2},
+    "knowledge-update": {"answerable": 72, "all_pairs_top20": 72, "all_pairs_top200": 72, "wrong_with_all_pairs_top20": 6, "wrong_missing_pair_top20": 0},
+    "single-session-assistant": {"answerable": 56, "all_pairs_top20": 54, "all_pairs_top200": 56, "wrong_with_all_pairs_top20": 3, "wrong_missing_pair_top20": 1}
+  },
+  "decision": "Keep Top-200 pair recall as a separate retrieval diagnostic. It adds five answer-marked pairs and five complete-pair questions over Top-20, while 58 of the 65 wrong answerable rows already contain every answer-marked pair in Top-20. Prioritize evidence synthesis, temporal anchoring, and answer validation for further gains; broader retrieval alone cannot account for most remaining errors.",
+  "precision_boundary": "Answer-bearing pair recall is not factual precision. The 100% memory-precision target remains unmeasured.",
+  "best_verified_full_score": {"stage": 243, "correct": 438, "total": 500, "accuracy": 0.876}
+}
