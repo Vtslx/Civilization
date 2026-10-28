@@ -325,3 +325,15 @@ Stage287 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`5e64ece fix: avoid transferring tennis schedules to table tennis`；259 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `4c53f985acdca19a0f60e826c39b4d4dc0076587a7919e9aeb756f059e90d068`；冻结目标复放 SHA-256 为 `ad9279494d724e042ba5f456d9597686adb6c6c5de2ab342ee7203675fa03e99`。详见[Stage287 成绩卡](data/longmemeval-stage287-table-tennis-frequency-guard-top20-2026-10-29.json)。
 
 保留为 opt-in：冻结目标得到无回退修正，但 Stage287 未提升最佳全量成绩。100% 记忆精准度和异地灾备恢复演练仍未验证。Stage287 未运行 Stage166；该随机预留原型仍无 provider 生成、持久化记忆或准确率集成证据。
+
+## Stage288：助手回答题型的助手原文证据（2026-10-29）
+
+适配器新增默认关闭的 `--assistant-authored-evidence-for-assistant-questions`。只有 LongMemEval 题型为 `single-session-assistant` 时，才允许精确的助手原文作为“助手之前说过什么”的证据；提示词和引用审计保留助手来源，不把助手陈述当成用户事实或已验证的现实事实。其他题型仍执行用户原话计数证据规则。
+
+在冻结检索上重新生成 56 道助手题，得 55/56，Stage287 为 52/56：3 题仅候选答对、0 题仅基线答对，28 个答案文本变化。56/56 检索对象一致，所有答案审计有效。该切片修正了 `0e5e2d1a`，引用助手原话答“38 subjects”；修正了 `18dcd5a5`，引用助手原话答“4 mummies”；也将 `778164c6` 答为“Grilled snapper with mango salsa”。`eaca4986` 仍弃答，因为 Top-20 记忆没有提供第二首歌的和弦进行。
+
+Stage288 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **451/500（90.2%）**，距离 485/500 门槛差 34 题，是目前最佳全量成绩。与 Stage287 配对：22 题仅候选答对、18 题仅 Stage287 答对、429 题两者都对、31 题两者都错，净增 4；269 个答案文本变化。与 Stage283 配对：25 题仅候选答对、20 题仅基线答对、426 题两者都对、29 题两者都错，净增 5；275 个答案文本变化。检索对象 500/500 一致。助手原文模式仅对 56 题生效、其余 444 题越界关闭；无效答案审计 23 条，API 错误 0。全量助手题型为 53/56，比 Stage287 的 52/56 净增 1；2 题仅候选答对、1 题仅基线答对，33 个答案文本变化。水果 snapper 菜名在单独类别切片通过，但全量复跑时没有复现，仍存在答案生成波动，不能把全量净增归因于这项单独改动。
+
+答题器和裁判均接受 seed 42。适配器提交：`83fac68 fix: scope assistant memory evidence to its question type`；263 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `b8ae92dc9cfee752cc6e4dac194b47e69992775b7d3fd7b4a1ec2202ca266ff9`；56 题试验 SHA-256 为 `12ecbdddb18871996ec0ebf9397e26c9f777bf751305bf48edb7b0b620128f91`。详见[Stage288 成绩卡](data/longmemeval-stage288-assistant-authored-evidence-top20-2026-10-29.json)。
+
+保留为 opt-in。Stage288 距离 485/500 仍差 34 题；记忆精准度尚未测量，异地灾备恢复演练未验证。Stage288 未运行 Stage166；该随机预留协议仍无 provider 解码、持久化记忆或 LongMemEval 准确率 A/B 证据。

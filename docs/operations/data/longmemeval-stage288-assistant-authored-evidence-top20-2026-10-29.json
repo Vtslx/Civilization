@@ -1,0 +1,154 @@
+{
+  "stage": 288,
+  "date": "2026-10-29",
+  "experiment": "assistant-authored-evidence-for-assistant-questions",
+  "feature": "Default-off evidence mode that accepts exact assistant-authored memory only for single-session-assistant questions, where the requested fact is what the assistant previously said or created.",
+  "plan_commit": "74dd1f0 docs: plan scoped assistant evidence support",
+  "adapter_commit": "83fac68 fix: scope assistant memory evidence to its question type",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 263,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "692c71d0caaa398c1b0e209e3025074041eb65a5056ff25e297bcb19340099f7",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage283; all 500 answers were freshly generated and judged over frozen Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage283-professional-role-count-20261029/candidate/full-run/predicted_stage283-professional-role-count-guard",
+  "retrieval_order_matches_stage283": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage288-assistant-authored-evidence",
+  "top_k": 200,
+  "cutoff": 20,
+  "assistant_question_slice_pilot": {
+    "question_count": 56,
+    "baseline_stage287_correct": 52,
+    "candidate_correct": 55,
+    "candidate_only_correct": 3,
+    "baseline_only_correct": 0,
+    "both_correct": 52,
+    "both_wrong": 1,
+    "answer_text_changed_rows": 28,
+    "retrieval_objects_equal": 56,
+    "invalid_answer_audit_rows": 0,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "corrected_targets": ["0e5e2d1a", "18dcd5a5", "778164c6"],
+    "remaining_target_failures": ["eaca4986"],
+    "result_artifact": "/Volumes/Net/civilization-stage288-assistant-authored-evidence-20261029/category-tuned/full-run/longmemeval_results_20261029_034721.json",
+    "result_size_bytes": 27547236,
+    "result_sha256": "12ecbdddb18871996ec0ebf9397e26c9f777bf751305bf48edb7b0b620128f91"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 451,
+    "accuracy": 0.902,
+    "target_correct": 485,
+    "shortfall": 34,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 66, "total": 70},
+      "multi-session": {"correct": 114, "total": 133},
+      "single-session-preference": {"correct": 26, "total": 30},
+      "temporal-reasoning": {"correct": 116, "total": 133},
+      "knowledge-update": {"correct": 76, "total": 78},
+      "single-session-assistant": {"correct": 53, "total": 56}
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 451,
+      "both_correct": 426,
+      "both_wrong": 29,
+      "candidate_only_correct": 25,
+      "baseline_only_correct": 20,
+      "answer_text_changed_rows": 275,
+      "retrieval_objects_equal": 500,
+      "net_delta": 5
+    },
+    "paired_against_stage287": {
+      "baseline_correct": 447,
+      "candidate_correct": 451,
+      "both_correct": 429,
+      "both_wrong": 31,
+      "candidate_only_correct": 22,
+      "baseline_only_correct": 18,
+      "answer_text_changed_rows": 269,
+      "retrieval_objects_equal": 500,
+      "net_delta": 4
+    },
+    "assistant_authored_evidence_effective_rows": 56,
+    "assistant_authored_evidence_out_of_scope_rows": 444,
+    "invalid_answer_audit_rows": 23,
+    "stage283_invalid_answer_audit_rows": 25,
+    "stage287_invalid_answer_audit_rows": 23,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_rows": {
+    "0e5e2d1a": {
+      "question": "I wanted to follow up on our previous conversation about binaural beats for anxiety and depression. Can you remind me how many subjects were in the study published in the journal Music and Medicine that found significant reductions in symptoms of depression, anxiety, and stress?",
+      "stage287_judgment": "FAIL",
+      "stage287_answer": "I cannot determine the count from user-authored evidence.",
+      "candidate_judgment": "PASS",
+      "candidate_answer": "38 subjects",
+      "assistant_evidence_scope_enabled": true,
+      "citation_validation": "PASS"
+    },
+    "18dcd5a5": {
+      "question": "I'm going back to our previous chat about the Lost Temple of the Djinn one-shot. Can you remind me how many mummies the party will face in the temple?",
+      "stage287_judgment": "FAIL",
+      "stage287_answer": "I cannot determine the count from user-authored evidence.",
+      "candidate_judgment": "PASS",
+      "candidate_answer": "4 mummies",
+      "assistant_evidence_scope_enabled": true,
+      "citation_validation": "PASS"
+    },
+    "778164c6": {
+      "stage287_judgment": "FAIL",
+      "category_slice_judgment": "PASS",
+      "full_candidate_judgment": "FAIL",
+      "category_slice_answer": "Grilled snapper with mango salsa.",
+      "full_candidate_answer": "Escovitch Fish",
+      "assistant_evidence_scope_enabled": true,
+      "note": "The exact earlier assistant recommendation passed in the independent 56-question slice but did not reproduce in the full fresh run."
+    },
+    "eaca4986": {
+      "stage287_judgment": "FAIL",
+      "candidate_judgment": "FAIL",
+      "candidate_answer": "The supplied memories don’t include a second sad song or its chorus chord progression, so I can’t determine it.",
+      "note": "Top-20 memory contains only one supported song output; the requested second-song progression remains unsupported in supplied evidence."
+    }
+  },
+  "category_slice_result_artifact": {
+    "path": "/Volumes/Net/civilization-stage288-assistant-authored-evidence-20261029/category-tuned/full-run/longmemeval_results_20261029_034721.json",
+    "size_bytes": 27547236,
+    "sha256": "12ecbdddb18871996ec0ebf9397e26c9f777bf751305bf48edb7b0b620128f91"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage288-assistant-authored-evidence-20261029/candidate/full-run/longmemeval_results_20261029_035756.json",
+    "size_bytes": 245734173,
+    "sha256": "b8ae92dc9cfee752cc6e4dac194b47e69992775b7d3fd7b4a1ec2202ca266ff9"
+  },
+  "best_observed_full_score": {
+    "stage": 288,
+    "correct": 451,
+    "total": 500,
+    "accuracy": 0.902,
+    "gate": 485,
+    "shortfall": 34
+  },
+  "memory_precision_measured": false,
+  "decision": "The 56-question assistant slice improved from 52/56 to 55/56 with no paired regressions and identical retrieval. In the fresh full run, 451/500 tied to Stage288's candidate achieved the new best score of 451/500, +4 versus Stage287 and +5 versus Stage283. The assistant question type scored 53/56 (net +1 versus Stage287, with two candidate-only and one baseline-only answer); 0e5e2d1a and 18dcd5a5 were corrected with exact assistant citations. The fruit-and-snapper recommendation passed in the category slice but failed again in the full run, so answer-generation variance remains. Do not attribute the aggregate full-score gain to this single feature; retain the opt-in question-type scope.",
+  "limitations": "Stage288 remains 34 answers below the 97% Top-20 gate. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. Stage288 does not exercise the Stage166 stochastic-token prototype, which remains unintegrated with provider decoding and durable memory storage and has no LongMemEval accuracy A/B."
+}
