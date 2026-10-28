@@ -566,3 +566,13 @@ The known baking-count target `88432d0a` regressed from Stage295 PASS to Stage29
 Both seeds were accepted. No adapter code changed; the run used adapter commit `975d9d5`. Full result SHA-256: `83017fb0fe7b04ec090eae618bf6301a84ef7aa45b9de400f2a523e11dd7eb8c`. See [longmemeval-stage297-weak-type-reranker-top20-2026-10-29.json](data/longmemeval-stage297-weak-type-reranker-top20-2026-10-29.json).
 
 Keep reranking opt-in; the Stage297 score is promising but its Top-20 selection regressed a known count target and stability was not tested across repeated runs. The 97% goal remains unmet. Memory precision and live offsite disaster-recovery restore remain unverified. Stage297 does not exercise Stage166; the stochastic reservation prototype still has no provider-generation, durable-memory, or accuracy A/B evidence.
+
+## Stage298: reranker count-inventory skip guard (2026-10-29)
+
+Stage298 tested an opt-in `--llm-reranker-skip-count-inventory` policy with reranking enabled for multi-session and temporal questions. It kept the original Top-20 order on 97 count-inventory questions and recorded `skipped_count_inventory`; reranking still ran on 169 other in-scope questions. The experimental code patch was not committed.
+
+The target `88432d0a` retained its original Top-20 order but still failed: the fresh answer counted 3 baking events after the boundary resolver removed the sourdough event. The count-skip subset was 3 candidate-only correct versus 6 Stage297-only correct (78 both-correct, 10 both-wrong; net -3). Preserving input order did not fix the target and the skipped subset lost three answers.
+
+Stage298 freshly regenerated and judged all 500 questions, scoring **449/500 (89.8%)**. It ties Stage295, is seven below Stage297, and three below Stage291. Against Stage297, paired outcomes were 15 candidate-only and 22 Stage297-only correct (434 both-correct, 29 both-wrong; net -7) across 252 changed answers. Against Stage295, 19 candidate-only and 19 baseline-only correct (430 both-correct, 32 both-wrong; net zero) across 256 changed answers. Retrieval order matched Stage295 in 363/500 rows. The candidate had 25 invalid audits and zero API-error rows. Do not retain the experimental code option; result and patch evidence are preserved in [longmemeval-stage298-reranker-count-inventory-guard-top20-2026-10-29.json](data/longmemeval-stage298-reranker-count-inventory-guard-top20-2026-10-29.json).
+
+The best full result remains Stage297 at 456/500, 29 below 485. Memory precision and live offsite restore remain unverified. Stage298 does not demonstrate Stage166 efficacy.

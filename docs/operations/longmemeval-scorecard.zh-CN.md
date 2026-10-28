@@ -447,3 +447,13 @@ Stage297 只对 Stage268 冻结 Top-200 候选中的 `multi-session` 与 `tempor
 答题器与裁判均接受 seed 42。没有修改适配器代码；运行使用适配器提交 `975d9d5`。完整结果 SHA-256 为 `83017fb0fe7b04ec090eae618bf6301a84ef7aa45b9de400f2a523e11dd7eb8c`。详见[Stage297 成绩卡](data/longmemeval-stage297-weak-type-reranker-top20-2026-10-29.json)。
 
 保留 reranker 为 opt-in。Stage297 得分有提升，但 Top-20 选择使已知计数题回退，且尚未进行同配置多次运行来测稳定性。97% 目标仍未完成；记忆精准度和异地灾备恢复未验证。Stage297 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage298：reranker 跳过完整计数题的实验护栏（2026-10-29）
+
+Stage298 测试了 opt-in `--llm-reranker-skip-count-inventory`，reranker 仍只用于多会话和时间推理题。97 道 count-inventory 题保留原 Top-20 顺序并记录 `skipped_count_inventory`，其他 169 道范围内题仍执行重排。实验代码没有提交。
+
+目标题 `88432d0a` 保留原 Top-20 顺序后仍判 FAIL：重新生成答案在边界解析器剔除酸面包事件后只统计 3 次。97 题跳过子集与 Stage297 配对为候选独赢 3、Stage297 独赢 6、78 题两者都对、10 题两者都错，净差 −3。因此保留原排序没有修复目标，跳过子集反而少了 3 个正确回答。
+
+Stage298 重新生成并裁判全部 500 题，得 **449/500（89.8%）**。该成绩与 Stage295 持平，比 Stage297 低 7，比 Stage291 低 3。与 Stage297 配对：候选独赢 15、Stage297 独赢 22、434 题两者都对、29 题两者都错，净差 −7；252 个答案变化。与 Stage295 配对：候选/基线独赢各 19，430 题两者都对，32 题两者都错，净差 0；256 个答案变化。检索顺序与 Stage295 在 363/500 行相同。无效审计 25 条，API 错误 0。实验代码不保留；结果与 patch 证据见[Stage298 成绩卡](data/longmemeval-stage298-reranker-count-inventory-guard-top20-2026-10-29.json)。
+
+当前最佳仍为 Stage297 的 456/500，距离 485 差 29。记忆精准度和异地恢复仍未验证。Stage298 未证明 Stage166 有效。
