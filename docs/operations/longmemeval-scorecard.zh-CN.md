@@ -275,6 +275,19 @@ Stage283 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，�
 
 保留该保护器为 opt-in。100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。Stage283 没有测试 Stage166 随机 token 原型。
 
+## Stage284：排除未完成的医生咨询计数（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--doctor-visit-count-exclude-planned-consultations`。对于“我看过多少位不同医生”，只有当匿名医生项的精确用户引文是在询问手术前咨询时该问什么、且没有任何用户引文证明咨询已经发生，才排除该项。剩余医生必须是不同对象，且每项均有有效用户原话引用，才能重算总数。
+
+在 Stage283 冻结的多会话答案上复放，保护器只改写 `gpt4_f2262a51`：它移除了从“结肠镜术前咨询应该问医生什么”的问题句推断出的匿名医生项，将 4 位改为 3 位。引用校验和真实裁判均通过，其余 132 条保存判定复用，零回退。单题复放也 PASS，裁判接受 seed 42。
+
+Stage284 fresh 全量候选得 **437/500（87.4%）**，比 Stage283 的 446/500 少 9 题。全量答题器自行把目标题答为“3 different doctors”，因此该保护器在 500 题中均为 `not_applicable`，没有实际触发。与 Stage283 配对：15 题仅候选答对、24 题仅 Stage283 答对、422 题两者都对、39 题两者都错，净差 −9；261 个答案文本变化。完整检索对象 500/500 相同。候选无效答案审计 29 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 69/78，多会话 110/133，助手事实 51/56，偏好 27/30，用户事实 68/70，时间推理 112/133。全量下降来自模型输出波动，不能归因于未触发的保护器。
+
+全量答题器和裁判均接受 seed 42。实现提交 `53de692 feat: exclude planned doctor consultations from visit counts`；245 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `1adf5b0574fa1f84ca66114a63d1632ee4d9262d789e411c8f0583bde1694166`；冻结单题复放 SHA-256 为 `ad2549daddb0228f3a3949de7b3fdead15a0c4b4cb1976918d63a10fe162d37a`。成绩卡见
+[longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json](data/longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json)。
+
+基于冻结答案零回退修正，保留该保护器为 opt-in。当前最佳全量成绩仍为 Stage283 的 **446/500（89.2%）**，离 485/500 还差 39 题。记忆精准度和异地灾备恢复仍未验证。Stage284 未测试 Stage166 随机 token 原型。
+
 ## Stage283：职位绑定的工程师人数证据保护器（2026-10-29）
 
 benchmark adapter 新增默认关闭的 `--professional-role-count-evidence-guard`，仅用于问题明确询问用户在某个职位下带领多少工程师的情形。当数值答案只由另一职位的用户原话支持时，保护器引用该原话并弃答；若一条用户原话直接给出题目职位和团队人数，则保留答案，不推断职位等价。

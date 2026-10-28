@@ -397,6 +397,18 @@ Answerer and judge accepted seed 42. Adapter commit: `c36974b feat: guard engine
 
 Keep the guard opt-in. The 100% memory-precision target remains unmeasured, and live offsite disaster-recovery restore remains unverified. Stage283 does not exercise the Stage166 stochastic-token prototype.
 
+## Stage284: exclude planned doctor consultations from visit counts (2026-10-29)
+
+The adapter adds default-off `--doctor-visit-count-exclude-planned-consultations`. For “how many different doctors did I visit?” it removes an anonymous provider item only when its exact user citation asks what to ask during a consultation before a procedure and no cited user quote confirms that encounter occurred. It recomputes the count only when the remaining doctor items are distinct and have valid user-authored evidence.
+
+On the frozen Stage283 multi-session answers, the guard changed only `gpt4_f2262a51`: it removed an unnamed doctor inferred from a question about a future colonoscopy consultation, changing four doctors to three. Citation validation and the live judge passed; the other 132 saved judgments were reused, with zero regressions. A separate target replay passed with seed 42 accepted by the judge.
+
+The fresh Stage284 candidate scored **437/500 (87.4%)**, nine below Stage283's 446/500. The answerer independently returned “3 different doctors” for the target, so the guard was `not_applicable` on all 500 rows and did not fire in the full candidate. Against Stage283, paired outcomes were 15 candidate-only correct and 24 Stage283-only correct, 422 correct in both, and 39 wrong in both (net -9) across 261 changed answer texts. Retrieval objects matched in 500/500. Candidate answer audits were invalid on 29 rows versus 25 in Stage283; API-error markers were zero. Per type: knowledge update 69/78, multi-session 110/133, assistant 51/56, preference 27/30, user facts 68/70, and temporal reasoning 112/133. The full-run decline is provider variation and is not attributed to the guard.
+
+Answerer and judge accepted seed 42. Adapter commit: `53de692 feat: exclude planned doctor consultations from visit counts`; verification passed 245 tests, compileall, and diff checks. The full result SHA-256 is `1adf5b0574fa1f84ca66114a63d1632ee4d9262d789e411c8f0583bde1694166`; the frozen target replay SHA-256 is `ad2549daddb0228f3a3949de7b3fdead15a0c4b4cb1976918d63a10fe162d37a`. See [longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json](data/longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json).
+
+Keep the guard opt-in based on the zero-regression frozen correction. The best full score remains **446/500 (89.2%)** at Stage283, 39 below 485/500. Memory precision and live offsite disaster-recovery restore remain unverified. Stage284 does not exercise the Stage166 stochastic-token prototype.
+
 ## Stage283: professional role count evidence guard (2026-10-29)
 
 The adapter adds default-off `--professional-role-count-evidence-guard` for engineer-count questions tied to an explicit job title. If a numeric answer is supported only by a user-authored quote for a different named role, it abstains with that exact citation. A quote that directly states both the requested role and team count is preserved. The guard does not infer role equivalence.

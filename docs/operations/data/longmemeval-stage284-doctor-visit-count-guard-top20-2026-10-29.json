@@ -1,0 +1,137 @@
+{
+  "stage": 284,
+  "date": "2026-10-29",
+  "experiment": "doctor-visit-count-exclude-planned-consultations",
+  "feature": "Default-off guard removes an anonymous doctor item when its only user evidence asks what to ask during a consultation before a procedure and does not confirm a completed visit.",
+  "plan_commit": "1695af1 docs: plan doctor visit count completion guard",
+  "adapter_commit": "53de692 feat: exclude planned doctor consultations from visit counts",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 245,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "20753624215ae19953a2b086dc3f5753d1d5c86c302c8f1848e814e4bcb50fa1",
+  "retrieval_source": "Stage268 frozen Top-200 results; all 500 answerer and judge outputs freshly generated over Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage283": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage284-doctor-visit-count-guard",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_multisession_replay": {
+    "question_count": 133,
+    "baseline_correct": 115,
+    "candidate_correct": 116,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 115,
+    "both_wrong": 17,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 132,
+    "citation_validation": "PASS",
+    "target_question_id": "gpt4_f2262a51",
+    "candidate_judgment": "PASS"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 437,
+    "accuracy": 0.8740000000000001,
+    "target_correct": 485,
+    "shortfall": 48,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {
+        "correct": 68,
+        "total": 70
+      },
+      "multi-session": {
+        "correct": 110,
+        "total": 133
+      },
+      "single-session-preference": {
+        "correct": 27,
+        "total": 30
+      },
+      "temporal-reasoning": {
+        "correct": 112,
+        "total": 133
+      },
+      "knowledge-update": {
+        "correct": 69,
+        "total": 78
+      },
+      "single-session-assistant": {
+        "correct": 51,
+        "total": 56
+      }
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 437,
+      "both_correct": 422,
+      "both_wrong": 39,
+      "candidate_only_correct": 15,
+      "baseline_only_correct": 24,
+      "answer_text_changed_rows": 261,
+      "retrieval_objects_equal": 500,
+      "net_delta": -9
+    },
+    "doctor_visit_count_exclude_planned_consultations_enabled_rows": 500,
+    "doctor_visit_count_exclude_planned_consultations_status_counts": {
+      "not_applicable": 500
+    },
+    "doctor_visit_count_exclude_planned_consultations_applied_rows": [],
+    "invalid_answer_audit_rows": 29,
+    "stage283_invalid_answer_audit_rows": 25,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "gpt4_f2262a51",
+    "question": "How many different doctors did I visit?",
+    "stage283_judgment": "FAIL",
+    "stage283_answer": "At least 4 different doctors: Dr. Patel, Dr. Lee, Dr. Smith, and an unnamed doctor for the colonoscopy consultation.",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "At least 3 different doctors: Dr. Patel, Dr. Lee, and Dr. Smith.",
+    "guard_status": "not_applicable",
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "gpt4_f2262a51",
+    "correct": 1,
+    "total": 1,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage284-doctor-visit-count-20261029/candidate/doctor-visit-count-target.json",
+    "result_size_bytes": 481133,
+    "result_sha256": "ad2549daddb0228f3a3949de7b3fdead15a0c4b4cb1976918d63a10fe162d37a"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage284-doctor-visit-count-20261029/candidate/full-run/longmemeval_results_20261029_020823.json",
+    "size_bytes": 245414615,
+    "sha256": "1adf5b0574fa1f84ca66114a63d1632ee4d9262d789e411c8f0583bde1694166"
+  },
+  "best_observed_full_score": {
+    "stage": 283,
+    "correct": 446,
+    "total": 500,
+    "accuracy": 0.892,
+    "gate": 485,
+    "shortfall": 39
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the resolver opt-in. On frozen Stage283 multi-session answers it corrected only gpt4_f2262a51 from FAIL (4 doctors) to PASS (3 doctors) with valid user citations and no regressions. In the fresh full candidate the guard was enabled but never applied; the answerer independently answered the target correctly. The full score was 437/500, nine below Stage283, with 15 candidate-only and 24 baseline-only correct across 261 changed answers; do not attribute the full-run movement to this guard.",
+  "limitations": "Stage284 does not meet the 97% Top-20 gate. The best fresh full score remains Stage283 at 446/500 (89.2%), 39 short. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. Stage284 does not exercise the Stage166 stochastic-token prototype."
+}
