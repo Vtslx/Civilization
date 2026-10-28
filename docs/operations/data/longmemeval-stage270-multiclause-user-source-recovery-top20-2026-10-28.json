@@ -1,0 +1,176 @@
+{
+  "stage": 270,
+  "date": "2026-10-28",
+  "experiment": "Recover a missing start/current count from unique user-authored evidence",
+  "plan_commit": "c8f2848 docs: plan source-backed multi-clause count recovery",
+  "adapter_commit": "ec69081 fix: recover multi-clause counts from user evidence",
+  "adapter_docs_commit": "9edd60d docs: describe source-backed multi-clause recovery",
+  "run_id": "stage270-multiclause-source-count",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage268 per-question results; frozen retrieval reused",
+  "feature": {
+    "cli_flag": "--multi-clause-count-answer-synthesis",
+    "default_enabled": false,
+    "new_fallback": "When a valid audit has one item, extract both states only from unique user-authored sentences with the same simple unit and action; require role context when named; reject conflicting start/current source counts; use cumulative snapshots and validate the rewritten answer.",
+    "existing_two-item_audit_path": "Unchanged"
+  },
+  "frozen_stage269_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 425,
+    "candidate_correct": 426,
+    "paired_outcomes": {
+      "both_correct": 425,
+      "both_wrong": 74,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "031748ae",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "baseline_answer": "5 engineers",
+        "candidate_answer": "At the start: 4 engineers; now: 5 engineers.",
+        "start_value": 4,
+        "current_value": 5,
+        "source_memory_indices": [
+          1,
+          8
+        ],
+        "citation_validation": "PASS",
+        "count_audit_validation": "PASS"
+      }
+    ],
+    "judge_seed_accepted": true,
+    "decision": "One saved-answer error changed from FAIL to PASS with no replay regression."
+  },
+  "full_candidate": {
+    "correct": 432,
+    "total": 500,
+    "accuracy": 0.864,
+    "target_correct": 485,
+    "shortfall": 53,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {
+        "correct": 73,
+        "total": 78
+      },
+      "multi-session": {
+        "correct": 103,
+        "total": 133
+      },
+      "single-session-assistant": {
+        "correct": 51,
+        "total": 56
+      },
+      "single-session-preference": {
+        "correct": 27,
+        "total": 30
+      },
+      "single-session-user": {
+        "correct": 67,
+        "total": 70
+      },
+      "temporal-reasoning": {
+        "correct": 111,
+        "total": 133
+      }
+    },
+    "resolver_status_counts": {
+      "multi_clause": {
+        "not_applicable": 499,
+        "revised": 1,
+        "revised_from_user_sources": 0
+      },
+      "property_offer": {
+        "not_applicable": 499,
+        "excluded_unique_offer_target": 1
+      }
+    },
+    "target_rows": {
+      "031748ae": {
+        "stage268_judgment": "PASS",
+        "stage270_judgment": "PASS",
+        "full_run_source_fallback_status": "not_triggered; answerer supplied both count items"
+      },
+      "gpt4_7fce9456": {
+        "stage268_judgment": "FAIL",
+        "stage270_judgment": "PASS",
+        "property_offer_resolver_status": "excluded_unique_offer_target"
+      }
+    },
+    "paired_against_stage268_full": {
+      "baseline_correct": 440,
+      "candidate_correct": 432,
+      "accuracy_delta_percentage_points": -1.6,
+      "paired_outcomes": {
+        "both_correct": 412,
+        "both_wrong": 40,
+        "candidate_only_correct": 20,
+        "baseline_only_correct": 28
+      },
+      "answer_text_changed_rows": 276
+    },
+    "paired_against_stage269_full": {
+      "baseline_correct": 425,
+      "candidate_correct": 432,
+      "accuracy_delta_percentage_points": 1.4,
+      "paired_outcomes": {
+        "both_correct": 405,
+        "both_wrong": 48,
+        "candidate_only_correct": 27,
+        "baseline_only_correct": 20
+      },
+      "answer_text_changed_rows": 247
+    },
+    "invalid_answer_audits": {
+      "stage268": 23,
+      "candidate": 29
+    }
+  },
+  "current_best_observed_full_score": {
+    "stage": 268,
+    "correct": 440,
+    "total": 500,
+    "accuracy": 0.88,
+    "shortfall": 45
+  },
+  "retrieval_equivalence": {
+    "top_20_order_matches_stage268": 500,
+    "top_200_available_lists_match_stage268": 500,
+    "result_list_lengths_match": 500,
+    "available_result_counts": {
+      "200": 495,
+      "199": 2,
+      "198": 2,
+      "194": 1
+    }
+  },
+  "artifacts": {
+    "frozen_answer_replay": "/Volumes/Net/civilization-stage270-multiclause-user-source-recovery-20261028/frozen-answer-replay.json",
+    "full_unified_result": {
+      "path": "/Volumes/Net/civilization-stage270-multiclause-source-count-20261028/candidate/longmemeval_results_20261028_170434.json",
+      "sha256": "4c967ebfe7a03896dd82b22c7cefd69393a89eb7f04ba6e87d2c3061136fa717",
+      "size_bytes": 244378783
+    }
+  },
+  "verification": {
+    "adapter_tests": 182,
+    "subtests": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "decision": "Keep the source-backed fallback opt-in. Frozen replay supports one correction with no regression. The full run scored 432/500, below Stage268's 440/500; 276 answer texts changed, so the +7 versus Stage269 is not attributed to this resolver. In the full run the answerer supplied both count items for the target row, so the new fallback itself was exercised by the frozen replay, not the fresh answer generation.",
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "limitations": "The best observed full Top-20 score remains 440/500, 45 answers short of 485/500. The 100% memory-precision target remains unmeasured."
+}
