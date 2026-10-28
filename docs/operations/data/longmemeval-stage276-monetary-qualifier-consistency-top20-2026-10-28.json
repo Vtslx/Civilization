@@ -1,0 +1,120 @@
+{
+  "stage": "Stage276",
+  "date": "2026-10-28",
+  "experiment": "Remove unsupported lower-bound qualifiers from exact monetary totals",
+  "adapter_repo": "memory-benchmarks",
+  "adapter_branch": "codex/relative-weekday-music-entity-resolution",
+  "adapter_commit": "a834e4f fix: normalize unsupported monetary total qualifiers",
+  "plan_commit": "07ae750 docs: plan exact monetary total qualifier fix",
+  "feature": {
+    "existing_flag": "--monetary-total-answer-consistency",
+    "behavior": "Only normalize a lower-bound total when every selected item has an exact user-authored amount citation in the same currency, selected values sum to count_value, and the candidate passes the shared validator.",
+    "lower_bound_only_sources": "leave unchanged",
+    "persistent_memory_writes": 0
+  },
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation rerun with Top-20 input",
+  "retrieval_equivalence": {
+    "top_20_order_matches_stage268": 500,
+    "top_200_order_matches_stage268": 500
+  },
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "OpenAI-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "isolated_saved_answer_replay": {
+    "source_run": "Stage275 combined-resolver full candidate",
+    "source_correct": 440,
+    "candidate_correct": 441,
+    "total": 500,
+    "rows_changed": 1,
+    "other_saved_judgments_reused": 499,
+    "question_id": "d851d5ba",
+    "baseline_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "baseline_answer": "More than $3,750",
+    "candidate_answer": "$3,750 total.",
+    "count_value": 3750,
+    "exact_user_cited_item_sum": 3750,
+    "citation_validation_passed": true,
+    "judge_seed_accepted": true,
+    "is_fresh_generation": false
+  },
+  "full_candidate": {
+    "run_id": "stage276-monetary-qualifier",
+    "question_count": 500,
+    "correct": 432,
+    "accuracy": 0.864,
+    "target_correct": 485,
+    "shortfall": 53,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 70, "total": 78},
+      "multi-session": {"correct": 106, "total": 133},
+      "single-session-assistant": {"correct": 50, "total": 56},
+      "single-session-preference": {"correct": 24, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 114, "total": 133}
+    },
+    "paired_against_stage268": {
+      "baseline_correct": 440,
+      "candidate_correct": 432,
+      "both_correct": 410,
+      "both_wrong": 38,
+      "candidate_only_correct": 22,
+      "baseline_only_correct": 30,
+      "answer_text_changed_rows": 266,
+      "net_delta": -8
+    },
+    "paired_against_stage275": {
+      "baseline_correct": 440,
+      "candidate_correct": 432,
+      "both_correct": 408,
+      "both_wrong": 36,
+      "candidate_only_correct": 24,
+      "baseline_only_correct": 32,
+      "net_delta": -8
+    },
+    "invalid_answer_audit_rows": {
+      "stage268": 23,
+      "candidate": 20
+    },
+    "api_error_marked_rows": 0,
+    "monetary_resolver_status_counts": {
+      "not_applicable": 488,
+      "already_consistent": 6,
+      "no_explicit_leading_total": 3,
+      "removed_unsupported_lower_bound_qualifier": 1,
+      "unverified_item_amount": 2
+    },
+    "target_row": {
+      "question_id": "d851d5ba",
+      "judgment": "PASS",
+      "answer": "$3,750 total.",
+      "resolver_status": "removed_unsupported_lower_bound_qualifier",
+      "validation_errors": []
+    },
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage276-monetary-qualifier-20261028/candidate/longmemeval_results_20261028_212238.json",
+      "size_bytes": 244707066,
+      "sha256": "8b62f9cd968b211da3c7ef60094398f382581cf80af2ca7af586204064a1e812"
+    }
+  },
+  "verification": {
+    "adapter_tests_passed": 206,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "all_500_rows_completed": true
+  },
+  "decision": "Keep the exact-citation monetary qualifier correction under the existing opt-in flag. It corrected one saved-answer row and passed the live judge, but the full 500-answer run scored 432/500, eight below Stage275 and Stage268. The full-run decline is not attributed to this single-row change; Stage268 remains the best verified fresh full score at 440/500.",
+  "current_best_verified_fresh_full_score": 440,
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "offsite_restore_verified": false,
+  "limitations": "The 485/500 gate remains 45 answers above the best full result. The 100% memory-precision objective and live offsite disaster-recovery restore remain unverified."
+}
