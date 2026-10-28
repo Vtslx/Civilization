@@ -542,3 +542,15 @@ A separate one-row regeneration did not pass: it generated two cookie events at 
 Both seeds were accepted. Adapter commit: `975d9d5 fix: exclude exact lower-bound events from relative counts`; verification passed 293 tests and 25 subtests, compileall, and diff checks. Full result SHA-256: `1db8c2bbc091e49bc34f1667287cc17f58ad47f542f52dfe8f81d24c15c3bf9b`; saved-answer replay SHA-256: `da5ed6503efaec8dc3c8fde64f5feb8b4a9299ecd97ba3b053700c03c04a3fda`. See [longmemeval-stage295-relative-event-count-boundary-top20-2026-10-29.json](data/longmemeval-stage295-relative-event-count-boundary-top20-2026-10-29.json).
 
 Keep the resolver opt-in. Stage295 does not improve the best full score; Stage291 remains at 452/500, 33 below 485. Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage295 does not exercise Stage166; the stochastic reservation prototype still has no provider-generation, durable-memory, or accuracy A/B evidence.
+
+## Stage296: selective four-type LLM reranker (2026-10-29)
+
+Stage296 re-evaluated the existing opt-in LLM reranker for `multi-session`, `temporal-reasoning`, `single-session-preference`, and `knowledge-update` using the same frozen Stage268 Top-200 candidate sets and Stage295 resolver configuration. It freshly generated and judged all 500 answers; no adapter code changed.
+
+The candidate scored **448/500 (89.6%)**, below Stage291's 452/500 best and Stage295's 449/500. Against Stage295, paired outcomes were 23 candidate-only and 24 baseline-only correct (425 both-correct, 28 both-wrong; net -1) across 254 changed answers. Against Stage291, 22 candidate-only and 26 baseline-only correct (426 both-correct, 26 both-wrong; net -4) across 261 changed answers. The reranker selected 20 memories from the frozen 200 candidates on 374 rows; 313/374 selected Top-20 orders changed from the original rank order. Candidate ID sets matched Stage268 in all 500 rows; the final stored search-result order matched the original in 126/500. Seeds were accepted, but this single run does not measure reranker repeatability. The candidate had 26 invalid answer audits and zero API-error rows.
+
+The reranked answer for `88432d0a` passed, but the boundary resolver did not trigger on that row. Per type: knowledge update 73/78, multi-session 111/133, assistant 53/56, preference 29/30, user facts 66/70, temporal reasoning 116/133. Keep reranking opt-in; this candidate does not improve the full score. Stage291 remains best at 452/500, 33 below 485.
+
+Both seeds were accepted. No adapter code changed; the run used adapter commit `975d9d5`. Full result SHA-256: `74bd176c70b8253463d90b7f184333ca57846007c821764f2f55a7d041728066`. See [longmemeval-stage296-selective-reranker-top20-2026-10-29.json](data/longmemeval-stage296-selective-reranker-top20-2026-10-29.json).
+
+Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage296 does not exercise Stage166; the stochastic reservation prototype still has no provider-generation, durable-memory, or accuracy A/B evidence.

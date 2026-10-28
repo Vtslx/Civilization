@@ -423,3 +423,15 @@ Stage295 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`975d9d5 fix: exclude exact lower-bound events from relative counts`；293 项测试、25 个子测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `1db8c2bbc091e49bc34f1667287cc17f58ad47f542f52dfe8f81d24c15c3bf9b`；保存答案回放 SHA-256 为 `da5ed6503efaec8dc3cfde64f5feb8b4a9299ecd97ba3b053700c03c04a3fda`。详见[Stage295 成绩卡](data/longmemeval-stage295-relative-event-count-boundary-top20-2026-10-29.json)。
 
 保留为 opt-in。Stage295 未提升最佳全量成绩；Stage291 仍为 452/500，距离 485 差 33。记忆精准度尚未测量，异地灾备恢复未验证。Stage295 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage296：选择性四类 LLM 重排器（2026-10-29）
+
+Stage296 使用 Stage268 冻结的 Top-200 候选集合和 Stage295 解析器配置，重新评估现有 opt-in LLM reranker，仅覆盖 `multi-session`、`temporal-reasoning`、`single-session-preference` 和 `knowledge-update`。全部 500 题均重新生成并裁判；没有修改适配器代码。
+
+候选得 **448/500（89.6%）**，低于 Stage291 的最佳 452/500，也低于 Stage295 的 449/500。与 Stage295 配对：候选独赢 23、基线独赢 24、425 题两者都对、28 题两者都错，净差 −1；254 个答案文本变化。与 Stage291 配对：候选独赢 22、基线独赢 26、426 题两者都对、26 题两者都错，净差 −4；261 个答案文本变化。reranker 在 374 题上从冻结的 200 个候选中选择 20 条，其中 313/374 的 Top-20 顺序与原排名不同。候选 ID 集合 500/500 与 Stage268 相同；最终保存的检索顺序 126/500 与原始列表一致。答题器和裁判均接受 seed，但单次运行不能测出 reranker 跨运行的稳定性。无效答案审计 26 条，API 错误 0。
+
+`88432d0a` 的 rerank 候选判 PASS，但边界 resolver 在该行未触发。分题型：知识更新 73/78，多会话 111/133，助手事实 53/56，偏好 29/30，用户事实 66/70，时间推理 116/133。保留 reranker 为 opt-in；本候选未提升全量成绩。Stage291 仍最佳 452/500，距离 485 差 33。
+
+答题器和裁判均接受 seed 42。没有适配器代码变更；本实验使用适配器提交 `975d9d5`。完整结果 SHA-256 为 `74bd176c70b8253463d90b7f184333ca57846007c821764f2f55a7d041728066`。详见[Stage296 成绩卡](data/longmemeval-stage296-selective-reranker-top20-2026-10-29.json)。
+
+记忆精准度尚未测量，异地灾备恢复未验证。Stage296 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。

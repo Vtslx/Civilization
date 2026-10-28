@@ -1,0 +1,119 @@
+{
+  "stage": 296,
+  "date": "2026-10-29",
+  "experiment": "selective-four-type-llm-reranker",
+  "feature": "Re-evaluate the existing default-off LLM reranker on Stage268 frozen Top-200 candidates for multi-session, temporal-reasoning, single-session-preference, and knowledge-update questions.",
+  "adapter_commit": "975d9d5 fix: exclude exact lower-bound events from relative counts",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_code_changed": false,
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "26b56200154650138b6c140d150811c4a907f90e4220768d10d2babb04369ca5",
+  "retrieval_source": "Stage268 frozen Top-200 candidates; the reranker selected up to 20 memories on four question types.",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_and_selection": {
+    "top200_candidate_id_sets_equal": 500,
+    "llm_reranker_enabled_rows": 374,
+    "selection_count": 20,
+    "rerank_audit_status_selected": 374,
+    "selected_top20_order_unchanged_rows": 61,
+    "selected_top20_order_changed_rows": 313,
+    "final_search_result_lists_equal_in_order": 126
+  },
+  "run_id": "89f8f93d",
+  "top_k": 200,
+  "cutoff": 20,
+  "reranker_question_types": [
+    "multi-session",
+    "temporal-reasoning",
+    "single-session-preference",
+    "knowledge-update"
+  ],
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 448,
+    "accuracy": 0.896,
+    "target_correct": 485,
+    "shortfall": 37,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 66, "total": 70},
+      "multi-session": {"correct": 111, "total": 133},
+      "single-session-preference": {"correct": 29, "total": 30},
+      "temporal-reasoning": {"correct": 116, "total": 133},
+      "knowledge-update": {"correct": 73, "total": 78},
+      "single-session-assistant": {"correct": 53, "total": 56}
+    },
+    "paired_against_stage291": {
+      "baseline_correct": 452,
+      "candidate_correct": 448,
+      "both_correct": 426,
+      "both_wrong": 26,
+      "candidate_only_correct": 22,
+      "baseline_only_correct": 26,
+      "answer_text_changed_rows": 261,
+      "top200_candidate_id_sets_equal": 500,
+      "final_retrieval_order_equal": 126,
+      "net_delta": -4
+    },
+    "paired_against_stage294": {
+      "baseline_correct": 448,
+      "candidate_correct": 448,
+      "both_correct": 431,
+      "both_wrong": 35,
+      "candidate_only_correct": 17,
+      "baseline_only_correct": 17,
+      "answer_text_changed_rows": 261,
+      "top200_candidate_id_sets_equal": 500,
+      "final_retrieval_order_equal": 126,
+      "net_delta": 0
+    },
+    "paired_against_stage295": {
+      "baseline_correct": 449,
+      "candidate_correct": 448,
+      "both_correct": 425,
+      "both_wrong": 28,
+      "candidate_only_correct": 23,
+      "baseline_only_correct": 24,
+      "answer_text_changed_rows": 254,
+      "top200_candidate_id_sets_equal": 500,
+      "final_retrieval_order_equal": 126,
+      "net_delta": -1
+    },
+    "invalid_answer_audit_rows": 26,
+    "stage295_invalid_answer_audit_rows": 21,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "88432d0a",
+    "stage295_judgment": "PASS",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "4 times. The evidence identifies four separate baking occasions within the two weeks before May 30, 2023: the apple pie, the chocolate cake for your sister’s birthday, the whole wheat baguette, and a batch of cookies. The cookies mentioned on May 24 and May 28 are the same batch, baked last Thursday (May 18), so they count once.",
+    "reranker_status": "selected",
+    "boundary_resolver_status": "no_open_lower_boundary_events"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage296-selective-reranker-20261029/candidate/full-run/longmemeval_results_20261029_070416.json",
+    "size_bytes": 246642121,
+    "sha256": "74bd176c70b8253463d90b7f184333ca57846007c821764f2f55a7d041728066"
+  },
+  "best_observed_full_score": {
+    "stage": 291,
+    "correct": 452,
+    "total": 500,
+    "accuracy": 0.904,
+    "gate": 485,
+    "shortfall": 33
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep reranking opt-in. The four-type reranker scored 448/500, below Stage291's 452 and Stage295's 449. It selected 20 memories from the frozen 200-candidate pool on 374 rows, changed the Top-20 order on 313 of those rows, and did not improve the paired aggregate. Seeds were accepted, but one run does not measure repeat-run selection stability.",
+  "limitations": "Stage296 remains 37 answers below the 485/500 gate; Stage291 remains best at 452/500. This run has no matched repeated reranker trial, so selection stability across runs is unmeasured. Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage296 does not exercise Stage166; the stochastic reservation prototype still has no provider-generation, durable-memory, or accuracy A/B evidence."
+}
