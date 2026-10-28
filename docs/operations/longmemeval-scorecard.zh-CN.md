@@ -248,3 +248,16 @@ Stage281 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 道答�
 [longmemeval-stage281-undergrad-poster-venue-guard-top20-2026-10-29.json](data/longmemeval-stage281-undergrad-poster-venue-guard-top20-2026-10-29.json)。
 
 100% 记忆精准度仍未测量，异地灾备恢复演练仍未验证。Stage281 没有测试 Stage166 随机 token 原型，因此不把本轮准确率变化归因于该机制。
+
+## Stage282：缺年份事件日期间隔解析（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--yearless-event-date-interval-resolution`。对于两事件时长题，只有当月/日来自用户原话的精确引用、两个观察日期都与题目日期一致，且最近一次的过去日期距锚点不超过 62 天时才计算。过期、未来、歧义、assistant 来源或锚点不一致的日期不触发；解析器不采用答题器猜出的年份。
+
+在 Stage281 冻结的 133 道时间题答案上复放，解析器只改写 `08f4fc43`：从“395 days”改为“30 days”，引用校验通过，真实裁判判 PASS。其余保存判定复用 132 题，无正确题回退；冻结时间子集从 112/133 提升到 113/133。Stage282 全量中该解析器只触发 1 次，目标题状态为 `yearless_source_event_interval_resolved` 并通过裁判。
+
+Stage282 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **442/500（88.4%）**，与 Stage281 持平，距 485/500 门槛仍差 43 题。与 Stage281 配对：18 题仅候选答对、18 题仅 Stage281 答对、424 题两者都对、40 题两者都错，净差 0；253 个答案文本变化。Top-20、Top-200 和完整检索对象 500/500 完全相同。功能全量启用 500 题、实际触发 1 次；候选无效答案审计 25 条（Stage281 为 24），API 错误标记 0。分题型：知识更新 71/78，多会话 114/133，助手事实 52/56，偏好 25/30，用户事实 68/70，时间推理 112/133。
+
+答题器与裁判均接受 seed 42。代码提交 `13a6971 feat: resolve recent yearless event dates from citations`；236 项测试、compileall 与 diff 检查通过。完整结果 SHA-256 为 `a099d68f5c32126287a611170194aefc2df8aec3fd480e7e3492caa53892b7cc`；单题答题与裁判产物 SHA-256 为 `e2d932f1f7b746105b87afb633fe597238aca033d9f577dc92723cd3902aab91`。成绩卡见
+[longmemeval-stage282-yearless-event-date-interval-top20-2026-10-29.json](data/longmemeval-stage282-yearless-event-date-interval-top20-2026-10-29.json)。
+
+该 resolver 保持 opt-in：它在冻结子集上无回退地修正一题，但 fresh 全量成绩净变化为 0。当前最佳全量成绩仍为 442/500（88.4%）；100% 记忆精准度尚未验证，异地灾备恢复演练仍未完成。Stage282 未测试 Stage166 随机 token 原型。
