@@ -337,3 +337,15 @@ Stage288 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`83fac68 fix: scope assistant memory evidence to its question type`；263 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `b8ae92dc9cfee752cc6e4dac194b47e69992775b7d3fd7b4a1ec2202ca266ff9`；56 题试验 SHA-256 为 `12ecbdddb18871996ec0ebf9397e26c9f777bf751305bf48edb7b0b620128f91`。详见[Stage288 成绩卡](data/longmemeval-stage288-assistant-authored-evidence-top20-2026-10-29.json)。
 
 保留为 opt-in。Stage288 距离 485/500 仍差 34 题；记忆精准度尚未测量，异地灾备恢复演练未验证。Stage288 未运行 Stage166；该随机预留协议仍无 provider 解码、持久化记忆或 LongMemEval 准确率 A/B 证据。
+
+## Stage289：按周几偏移与最新起床时间计算（2026-10-29）
+
+适配器新增默认关闭的 `--relative-weekday-wake-time-resolution`。对于询问指定星期几起床时间的 temporal 题，只有同一观察日期上的用户原话给出周几偏移和较晚的一般起床时间，且源会话/消息对元数据能证明先后顺序时，才计算结果。冲突、过期、助手来源或信息不完整时不触发。
+
+在 Stage288 冻结题 `gpt4_2c50253f` 上，较早的用户原话说周二和周四提前 15 分钟起床；同日后续用户原话把一般起床时间更新为 7:00 AM。解析器将 8:15 AM/FAIL 改为 6:45 AM/PASS，并引用两条精确用户原话。引用校验通过，真实裁判接受 seed 42。
+
+Stage289 在相同 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **440/500（88.0%）**。与 Stage288 的 451/500 配对：13 题仅候选答对、24 题仅 Stage288 答对、427 题两者都对、36 题两者都错，净差 −11；254 个答案文本变化。与 Stage287 配对：19 题仅候选答对、26 题仅基线答对、421 题两者都对、34 题两者都错，净差 −7；270 个答案文本变化。检索对象 500/500 一致。全量启用开关，但仅触发目标题一次；132 道 temporal 题不适用，367 道非 temporal 题在范围外。候选无效审计 27 条（Stage288 为 23），API 错误 0。分题型：知识更新 73/78，多会话 107/133，助手事实 55/56，偏好 25/30，用户事实 66/70，时间推理 114/133。全量输出波动较大，不能把总分下降归因于该解析器。
+
+答题器和裁判均接受 seed 42。适配器提交：`4771db6 fix: resolve ordered weekday wake-time updates`；267 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `3b3e89e471066f868a8a13cee5090f1497cd07df74c5315bdc5663f257e06f98`；冻结目标复放 SHA-256 为 `034559b1d4e38b319958f7293139915c10718408a2dc15aefa49ca2042e518af`。详见[Stage289 成绩卡](data/longmemeval-stage289-relative-weekday-wake-time-top20-2026-10-29.json)。
+
+保留为 opt-in：冻结目标修正通过，但 Stage289 未提升全量成绩。当前最佳仍是 Stage288 的 451/500，距 485/500 差 34。记忆精准度尚未测量，异地灾备恢复未验证。Stage289 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
