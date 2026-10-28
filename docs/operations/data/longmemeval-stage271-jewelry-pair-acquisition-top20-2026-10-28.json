@@ -20,12 +20,12 @@
     "default_enabled": false,
     "requirements": [
       "A count question asks for pieces/items of jewelry acquired",
-      "The validated audit contains an incremental pair-of-earrings item with quantity two",
-      "An exact user-authored citation contains one acquired pair and no multiple-pair statement",
+      "A validated incremental item with quantity two identifies earrings",
+      "An exact user-authored sentence establishes acquisition of one pair and supports any distinctive item descriptor",
       "The question does not ask for individual earrings",
       "The adjusted count and citations pass the full answer validator"
     ],
-    "behavior": "Normalize the pair quantity from two individual earrings to one acquired jewelry item, preserve other items/citations, and produce a concise corrected count"
+    "behavior": "Match the user source even when the audit calls the item two earrings rather than a pair; append the exact supporting sentence to item and answer citations, normalize its acquired quantity to one, and leave other items unchanged. The related property-offer resolver now leaves target-only audits untouched."
   },
   "frozen_stage270_saved_answer_replay": {
     "question_count": 500,
@@ -53,27 +53,28 @@
     "decision": "One saved-answer error changed from FAIL to PASS with no replay regression."
   },
   "full_candidate": {
-    "correct": 424,
+    "run_id": "stage271-jewelry-pair-acquisition-final",
+    "correct": 425,
     "total": 500,
-    "accuracy": 0.848,
+    "accuracy": 0.85,
     "target_correct": 485,
-    "shortfall": 61,
+    "shortfall": 60,
     "target_met": false,
     "question_types": {
       "knowledge-update": {
-        "correct": 71,
+        "correct": 68,
         "total": 78
       },
       "multi-session": {
-        "correct": 100,
+        "correct": 106,
         "total": 133
       },
       "single-session-assistant": {
-        "correct": 50,
+        "correct": 48,
         "total": 56
       },
       "single-session-preference": {
-        "correct": 26,
+        "correct": 27,
         "total": 30
       },
       "single-session-user": {
@@ -81,7 +82,7 @@
         "total": 70
       },
       "temporal-reasoning": {
-        "correct": 109,
+        "correct": 108,
         "total": 133
       }
     },
@@ -101,49 +102,33 @@
     },
     "target_rows": {
       "9d25d4e0": {
-        "stage270_judgment": "FAIL",
-        "stage271_judgment": "PASS",
-        "answer": "3",
-        "jewelry_resolver_status": "no_uncorrected_pair_items",
-        "note": "The fresh answerer already emitted the gold count, so the jewelry post-processor did not trigger."
+        "stage268_judgment": "PASS",
+        "full_generation_judgment": "FAIL",
+        "answer": "4 pieces",
+        "jewelry_resolver_status": "no_uncorrected_pair_items"
       },
       "gpt4_7fce9456": {
-        "stage270_judgment": "PASS",
-        "stage271_judgment": "FAIL",
-        "property_resolver_status": "excluded_unique_offer_target",
-        "answer": "You viewed 0 other properties before making an offer on the townhouse in the Brookside neighborhood. Including the target property itself, that is 1 properties viewed by the time of the offer.",
-        "audit_validated": true,
-        "known_issue": "The property resolver rewrote an incomplete one-item target-only audit as zero other properties. A follow-up guard is needed."
+        "stage268_judgment": "FAIL",
+        "full_generation_judgment": "PASS",
+        "answer": "4 other properties; five including the target",
+        "property_resolver_status": "excluded_unique_offer_target"
       }
     },
     "paired_against_stage268_full": {
       "baseline_correct": 440,
-      "candidate_correct": 424,
-      "accuracy_delta_percentage_points": -3.2,
+      "candidate_correct": 425,
+      "accuracy_delta_percentage_points": -3.0,
       "paired_outcomes": {
-        "both_correct": 407,
-        "both_wrong": 43,
-        "candidate_only_correct": 17,
-        "baseline_only_correct": 33
-      },
-      "answer_text_changed_rows": 267
-    },
-    "paired_against_stage270_full": {
-      "baseline_correct": 432,
-      "candidate_correct": 424,
-      "accuracy_delta_percentage_points": -1.6,
-      "paired_outcomes": {
-        "both_correct": 404,
-        "both_wrong": 48,
+        "both_correct": 405,
+        "both_wrong": 40,
         "candidate_only_correct": 20,
-        "baseline_only_correct": 28
+        "baseline_only_correct": 35
       },
-      "answer_text_changed_rows": 240
+      "answer_text_changed_rows": 280
     },
     "invalid_answer_audits": {
       "stage268": 23,
-      "stage270": 29,
-      "candidate": 23
+      "candidate": 29
     }
   },
   "retrieval_equivalence": {
@@ -170,16 +155,93 @@
       "path": "/Volumes/Net/civilization-stage271-jewelry-pair-acquisition-20261028/candidate/longmemeval_results_20261028_173655.json",
       "sha256": "7fa8028cd61c66deb1bcfdcceb90a72a03f3907f39ce34da9c538df8ca6dbf08",
       "size_bytes": 244482984
+    },
+    "superseded_diagnostic_full_result": {
+      "path": "/Volumes/Net/civilization-stage271-jewelry-pair-acquisition-20261028/candidate/longmemeval_results_20261028_173655.json",
+      "sha256": "7fa8028cd61c66deb1bcfdcceb90a72a03f3907f39ce34da9c538df8ca6dbf08",
+      "size_bytes": 244482984
+    },
+    "final_full_unified_result": {
+      "path": "/Volumes/Net/civilization-stage271-jewelry-pair-acquisition-20261028/candidate-final/longmemeval_results_20261028_181015.json",
+      "sha256": "56755685aabc143a306394427253190912de1d7383d8b2739218331e737e35dc",
+      "size_bytes": 244491790
+    },
+    "final_postprocessor_replay": {
+      "path": "/Volumes/Net/civilization-stage271-jewelry-pair-acquisition-20261028/postprocessor-replay-after-final-code.json",
+      "sha256": "7c7b2facad25dfafaeecbe3859340fc580f0bbf6180572fd7b3d08daf2357301",
+      "size_bytes": 1952,
+      "resolver_source_sha256": "371cba816db27486f0ecb9f7370efd7729f02463b9c1966f470cabf8f9bea757"
     }
   },
   "verification": {
-    "adapter_tests": 187,
+    "adapter_tests": 190,
     "subtests": 25,
     "compileall": "PASS",
     "git_diff_check": "PASS"
   },
-  "decision": "Keep the narrow jewelry correction opt-in: frozen replay corrected one answer, while fresh answer generation already answered that row correctly. The full candidate score is below Stage268 and 267 answer texts changed, so the aggregate delta is not attributed to the jewelry resolver. Follow up the property resolver's target-only audit false positive before enabling related guards together.",
+  "decision": "Keep the jewelry normalizer opt-in. The final postprocessor replay over all 500 saved Stage271 answers corrected one FAIL to PASS with no regression; the source quote explicitly identifies the acquired pair even though the audit described two emerald earrings. Fresh answer generation had already answered that row incorrectly and the resolver version in the full run had not yet matched that item description, so report the replay as a separate result. The final full generation remains below Stage268 best. The target-only property guard false positive from the superseded run is now fixed and covered by tests.",
   "memory_precision_measured": false,
   "persistent_memory_writes": 0,
-  "limitations": "The best observed full Top-20 score remains 440/500, 45 answers short of 485/500. The 100% memory-precision target remains unmeasured."
+  "limitations": "Best observed full Top-20 score remains Stage268 at 440/500, 45 short of 485. Stage271 final generation scored 425/500; its deterministic saved-answer postprocessor replay scored 426/500. The 100% memory-precision target remains unmeasured.",
+  "adapter_followup_commits": [
+    "acd573e fix: match jewelry pairs to user source quotes",
+    "1949174 fix: reject incomplete property offer counts"
+  ],
+  "superseded_diagnostic_run": {
+    "run_id": "stage271-jewelry-pair-acquisition",
+    "correct": 424,
+    "total": 500,
+    "target_property_resolver_status": "excluded_unique_offer_target",
+    "note": "Superseded after the target-only offer-count guard was added; the guard had incorrectly rendered zero other properties from an incomplete one-item audit."
+  },
+  "saved_answer_postprocessor_replay": {
+    "source_run": "Stage271 final full generation with frozen Stage268 Top-20 retrieval",
+    "question_count": 500,
+    "baseline_correct": 425,
+    "candidate_correct": 426,
+    "paired_outcomes": {
+      "both_correct": 425,
+      "both_wrong": 74,
+      "candidate_only_correct": 1
+    },
+    "changed_rows": [
+      {
+        "question_id": "9d25d4e0",
+        "question_type": "multi-session",
+        "question": "How many pieces of jewelry did I acquire in the last two months?",
+        "ground_truth_answer": "3",
+        "question_date": "2023/05/30 (Tue) 15:43",
+        "baseline_judgment": "FAIL",
+        "baseline_correct": false,
+        "candidate_judgment": "PASS",
+        "candidate_correct": true,
+        "baseline_answer": "4 pieces",
+        "candidate_answer": "3 pieces of jewelry.",
+        "changed": true,
+        "resolver_audit": {
+          "status": "normalized_acquired_earring_pairs",
+          "original_count": 4.0,
+          "corrected_count": 3.0,
+          "adjusted_items": [
+            {
+              "item": "Two emerald earrings",
+              "original_quantity": 2.0,
+              "corrected_quantity": 1.0,
+              "source_memory_indices": [
+                1
+              ]
+            }
+          ],
+          "validation_errors": []
+        },
+        "validation_errors": [],
+        "judge_output_excerpt": "<judge_thinking>The response gives the same number of jewelry pieces as the correct answer: 3.</judge_thinking>\nyes"
+      }
+    ],
+    "judge_seed": 42,
+    "judge_seed_accepted": true,
+    "all_changed_answers_validated": true,
+    "is_fresh_generation": false
+  },
+  "full_candidate_postprocessor_replay_correct": 426
 }
