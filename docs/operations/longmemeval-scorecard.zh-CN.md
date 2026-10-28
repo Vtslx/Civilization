@@ -199,4 +199,13 @@ Stage260 新增默认关闭的、来源日期约束相对时间实体答案 reso
 
 Stage261 将现有 opt-in 时间列表 resolver 扩展到 first/second/third 显式排序，并仅识别本轮观察到的 `yesterady` 拼写转置。Stage260 冻结时间题回放只修正 1 道错题，通过引用验证和裁判；该子集从 110/133 提升到 111/133，零回退。fresh 500 题候选得分 432/500，与 Stage260 持平，低于 Stage243 的 438/500；Top-20/Top-200 检索顺序 500/500 相同。该规则继续保持 opt-in，不宣称带来全量成绩提升。详情见[Stage261 成绩卡](data/longmemeval-stage261-ordinal-temporal-event-order-top20-2026-10-27.json)。
 
-发布门仍为 **485/500（97%）**。当前最佳已验证全量成绩仍为 **438/500（87.6%）**，还差 47 题；100% 记忆精准度尚未测量。
+## Stage277 研究海报会场跨会话解析（2026-10-28）
+
+benchmark adapter 新增默认关闭的 `--research-poster-conference-venue-resolution`：只有用户问题同时询问 thesis research poster 的大学/地点，且用户原话分别把海报陈述与唯一大学会场连到同一个 “first research conference” 时，才合并两条引用并校验答案。助手发言、多个候选大学、缺少共同事件名或本科课程海报题均不触发。
+
+在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 道 Top-20 答案，得到 **441/500（88.2%）**，较 Stage268 的 440/500 净增 1 题，离 485 题门槛还差 44 题。配对结果：26 题仅候选答对、25 题仅基线答对、415 题两者都对、34 题两者都错；258 个答案文本发生变化，因此不能把总体净增全部归因于单个解析器。Stage268 的 Top-20、Top-200 与完整检索结果对象在 500/500 题上保持一致；候选无效答案审计 19 条，基线为 23 条，API 错误标记为 0。
+
+目标题 `a96c20ee` 从 FAIL 变为 PASS，解析器使用两条用户原话得出 Harvard University，引用校验通过。相邻本科课程题 `a96c20ee_abs` 由答题器自行弃答并通过裁判，解析器状态为 `not_applicable`，不把第一研究会议场地套用到不同项目。保留该功能为 opt-in。benchmark adapter 提交为 `ca09b31 feat: resolve research poster venue from linked sources`；210 项测试、25 个子测试、compileall 和 diff 检查通过。
+
+本轮最佳已验证全量成绩更新为 **441/500（88.2%）**，仍低于 **485/500（97%）**；100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。成绩卡见
+[longmemeval-stage277-research-poster-venue-top20-2026-10-28.json](data/longmemeval-stage277-research-poster-venue-top20-2026-10-28.json)。

@@ -328,4 +328,12 @@ Stage260 added a default-off source-backed relative-time entity resolver. A froz
 
 Stage261 extended the opt-in temporal list resolver to explicit ordinal rankings and one observed “yesterady” typo. Its frozen Stage260 temporal replay corrected one wrong answer, which passed citation validation and judge; the slice moved 110/133→111/133 with zero regressions. The fresh 500-question candidate scored 432/500, tied with Stage260 and below Stage243's 438/500; Top-20 and Top-200 order matched 500/500. Keep the rule opt-in and do not credit it with a full-score gain. Details: [Stage261 scorecard](data/longmemeval-stage261-ordinal-temporal-event-order-top20-2026-10-27.json).
 
-The release gate remains **485/500 (97%)**. The best verified full result remains **438/500 (87.6%)**, 47 answers short; 100% memory precision has not been measured.
+## Stage277: research poster conference venue resolution (2026-10-28)
+
+The benchmark adapter adds a default-off `--research-poster-conference-venue-resolution` resolver. It joins a user-authored thesis-poster statement to a university venue only when both cite the same uniquely named first research conference. Assistant-only venue claims, conflicting universities, missing event aliases, and undergraduate-course poster questions do not trigger it.
+
+Using Stage268's frozen Top-200 retrieval, a fresh 500-question Top-20 answer-and-judge run scored **441/500 (88.2%)**, one net answer above Stage268's 440/500 and 44 below the 485/500 gate. Paired outcomes were 26 candidate-only correct, 25 baseline-only correct, 415 correct in both, and 34 wrong in both. Because 258 answer texts changed, do not attribute the aggregate delta solely to this one-row resolver. The full Top-20, Top-200, and retrieval result objects matched Stage268 for 500/500 questions. Candidate invalid answer audits were 19 versus 23 in Stage268; no API-error markers were recorded.
+
+Target `a96c20ee` changed from FAIL to PASS as “Harvard University.” with both source citations validated. The related undergraduate-course question `a96c20ee_abs` was correctly answered by abstention; the resolver status was `not_applicable`, so that row is not credited to the resolver. Keep the option opt-in. The adapter commit is `ca09b31 feat: resolve research poster venue from linked sources`; verification passed 210 unittest tests, 25 subtests, compileall, diff checks, and all 500 rows.
+
+The best verified full result is now **441/500 (88.2%)**, still below **485/500 (97%)**. The separate 100% memory-precision target remains unmeasured, and a live offsite disaster-recovery restore remains unverified. See [longmemeval-stage277-research-poster-venue-top20-2026-10-28.json](data/longmemeval-stage277-research-poster-venue-top20-2026-10-28.json).
