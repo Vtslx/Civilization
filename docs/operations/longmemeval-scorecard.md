@@ -397,6 +397,18 @@ Answerer and judge accepted seed 42. Adapter commit: `c36974b feat: guard engine
 
 Keep the guard opt-in. The 100% memory-precision target remains unmeasured, and live offsite disaster-recovery restore remains unverified. Stage283 does not exercise the Stage166 stochastic-token prototype.
 
+## Stage285: latest user follower estimate resolution (2026-10-29)
+
+The adapter adds default-off `--latest-user-follower-count-estimate-resolution`. For a current follower-count question about a named platform, it may replace an older exact count only when a later user-authored update gives a unique approximate count for that same platform and source-session/pair metadata establishes the order. The answer keeps the estimate qualifier and cites both platform context and the newer estimate. Assistant-only, conflicting, ambiguous, or older estimates do not trigger.
+
+On frozen Stage283 row `a2f3aa27`, the answer changed from “1250 followers” to “About 1300 Instagram followers, based on your latest estimate.” The two user updates were ordered by source session (16→21) on the same observation date. Citation validation passed and the live judge returned PASS; the other 499 saved judgments were reused without regression.
+
+Stage285 freshly regenerated and judged all 500 answers over the Stage268 frozen Top-200 retrieval, scoring **442/500 (88.4%)**, four below Stage283's 446/500. Paired outcomes against Stage283 were 17 candidate-only correct, 21 Stage283-only correct, 425 correct in both, and 37 wrong in both (net -4) across 258 changed answer texts. Retrieval objects matched in 500/500. The resolver was enabled on all rows and applied once to `a2f3aa27`; candidate invalid answer audits were 25 (Stage283: 25), and API-error markers were zero. Per type: knowledge update 73/78, multi-session 111/133, assistant 51/56, preference 27/30, user facts 67/70, and temporal reasoning 113/133. The fresh full-score delta is not attributed to this one-row resolver.
+
+Answerer and judge accepted seed 42. Adapter commit: `ed65495 feat: prefer latest user follower estimate`; verification passed 250 tests, compileall, and diff checks. The full result SHA-256 is `8fcc16b022dcb313eaf972c1dee22fc121362066a230a0a3cf8520318d08d272`; the one-row judge artifact SHA-256 is `118c422661baea615f990cfa8792af68eed60218307dc56aef0f1d0ef9742d98`. See [longmemeval-stage285-latest-follower-estimate-top20-2026-10-29.json](data/longmemeval-stage285-latest-follower-estimate-top20-2026-10-29.json).
+
+Keep the resolver opt-in: it corrected one frozen answer without regression, but the fresh run did not improve the full score. Stage283 remains the best at **446/500 (89.2%)**, 39 below the 485/500 gate. Memory precision and live offsite disaster-recovery restore remain unverified. Stage285 does not exercise Stage166 stochastic-token reservation.
+
 ## Stage284: exclude planned doctor consultations from visit counts (2026-10-29)
 
 The adapter adds default-off `--doctor-visit-count-exclude-planned-consultations`. For “how many different doctors did I visit?” it removes an anonymous provider item only when its exact user citation asks what to ask during a consultation before a procedure and no cited user quote confirms that encounter occurred. It recomputes the count only when the remaining doctor items are distinct and have valid user-authored evidence.

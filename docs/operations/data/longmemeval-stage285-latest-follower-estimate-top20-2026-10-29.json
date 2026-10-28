@@ -1,0 +1,146 @@
+{
+  "stage": 285,
+  "date": "2026-10-29",
+  "experiment": "latest-user-follower-count-estimate-resolution",
+  "feature": "Default-off resolver uses a later same-platform user estimate over an older exact current follower count, while preserving the estimate qualifier.",
+  "plan_commit": "05f15c4 docs: plan latest follower estimate resolver",
+  "adapter_commit": "ed65495 feat: prefer latest user follower estimate",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 250,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "77347fc1d527895f5fa6785cee48a3515b9e5efae6ec56572b9e6b20a4f905c0",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage283; all 500 answerer and judge outputs freshly generated over Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage283": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage285-latest-follower-estimate",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 446,
+    "candidate_correct": 447,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 446,
+    "both_wrong": 53,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 499,
+    "citation_validation": "PASS",
+    "target_question_id": "a2f3aa27",
+    "candidate_judgment": "PASS"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 442,
+    "accuracy": 0.884,
+    "target_correct": 485,
+    "shortfall": 43,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {
+        "correct": 67,
+        "total": 70
+      },
+      "multi-session": {
+        "correct": 111,
+        "total": 133
+      },
+      "single-session-preference": {
+        "correct": 27,
+        "total": 30
+      },
+      "temporal-reasoning": {
+        "correct": 113,
+        "total": 133
+      },
+      "knowledge-update": {
+        "correct": 73,
+        "total": 78
+      },
+      "single-session-assistant": {
+        "correct": 51,
+        "total": 56
+      }
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 442,
+      "both_correct": 425,
+      "both_wrong": 37,
+      "candidate_only_correct": 17,
+      "baseline_only_correct": 21,
+      "answer_text_changed_rows": 258,
+      "retrieval_objects_equal": 500,
+      "net_delta": -4
+    },
+    "latest_user_follower_count_estimate_resolution_enabled_rows": 500,
+    "latest_user_follower_count_estimate_resolution_status_counts": {
+      "not_applicable": 499,
+      "updated_to_latest_user_estimate": 1
+    },
+    "latest_user_follower_count_estimate_resolution_applied_rows": [
+      "a2f3aa27"
+    ],
+    "invalid_answer_audit_rows": 25,
+    "stage283_invalid_answer_audit_rows": 25,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "a2f3aa27",
+    "question": "How many followers do I have on Instagram now?",
+    "stage283_judgment": "FAIL",
+    "stage283_answer": "1250 followers",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "About 1300 Instagram followers, based on your latest estimate.",
+    "resolver_status": "updated_to_latest_user_estimate",
+    "previous_count": 1250,
+    "estimated_count": 1300,
+    "source_memory_indices": [
+      3,
+      3
+    ],
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "a2f3aa27",
+    "correct": 1,
+    "total": 1,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage285-follower-estimate-20261029/candidate/latest-follower-estimate-target.json",
+    "result_size_bytes": 515346,
+    "result_sha256": "118c422661baea615f990cfa8792af68eed60218307dc56aef0f1d0ef9742d98"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage285-follower-estimate-20261029/candidate/full-run/longmemeval_results_20261029_023549.json",
+    "size_bytes": 245513263,
+    "sha256": "8fcc16b022dcb313eaf972c1dee22fc121362066a230a0a3cf8520318d08d272"
+  },
+  "best_observed_full_score": {
+    "stage": 283,
+    "correct": 446,
+    "total": 500,
+    "accuracy": 0.892,
+    "gate": 485,
+    "shortfall": 39
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the resolver opt-in. It changed only a2f3aa27 on the frozen answer replay, from 1250 to a cited “about 1300” based on a later same-platform user estimate; validation and live judge passed with no saved-answer regression. The fresh full candidate scored 442/500, four below Stage283, with 17 candidate-only and 21 baseline-only answers across 258 changed texts. The full-score movement is not attributed to the single-row resolver.",
+  "limitations": "Stage285 does not meet the 97% Top-20 gate. The best fresh full score remains Stage283 at 446/500 (89.2%), 39 short. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. Stage285 does not exercise the Stage166 stochastic-token prototype."
+}

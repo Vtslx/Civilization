@@ -275,6 +275,19 @@ Stage283 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，�
 
 保留该保护器为 opt-in。100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。Stage283 没有测试 Stage166 随机 token 原型。
 
+## Stage285：采用最新用户粉丝数估计（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--latest-user-follower-count-estimate-resolution`。当问题询问指定平台当前粉丝数时，只有更晚的同平台用户原话明确给出唯一近似数、且源会话/消息对顺序可证明时，才用该估计替换旧的精确数；答案保留“约”的语气，并引用平台上下文与最新估计。助手-only、冲突、顺序不明或更旧的估计均不触发。
+
+在 Stage283 冻结答案 `a2f3aa27` 上，答案从“1250 followers”改为“About 1300 Instagram followers, based on your latest estimate.” 两条用户更新日期相同，但来源会话从 16 前进到 21；引用校验通过，真实裁判 PASS，其余 499 个保存判定复用且零回退。
+
+Stage285 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **442/500（88.4%）**，比 Stage283 的 446/500 少 4 题。与 Stage283 配对：17 题仅候选答对、21 题仅 Stage283 答对、425 题两者都对、37 题两者都错，净差 −4；258 个答案文本变化。检索对象 500/500 相同。解析器全量启用 500 题，只触发 `a2f3aa27` 一次；候选无效答案审计 25 条（Stage283 也是 25），API 错误标记 0。分题型：知识更新 73/78，多会话 111/133，助手事实 51/56，偏好 27/30，用户事实 67/70，时间推理 113/133。不能把全量分差归因于此单题解析器。
+
+答题器和裁判均接受 seed 42。实现提交 `ed65495 feat: prefer latest user follower estimate`；250 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `8fcc16b022dcb313eaf972c1dee22fc121362066a230a0a3cf8520318d08d272`；单题裁判产物 SHA-256 为 `118c422661baea615f990cfa8792af68eed60218307dc56aef0f1d0ef9742d98`。成绩卡见
+[longmemeval-stage285-latest-follower-estimate-top20-2026-10-29.json](data/longmemeval-stage285-latest-follower-estimate-top20-2026-10-29.json)。
+
+保留解析器为 opt-in：它在冻结答案上零回退地修正一题，但 fresh 全量未提升。最佳成绩仍为 Stage283 的 **446/500（89.2%）**，距 485/500 门槛差 39。记忆精准度和异地灾备恢复仍未验证。Stage285 未测试 Stage166 随机 token 原型。
+
 ## Stage284：排除未完成的医生咨询计数（2026-10-29）
 
 benchmark adapter 新增默认关闭的 `--doctor-visit-count-exclude-planned-consultations`。对于“我看过多少位不同医生”，只有当匿名医生项的精确用户引文是在询问手术前咨询时该问什么、且没有任何用户引文证明咨询已经发生，才排除该项。剩余医生必须是不同对象，且每项均有有效用户原话引用，才能重算总数。
