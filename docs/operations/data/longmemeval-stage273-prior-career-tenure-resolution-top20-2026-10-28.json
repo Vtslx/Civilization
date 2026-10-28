@@ -1,0 +1,116 @@
+{
+  "stage": "Stage273",
+  "date": "2026-10-28",
+  "experiment": "Resolve prior career tenure from same-date user-reported durations",
+  "adapter_repo": "memory-benchmarks",
+  "adapter_branch": "codex/prior-career-tenure-resolution",
+  "adapter_commit": "d385162 feat: resolve prior career tenure from cited durations",
+  "plan_commit": "a608bdd docs: plan prior career tenure resolver",
+  "feature": {
+    "flag": "--prior-career-tenure-resolution",
+    "default_enabled": false,
+    "requirements": [
+      "The question asks how long the user worked before a named current employer",
+      "One unique total professional-experience duration is cited from user-authored text",
+      "One unique current-employer tenure is cited from user-authored text",
+      "Both durations share the same unambiguous observation date",
+      "The computed positive difference passes the existing answer validator"
+    ],
+    "persistent_memory_writes": 0
+  },
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation rerun with Top-20 input",
+  "retrieval_equivalence": {
+    "top_20_order_matches_stage268": 500,
+    "top_200_order_matches_stage268": 500
+  },
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "OpenAI-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "full_candidate": {
+    "run_id": "stage273-prior-career-tenure",
+    "question_count": 500,
+    "correct": 430,
+    "accuracy": 0.86,
+    "target_correct": 485,
+    "shortfall": 55,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 67, "total": 78},
+      "multi-session": {"correct": 110, "total": 133},
+      "single-session-assistant": {"correct": 52, "total": 56},
+      "single-session-preference": {"correct": 24, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 109, "total": 133}
+    },
+    "paired_against_stage268": {
+      "baseline_correct": 440,
+      "candidate_correct": 430,
+      "both_correct": 410,
+      "both_wrong": 40,
+      "candidate_only_correct": 20,
+      "baseline_only_correct": 30,
+      "answer_text_changed_rows": 267,
+      "net_delta": -10
+    },
+    "invalid_answer_audit_rows": {
+      "stage268": 23,
+      "candidate": 22
+    },
+    "api_error_marked_rows": 0,
+    "resolver_status_counts": {
+      "not_applicable": 497,
+      "revised": 1,
+      "missing_named_employer": 1,
+      "no_same_date_user_duration_pair": 1
+    },
+    "target_row": {
+      "question_id": "gpt4_93159ced",
+      "baseline_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "candidate_answer": "About 4 years and 9 months before starting at NovaTech.",
+      "resolver_status": "revised",
+      "total_duration_months": 108,
+      "current_employer_tenure_months": 51,
+      "prior_duration_months": 57,
+      "source_observation_date": "2023-05-25",
+      "citations_validated": true,
+      "judge_seed_accepted": true
+    },
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage273-prior-career-tenure-20261028/candidate/longmemeval_results_20261028_192059.json",
+      "size_bytes": 244609603,
+      "sha256": "94c85abf175cfb711dbd6b6517dd75f98eca5a395afd5f0458a6a8ea4ace6215"
+    }
+  },
+  "composed_saved_answer_replay": {
+    "source_full_score": 440,
+    "candidate_score": 442,
+    "total": 500,
+    "rows_changed_or_rejudged": 2,
+    "other_saved_judgments_reused": 498,
+    "candidate_only_correct": 2,
+    "baseline_only_correct": 0,
+    "question_ids": ["2ebe6c92", "gpt4_93159ced"],
+    "is_fresh_generation": false,
+    "note": "Combines the Stage272 malformed-verdict retry and this Stage273 tenure correction on the Stage268 saved answer set. This is a targeted replay, not the full candidate score."
+  },
+  "verification": {
+    "adapter_tests_passed": 199,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "all_500_rows_completed": true
+  },
+  "decision": "Keep the narrow tenure resolver opt-in. It corrected and validated one target row in the full candidate and the isolated saved-answer rejudge passed. The 500-answer candidate scored 430/500, ten below Stage268; 267 answer texts changed, so do not attribute the aggregate decline to this single-row resolver. Stage268 remains the best fresh full score at 440/500.",
+  "current_best_verified_fresh_full_score": 440,
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "offsite_restore_verified": false,
+  "limitations": "The 485/500 full Top-20 target remains 45 answers above the best full score. The 100% memory-precision objective and live offsite disaster-recovery restore remain unverified. The adapter commit is in a /Volumes/Net clone because the original /Users checkout cannot create Git objects while the system volume is full; transfer remains pending."
+}
