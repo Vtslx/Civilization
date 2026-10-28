@@ -1,0 +1,119 @@
+{
+  "stage": 287,
+  "date": "2026-10-29",
+  "experiment": "table-tennis-frequency-evidence-guard",
+  "feature": "Default-off guard abstains when a table-tennis frequency answer cites only a user-authored tennis schedule and no direct table-tennis or ping-pong frequency evidence is retrieved.",
+  "plan_commit": "2af42f0 docs: plan table tennis frequency evidence guard",
+  "adapter_commit": "5e64ece fix: avoid transferring tennis schedules to table tennis",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 259,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "b03d6696cdf9af79eb46a6d0d9055cd9e62f3bebc5fe9e66eac258a55ddca13e",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage283; all 500 answers were freshly generated and judged over the frozen Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage283-professional-role-count-20261029/candidate/full-run/predicted_stage283-professional-role-count-guard",
+  "retrieval_order_matches_stage283": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage287-table-tennis-frequency-guard",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 446,
+    "candidate_correct": 447,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 446,
+    "both_wrong": 53,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 499,
+    "citation_validation": "PASS",
+    "target_question_id": "f685340e_abs",
+    "candidate_judgment": "PASS"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 447,
+    "accuracy": 0.894,
+    "target_correct": 485,
+    "shortfall": 38,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 67, "total": 70},
+      "multi-session": {"correct": 112, "total": 133},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "temporal-reasoning": {"correct": 112, "total": 133},
+      "knowledge-update": {"correct": 77, "total": 78},
+      "single-session-assistant": {"correct": 52, "total": 56}
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 447,
+      "both_correct": 428,
+      "both_wrong": 35,
+      "candidate_only_correct": 19,
+      "baseline_only_correct": 18,
+      "answer_text_changed_rows": 250,
+      "retrieval_objects_equal": 500,
+      "net_delta": 1
+    },
+    "table_tennis_frequency_evidence_guard_enabled_rows": 500,
+    "table_tennis_frequency_evidence_guard_applied_rows": ["f685340e_abs"],
+    "table_tennis_frequency_evidence_guard_status_counts": {
+      "not_applicable": 499,
+      "abstained_table_tennis_not_supported_by_tennis_quote": 1
+    },
+    "invalid_answer_audit_rows": 23,
+    "stage283_invalid_answer_audit_rows": 25,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "f685340e_abs",
+    "stage283_judgment": "FAIL",
+    "stage283_answer": "Every other week.",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "I cannot determine how often you play table tennis from the supplied user memories. The cited frequency describes tennis, not table tennis.",
+    "guard_status": "abstained_table_tennis_not_supported_by_tennis_quote",
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "f685340e_abs",
+    "correct": 1,
+    "total": 1,
+    "result_artifact": "/Volumes/Net/civilization-stage287-table-tennis-frequency-guard-20261029/frozen-replay/predicted_stage287-table-tennis-frequency-guard/f685340e_abs.json",
+    "result_size_bytes": 514481,
+    "result_sha256": "ad9279494d724e042ba5f456d9597686adb6c6c5de2ab342ee7203675fa03e99"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage287-table-tennis-frequency-guard-20261029/candidate/full-run/longmemeval_results_20261029_032401.json",
+    "size_bytes": 245701673,
+    "sha256": "4c53f985acdca19a0f60e826c39b4d4dc0076587a7919e9aeb756f059e90d068"
+  },
+  "best_observed_full_score": {
+    "stage": 286,
+    "tied_by_stage": 287,
+    "correct": 447,
+    "total": 500,
+    "accuracy": 0.894,
+    "gate": 485,
+    "shortfall": 38
+  },
+  "memory_precision_measured": false,
+  "decision": "The frozen replay corrected only f685340e_abs with a citation-validated abstention that passed the live judge; the other 499 saved judgments were reused with no regressions. The fresh full run also triggered the guard once and passed the target, but scored 447/500, tied with Stage286 and one above Stage283, across 250 changed answer texts (19 candidate-only and 18 baseline-only correct). Do not attribute the aggregate +1 to this single-row guard; keep it opt-in.",
+  "limitations": "Stage287 remains 38 answers below the 97% Top-20 gate. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. Stage287 does not exercise the Stage166 stochastic-token prototype, which remains unintegrated with provider generation and durable memory storage and has no LongMemEval accuracy A/B."
+}

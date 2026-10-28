@@ -275,6 +275,19 @@ Stage283 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，�
 
 保留该保护器为 opt-in。100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。Stage283 没有测试 Stage166 随机 token 原型。
 
+## Stage284：排除未完成的医生咨询计数（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--doctor-visit-count-exclude-planned-consultations`。对于“我看过多少位不同医生”，只有当匿名医生项的精确用户引文是在询问手术前咨询时该问什么、且没有任何用户引文证明咨询已经发生，才排除该项。剩余医生必须是不同对象，且每项均有有效用户原话引用，才能重算总数。
+
+在 Stage283 冻结的多会话答案上复放，保护器只改写 `gpt4_f2262a51`：它移除了从“结肠镜术前咨询应该问医生什么”的问题句推断出的匿名医生项，将 4 位改为 3 位。引用校验和真实裁判均通过，其余 132 条保存判定复用，零回退。单题复放也 PASS，裁判接受 seed 42。
+
+Stage284 fresh 全量候选得 **437/500（87.4%）**，比 Stage283 的 446/500 少 9 题。全量答题器自行把目标题答为“3 different doctors”，因此该保护器在 500 题中均为 `not_applicable`，没有实际触发。与 Stage283 配对：15 题仅候选答对、24 题仅 Stage283 答对、422 题两者都对、39 题两者都错，净差 −9；261 个答案文本变化。完整检索对象 500/500 相同。候选无效答案审计 29 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 69/78，多会话 110/133，助手事实 51/56，偏好 27/30，用户事实 68/70，时间推理 112/133。全量下降来自模型输出波动，不能归因于未触发的保护器。
+
+全量答题器和裁判均接受 seed 42。实现提交 `53de692 feat: exclude planned doctor consultations from visit counts`；245 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `1adf5b0574fa1f84ca66114a63d1632ee4d9262d789e411c8f0583bde1694166`；冻结单题复放 SHA-256 为 `ad2549daddb0228f3a3949de7b3fdead15a0c4b4cb1976918d63a10fe162d37a`。成绩卡见
+[longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json](data/longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json)。
+
+基于冻结答案零回退修正，保留该保护器为 opt-in。当前最佳全量成绩仍为 Stage283 的 **446/500（89.2%）**，离 485/500 还差 39 题。记忆精准度和异地灾备恢复仍未验证。Stage284 未测试 Stage166 随机 token 原型。
+
 ## Stage285：采用最新用户粉丝数估计（2026-10-29）
 
 benchmark adapter 新增默认关闭的 `--latest-user-follower-count-estimate-resolution`。当问题询问指定平台当前粉丝数时，只有更晚的同平台用户原话明确给出唯一近似数、且源会话/消息对顺序可证明时，才用该估计替换旧的精确数；答案保留“约”的语气，并引用平台上下文与最新估计。助手-only、冲突、顺序不明或更旧的估计均不触发。
@@ -301,41 +314,14 @@ Stage286 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，�
 
 保留解析器为 opt-in：冻结目标修正确认通过，但 fresh 全量中未触发。100% 记忆精准度和异地灾备恢复演练仍未验证。Stage286 未测试 Stage166 随机 token 原型。
 
-## Stage286：合并后续符合筛选的收藏新增项（2026-10-29）
+## Stage287：乒乓球频率证据实体保护器（2026-10-29）
 
-benchmark adapter 新增默认关闭的 `--collection-total-include-subsequent-additions`。只有在同一个明确筛选的收藏中，用户原话报告了一个累计总数，之后又有一条用户原话新增一件带年份且满足题目年份筛选的物品，并且更新顺序早于题目日期、之后没有更新的累计总数时，才会递增。助手说法、超出年份范围、多个新增项或顺序不明均不触发。
+适配器新增默认关闭的 `--table-tennis-frequency-evidence-guard`。只有答案引用了用户原话中的网球频率、检索不到用户原话中的乒乓球或 ping-pong 频率，且来源上下文与问题相符时，才弃答。直接乒乓球证据、普通网球问题、助手发言和无关赛程均保持不变。
 
-在 Stage283 冻结答案上复放，解析器只改写 `69fee5aa`：用户报告的 37 枚 1920 年前美国硬币，加上后来加入收藏的一枚 1915-S Barber quarter，得到 38。1972 年 doubled-die cent 因超出筛选年份而排除。引用校验和真实裁判均通过，其余 499 个保存判定复用且零回退。
+在 Stage283 冻结题 `f685340e_abs` 上，原答案“Every other week”引用的是“和朋友在公园打网球”的安排。保护器将其改为带引用的弃答，引用校验和真实裁判均 PASS；其余 499 个保存判定复用，零回退。单独的全量新生成也通过了目标题，保护器触发一次。
 
-Stage286 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **447/500（89.4%）**，比 485/500 门槛差 38 题，是目前最佳 fresh 全量成绩。与 Stage283 配对：21 题仅候选答对、20 题仅 Stage283 答对、426 题两者都对、33 题两者都错，净增 1；264 个答案文本变化。检索对象 500/500 相同。解析器全量启用，但实际触发 0 次；目标题由答题器和 count-completeness audit 自行得出 38，状态 `not_applicable`。候选无效答案审计 24 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 75/78，多会话 113/133，助手事实 52/56，偏好 26/30，用户事实 66/70，时间推理 115/133。全量净增不能归因于该解析器。
+Stage287 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **447/500（89.4%）**。该成绩与 Stage286 持平，距离 485/500 门槛仍差 38 题。与 Stage283 配对：19 题仅候选答对、18 题仅 Stage283 答对、428 题两者都对、35 题两者都错，净增 1；250 个答案文本变化。检索对象 500/500 一致。保护器在 500 题中启用，触发 1 次，其余 499 次不适用；无效答案审计 23 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 77/78，多会话 112/133，助手事实 52/56，偏好 27/30，用户事实 67/70，时间推理 112/133。输出波动较大，不能把全量净增归因于单题保护器。
 
-答题器和裁判均接受 seed 42。实现提交 `a18ed3e feat: include later qualifying coins in collection totals`；254 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `c9f28bccff568019ed2fe03a2500074d8bc1f9e21532cd59a57681d701259cfa`；冻结单题复放 SHA-256 为 `2a4e9cadbda1e6d419e9ef62bc2406d0b966a17440202782d56b1f5b4f3b395a`。成绩卡见
-[longmemeval-stage286-collection-total-increment-top20-2026-10-29.json](data/longmemeval-stage286-collection-total-increment-top20-2026-10-29.json)。
+答题器和裁判均接受 seed 42。适配器提交：`5e64ece fix: avoid transferring tennis schedules to table tennis`；259 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `4c53f985acdca19a0f60e826c39b4d4dc0076587a7919e9aeb756f059e90d068`；冻结目标复放 SHA-256 为 `ad9279494d724e042ba5f456d9597686adb6c6c5de2ab342ee7203675fa03e99`。详见[Stage287 成绩卡](data/longmemeval-stage287-table-tennis-frequency-guard-top20-2026-10-29.json)。
 
-保留解析器为 opt-in：冻结目标修正确认通过，但 fresh 全量中未触发。100% 记忆精准度和异地灾备恢复演练仍未验证。Stage286 未测试 Stage166 随机 token 原型。
-
-## Stage284：排除未完成的医生咨询计数（2026-10-29）
-
-benchmark adapter 新增默认关闭的 `--doctor-visit-count-exclude-planned-consultations`。对于“我看过多少位不同医生”，只有当匿名医生项的精确用户引文是在询问手术前咨询时该问什么、且没有任何用户引文证明咨询已经发生，才排除该项。剩余医生必须是不同对象，且每项均有有效用户原话引用，才能重算总数。
-
-在 Stage283 冻结的多会话答案上复放，保护器只改写 `gpt4_f2262a51`：它移除了从“结肠镜术前咨询应该问医生什么”的问题句推断出的匿名医生项，将 4 位改为 3 位。引用校验和真实裁判均通过，其余 132 条保存判定复用，零回退。单题复放也 PASS，裁判接受 seed 42。
-
-Stage284 fresh 全量候选得 **437/500（87.4%）**，比 Stage283 的 446/500 少 9 题。全量答题器自行把目标题答为“3 different doctors”，因此该保护器在 500 题中均为 `not_applicable`，没有实际触发。与 Stage283 配对：15 题仅候选答对、24 题仅 Stage283 答对、422 题两者都对、39 题两者都错，净差 −9；261 个答案文本变化。完整检索对象 500/500 相同。候选无效答案审计 29 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 69/78，多会话 110/133，助手事实 51/56，偏好 27/30，用户事实 68/70，时间推理 112/133。全量下降来自模型输出波动，不能归因于未触发的保护器。
-
-全量答题器和裁判均接受 seed 42。实现提交 `53de692 feat: exclude planned doctor consultations from visit counts`；245 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `1adf5b0574fa1f84ca66114a63d1632ee4d9262d789e411c8f0583bde1694166`；冻结单题复放 SHA-256 为 `ad2549daddb0228f3a3949de7b3fdead15a0c4b4cb1976918d63a10fe162d37a`。成绩卡见
-[longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json](data/longmemeval-stage284-doctor-visit-count-guard-top20-2026-10-29.json)。
-
-基于冻结答案零回退修正，保留该保护器为 opt-in。当前最佳全量成绩仍为 Stage283 的 **446/500（89.2%）**，离 485/500 还差 39 题。记忆精准度和异地灾备恢复仍未验证。Stage284 未测试 Stage166 随机 token 原型。
-
-## Stage283：职位绑定的工程师人数证据保护器（2026-10-29）
-
-benchmark adapter 新增默认关闭的 `--professional-role-count-evidence-guard`，仅用于问题明确询问用户在某个职位下带领多少工程师的情形。当数值答案只由另一职位的用户原话支持时，保护器引用该原话并弃答；若一条用户原话直接给出题目职位和团队人数，则保留答案，不推断职位等价。
-
-在 Stage282 冻结答案上复放时，保护器只改写 `031748ae_abs`：原答案“4 engineers”引用的是 Senior Software Engineer 职位，而题目问 Software Engineer Manager；候选改为带引用的弃答，引用校验通过，真实裁判 PASS。其余 499 条已保存判定复用，零回退。单题实时裁判复放也 PASS，seed 42 被接受。
-
-Stage283 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **446/500（89.2%）**，距 485/500 门槛差 39 题，是目前最佳已验证全量成绩。较 Stage282 的 442/500，配对结果为 24 题仅候选答对、20 题仅 Stage282 答对、422 题两者都对、34 题两者都错，净增 4；256 个答案文本发生变化，因此不能把全量提升单独归因于这条单题规则。检索结果对象 500/500 一致。保护器全量启用 500 题，输出 1 条职位不匹配弃答、1 条职位与人数直接匹配状态，其余 498 题不适用。候选无效答案审计 25 条，API 错误标记为 0。分题型：知识更新 69/78，多会话 115/133，助手事实 51/56，偏好 28/30，用户事实 67/70，时间推理 116/133。
-
-答题器和裁判均接受 seed 42。实现提交 `c36974b feat: guard engineer counts by user role title`；241 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `d7c1991e3b6d168006c3cb08094ea4372069d5b0254a8bd04f6606fa486c5918`；单题裁判产物 SHA-256 为 `030c38c98174074be4c9768f70a1ff5f4d135676a66be7b36df83b0c4aa4d4eb`。成绩卡见
-[longmemeval-stage283-professional-role-count-guard-top20-2026-10-29.json](data/longmemeval-stage283-professional-role-count-guard-top20-2026-10-29.json)。
-
-保留该保护器为 opt-in。100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。Stage283 没有测试 Stage166 随机 token 原型。
+保留为 opt-in：冻结目标得到无回退修正，但 Stage287 未提升最佳全量成绩。100% 记忆精准度和异地灾备恢复演练仍未验证。Stage287 未运行 Stage166；该随机预留原型仍无 provider 生成、持久化记忆或准确率集成证据。
