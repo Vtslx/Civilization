@@ -361,3 +361,15 @@ Stage290 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`b7ab731 fix: resolve elapsed days from immediate user events`；271 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `6eb5cf219ccb0bd8bd38906a12acc361bbdc141eeb5d264d0657c113ddc8e010`；冻结目标复放 SHA-256 为 `830a2ff1d6383776c5dc57ebbf5ca839b8eebe2578fd8b538dd045a2c57d64a`。详见[Stage290 成绩卡](data/longmemeval-stage290-elapsed-days-immediate-events-top20-2026-10-29.json)。
 
 保留为 opt-in：冻结目标修正通过，但 Stage290 未提升最佳全量成绩。当前最佳仍为 Stage288 的 451/500，距 485 差 34。记忆精准度尚未测量，异地灾备恢复未验证。Stage290 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage291：按明确线索定位助手推荐（2026-10-29）
+
+适配器新增默认关闭的 `--assistant-recommendation-clue-resolution`，仅在同时启用 `--assistant-authored-evidence-for-assistant-questions` 且题型为 `single-session-assistant` 时生效。它只扫描助手消息中的编号/项目列表；仅当唯一一项同时匹配问题中的食材和具体水果线索时才改答。用户复述、多个匹配项、列表外散文和其他题型均不触发。
+
+在 Stage290 冻结题 `778164c6` 上，保存答案“Escovitch Fish”改为“Grilled Snapper with Mango Salsa”。助手列表中的精确行同时匹配“snapper”和“mango”；引用校验和真实裁判均 PASS，其余 499 条保存判定复用且零回退。
+
+Stage291 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **452/500（90.4%）**，距离 485/500 门槛差 33 题，是当前最佳全量成绩。与 Stage288 配对：18 题仅候选答对、17 题仅 Stage288 答对、434 题两者都对、31 题两者都错，净增 1；251 个答案文本变化。与 Stage290 配对：21 题仅候选答对、17 题仅基线答对、431 题两者都对、31 题两者都错，净增 4；256 个答案文本变化。检索对象 500/500 一致。父级助手证据范围对 56 题生效；线索解析器触发 1 次、55 次不适用、444 题越界未启用。无效答案审计 22 条（Stage288 为 23），API 错误 0。分题型：知识更新 74/78，多会话 113/133，助手事实 54/56，偏好 25/30，用户事实 68/70，时间推理 118/133。全量输出变化较大，不能把相对 Stage288 的净增 1 题归因于该单题修正。
+
+答题器和裁判均接受 seed 42。适配器提交：`64f60c7 fix: match assistant recommendations to explicit clues`；275 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `d5baeb73ba2599c2bf784a212a28e6568f43ff1753859e414dd01f7b975376ff`；冻结目标复放 SHA-256 为 `487db9879d03406e68581e0d8bb05864ed2e09e477d9e3832fbdc9c71a6a377a`。详见[Stage291 成绩卡](data/longmemeval-stage291-assistant-recommendation-clue-top20-2026-10-29.json)。
+
+保留两个开关为 opt-in。Stage291 距离 485/500 仍差 33 题；记忆精准度尚未测量，异地灾备恢复未验证。Stage291 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。

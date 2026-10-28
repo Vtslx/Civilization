@@ -1,0 +1,143 @@
+{
+  "stage": 291,
+  "date": "2026-10-29",
+  "experiment": "assistant-recommendation-clue-resolution",
+  "feature": "Default-off resolver selects one unique exact assistant-authored recommendation list item matching a named ingredient and concrete fruit clue; it is scoped to single-session-assistant with assistant evidence enabled.",
+  "plan_commit": "a1e1573 docs: plan assistant recommendation clue resolver",
+  "adapter_commit": "64f60c7 fix: match assistant recommendations to explicit clues",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 275,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "65d1a68dfe0ac29407624cb3e0112488a64f1e265b928759f96d66dfe2ddd2f9",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage290; all 500 answers were freshly generated and judged over frozen Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage290-elapsed-days-immediate-events-20261029/candidate/full-run/predicted_stage290-elapsed-days-immediate-events",
+  "retrieval_order_matches_stage290": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage291-assistant-recommendation-clue",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 448,
+    "candidate_correct": 449,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 448,
+    "both_wrong": 51,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 499,
+    "citation_validation": "PASS",
+    "target_question_id": "778164c6",
+    "candidate_judgment": "PASS"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 452,
+    "accuracy": 0.904,
+    "target_correct": 485,
+    "shortfall": 33,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 68, "total": 70},
+      "multi-session": {"correct": 113, "total": 133},
+      "single-session-preference": {"correct": 25, "total": 30},
+      "temporal-reasoning": {"correct": 118, "total": 133},
+      "knowledge-update": {"correct": 74, "total": 78},
+      "single-session-assistant": {"correct": 54, "total": 56}
+    },
+    "paired_against_stage288": {
+      "baseline_correct": 451,
+      "candidate_correct": 452,
+      "both_correct": 434,
+      "both_wrong": 31,
+      "candidate_only_correct": 18,
+      "baseline_only_correct": 17,
+      "answer_text_changed_rows": 251,
+      "retrieval_objects_equal": 500,
+      "net_delta": 1
+    },
+    "paired_against_stage290": {
+      "baseline_correct": 448,
+      "candidate_correct": 452,
+      "both_correct": 431,
+      "both_wrong": 31,
+      "candidate_only_correct": 21,
+      "baseline_only_correct": 17,
+      "answer_text_changed_rows": 256,
+      "retrieval_objects_equal": 500,
+      "net_delta": 4
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 452,
+      "both_correct": 425,
+      "both_wrong": 27,
+      "candidate_only_correct": 27,
+      "baseline_only_correct": 21,
+      "answer_text_changed_rows": 275,
+      "retrieval_objects_equal": 500,
+      "net_delta": 6
+    },
+    "assistant_authored_evidence_effective_rows": 56,
+    "assistant_recommendation_clue_resolution_effective_rows": 56,
+    "assistant_recommendation_clue_resolution_status_counts": {
+      "not_enabled": 444,
+      "not_applicable": 55,
+      "revised_unique_assistant_list_item": 1
+    },
+    "invalid_answer_audit_rows": 22,
+    "stage288_invalid_answer_audit_rows": 23,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "778164c6",
+    "stage290_judgment": "FAIL",
+    "stage290_answer": "Escovitch Fish",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "Grilled Snapper with Mango Salsa.",
+    "assistant_source_memory_index": 13,
+    "resolver_status": "revised_unique_assistant_list_item",
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "778164c6",
+    "correct": 1,
+    "total": 1,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage291-assistant-recommendation-clue-20261029/frozen-replay/target.json",
+    "result_size_bytes": 457849,
+    "result_sha256": "487db9879d03406e68581e0d8bb05864ed2e09e477d9e3832fbdc9c71a6a377a"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage291-assistant-recommendation-clue-20261029/candidate/full-run/longmemeval_results_20261029_050008.json",
+    "size_bytes": 246012836,
+    "sha256": "d5baeb73ba2593c2bf784a212a28e6568f43ff1753859e414dd01f7b975376ff"
+  },
+  "best_observed_full_score": {
+    "stage": 291,
+    "correct": 452,
+    "total": 500,
+    "accuracy": 0.904,
+    "gate": 485,
+    "shortfall": 33
+  },
+  "memory_precision_measured": false,
+  "decision": "The frozen Stage290 answer replay changed only 778164c6 from Escovitch Fish/FAIL to the clue-matched assistant list item Grilled Snapper with Mango Salsa/PASS, with valid citation and live judging. The fresh full candidate applied the resolver once and scored 452/500, one above Stage288 and four above Stage290. Against Stage288, 18 answers were candidate-only and 17 baseline-only across 251 changed texts; do not attribute the full-score +1 to this one-item resolver. Keep the parent and clue-resolution flags opt-in.",
+  "limitations": "Stage291 remains 33 answers below the 97% Top-20 gate. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. Stage291 does not exercise the Stage166 stochastic-token prototype; it remains unintegrated with provider generation and durable memory storage and has no accuracy A/B."
+}
