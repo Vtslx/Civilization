@@ -34,3 +34,11 @@ Run focused tests and the complete adapter suite, compileall, and `git diff --ch
 ### Task 4: Run a 500-question candidate
 
 Regenerate all 500 answers over Stage264 frozen retrieval with only this resolver newly enabled. Record paired outcomes, per-type scores, citations, and artifact hashes. Commit the adapter module with an English message, then record the result in Civilization.
+
+## Stage267 outcome
+
+- Adapter module commit: `1e39a80 fix: resolve explicit education year spans`.
+- Adapter verification: 170 tests and 25 subtests passed; `compileall` and `git diff --check` passed.
+- On Stage264's frozen saved answers, `gpt4_372c3eed` changed from FAIL to PASS using the user-cited 2010 high-school start year and 2020 Bachelor's completion year. The answer passed source validation and the live judge; zero saved answers regressed (431/500→432/500).
+- The full 500-answer regeneration over frozen Stage264 retrieval scored 431/500 (86.2%), tied with Stage264 and below Stage243's best 438/500. The resolver applied once in the fresh generation; paired outcomes against Stage264 were 21 candidate-only and 21 baseline-only across 277 changed answers, so no overall gain is attributed to this feature. Keep it opt-in.
+- Scorecard: `docs/operations/data/longmemeval-stage267-education-year-span-resolution-top20-2026-10-28.json`.

@@ -1,0 +1,111 @@
+{
+  "stage": 267,
+  "date": "2026-10-28",
+  "experiment": "Explicit user-cited education year-span resolution",
+  "plan_commit": "a4840f8 docs: plan education year span resolver",
+  "adapter_commit": "1e39a80 fix: resolve explicit education year spans",
+  "run_id": "stage267-education-year-span",
+  "timestamp": "20261028_144923",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage264 per-question results; frozen retrieval order reused",
+  "retrieval_order_matches_stage264": {
+    "top_20": 500,
+    "top_200": 500
+  },
+  "feature": {
+    "cli_flag": "--education-year-span-resolution",
+    "default_enabled": false,
+    "scope": "Formal-education questions from high-school start through Bachelor's completion",
+    "requirements": [
+      "A unique exact user-authored high-school attendance range",
+      "A unique exact user-authored Bachelor's completion year",
+      "A positive bounded year span",
+      "The rewritten answer passes the full numeric and citation validator"
+    ]
+  },
+  "frozen_stage264_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 431,
+    "candidate_correct": 432,
+    "paired_outcomes": {
+      "both_correct": 431,
+      "both_wrong": 68,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "gpt4_372c3eed",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "start_year": 2010,
+        "completion_year": 2020,
+        "candidate_answer": "About 10 calendar years, from 2010 to 2020.",
+        "citation_validation": "PASS",
+        "seed_accepted": true
+      }
+    ],
+    "decision": "One wrong saved answer was corrected with both endpoint years directly cited from user-authored memories; no saved answer regressed."
+  },
+  "full_candidate": {
+    "correct": 431,
+    "total": 500,
+    "accuracy": 0.862,
+    "target_correct": 485,
+    "shortfall": 54,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 107, "total": 133},
+      "single-session-assistant": {"correct": 51, "total": 56},
+      "single-session-preference": {"correct": 26, "total": 30},
+      "single-session-user": {"correct": 67, "total": 70},
+      "temporal-reasoning": {"correct": 109, "total": 133}
+    },
+    "resolver_audit_statuses": {
+      "revised": 1,
+      "not_applicable": 499
+    }
+  },
+  "paired_against_stage264_full": {
+    "baseline_correct": 431,
+    "candidate_correct": 431,
+    "accuracy_delta_percentage_points": 0.0,
+    "paired_outcomes": {
+      "both_correct": 410,
+      "both_wrong": 48,
+      "candidate_only_correct": 21,
+      "baseline_only_correct": 21
+    },
+    "answer_text_changed_rows": 277
+  },
+  "unified_result_file": {
+    "path": "/Volumes/Net/civilization-stage267-education-year-span-20261028/candidate/longmemeval_results_stage267_education_year_span.json",
+    "size_bytes": 230338279,
+    "sha256": "525f950806e531bf424a21264564f8d617023ed9c3f15900ab49ede3fffdc612"
+  },
+  "best_verified_full_score": {
+    "stage": 243,
+    "correct": 438,
+    "total": 500,
+    "accuracy": 0.876,
+    "shortfall": 47
+  },
+  "verification": {
+    "adapter_tests": 170,
+    "subtests": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "decision": "Keep the resolver opt-in. The frozen replay corrected the specific education-span error, but the full 500-answer candidate tied Stage264 and remains seven answers below Stage243. The resolver fired once in fresh generation; full-run answer changes across 277 rows make the aggregate paired delta unsuitable for attributing a gain.",
+  "memory_precision_measured": false,
+  "limitations": "The 97% Top-20 gate remains unmet. The 100% memory-precision target remains unmeasured. This resolver computes only an explicit user-cited calendar-year span and does not write persistent memory."
+}
