@@ -142,7 +142,7 @@ Stage216 让带有“今年”“三月”“过去两周”等明确时间窗�
 Stage219 为一种受限情形增加确定性日期回退：带引用的用户原话明确说“刚从导览回来”，事件日期缺失，而题目需要计算两个事件的间隔。回退只使用检索记忆的观察日期元数据；assistant 单方引用、无角色标记的记忆、无关事件或缺少观察日期时都不会触发。受影响题目的两次 live 重放均返回有证据支持的 7 天。将这一道时间推理题与 Stage216 合成后为 **444/500（88.8%）**，净增 1 题，距离门槛还差 41 题；配对结果为 1 题转对、0 题回退。这是一题子集回放，不是重新生成全部 500 题：
 [longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json](data/longmemeval-stage219-immediate-return-date-subset-top20-2026-10-25.json)。
 
-## 当前最佳已验证全量 Top-20 成绩：Stage243（2026-10-27）
+## Stage243 全量候选历史记录（2026-10-27）
 
 Stage243 在 Stage221 冻结的 Top-200 检索结果上重新生成并裁判 Top-20 答案，完整
 500 题得分为 **438/500（87.6%）**，距离 Top-20 发布门槛 485/500 还差 47 题。
@@ -207,7 +207,7 @@ benchmark adapter 新增默认关闭的 `--research-poster-conference-venue-reso
 
 目标题 `a96c20ee` 从 FAIL 变为 PASS，解析器使用两条用户原话得出 Harvard University，引用校验通过。相邻本科课程题 `a96c20ee_abs` 由答题器自行弃答并通过裁判，解析器状态为 `not_applicable`，不把第一研究会议场地套用到不同项目。保留该功能为 opt-in。benchmark adapter 提交为 `ca09b31 feat: resolve research poster venue from linked sources`；210 项测试、25 个子测试、compileall 和 diff 检查通过。
 
-本轮最佳已验证全量成绩更新为 **441/500（88.2%）**，仍低于 **485/500（97%）**；100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。成绩卡见
+截至 Stage277，最佳已验证全量成绩更新为 **441/500（88.2%）**，仍低于 **485/500（97%）**；100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。成绩卡见
 [longmemeval-stage277-research-poster-venue-top20-2026-10-28.json](data/longmemeval-stage277-research-poster-venue-top20-2026-10-28.json)。
 
 ## Stage278：硕士完成度终点校验（2026-10-28）
@@ -219,7 +219,7 @@ Stage278 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 目标题 `gpt4_372c3eed_abs` 从 Stage277 的“10 years”/FAIL 变为引用高中教育背景和硕士意向的弃答/PASS；单题真实答题与裁判复放也 PASS。硕士论文时间差题 `gpt4_21adecb5` 仍为 6 个月/PASS，护栏状态 `not_applicable`。护栏在全量数据中触发 1 次，其余 499 题未触发。保留 opt-in。实现提交 `3cc53e3 fix: abstain on unsupported masters education spans`；215 项测试、25 个子测试、compileall、diff 检查通过。成绩卡见
 [longmemeval-stage278-unverified-masters-education-span-top20-2026-10-28.json](data/longmemeval-stage278-unverified-masters-education-span-top20-2026-10-28.json)。
 
-Stage277 仍是最佳全量成绩 **441/500（88.2%）**，比 485/500 发布门槛少 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。
+截至 Stage278，Stage277 仍是最佳全量成绩 **441/500（88.2%）**，比 485/500 发布门槛少 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。
 
 ## Stage279：Sephora 剩余积分计算（2026-10-28）
 
@@ -227,7 +227,7 @@ benchmark adapter 新增默认关闭的 `--loyalty-points-remaining-resolution`�
 
 目标题 `9ee3ecd6` 的用户来源在 5 月 21 日报告 Sephora 余额 200 分，5 月 29 日报告兑换门槛 300 分，题目日期为 5 月 30 日。解析器算出还需 **100 分**，引用校验通过；最终严格版本的真实单题答题与裁判复放 PASS。最终 Stage279 全量在 Stage268 冻结 Top-200 检索上得分 **434/500（86.8%）**，低于 Stage277 的 441/500 和 Stage268 的 440/500。与 Stage277 配对：23 题仅候选答对、30 题仅基线答对、411 题两者都对、36 题两者都错，净差 −7；262 个答案文本发生变化，整体下降不能归因于该单题规则。与 Stage268 配对净差 −6。Top-20、Top-200 和完整检索对象在 500/500 题上一致；无效答案审计 26 条，API 错误标记 0；解析器触发 1 次。
 
-保留 opt-in。最终代码提交为 `bff133a feat: resolve remaining loyalty points from evidence`；220 项测试、25 个子测试、compileall、diff 检查通过。最佳全量成绩仍为 Stage277 的 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
+保留 opt-in。最终代码提交为 `bff133a feat: resolve remaining loyalty points from evidence`；220 项测试、25 个子测试、compileall、diff 检查通过。截至 Stage279，最佳全量成绩仍为 Stage277 的 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
 [longmemeval-stage279-loyalty-points-remaining-top20-2026-10-28.json](data/longmemeval-stage279-loyalty-points-remaining-top20-2026-10-28.json)。
 ## Stage280：衣物门店取/退待办计数（2026-10-29）
 
@@ -235,5 +235,16 @@ benchmark adapter 新增默认关闭的 `--clothing-store-pickup-return-count-re
 
 目标题 `0a995998` 的 Top-20 用户原话分别提到取回 Zara 换货的新靴子、取回送洗的海军蓝西装外套、以及另一条退回 Zara 靴子的待办。重复的西装外套记录合并后得到 3 项；三条引用均通过校验，真实单题答题与裁判复放 PASS。Stage280 全量重答在 Stage268 冻结检索上得 **440/500（88.0%）**，与 Stage268 持平，比 Stage277 少 1 题。配对 Stage268：24 题仅候选答对、24 题仅基线答对、416 题两者都对、36 题两者都错，净差 0；与 Stage277 配对净差 −1（27 题仅候选答对、28 题仅基线答对、413 题两者都对、32 题两者都错）。277 个答案文本变化，不能将总体结果归因于单个待办解析器。检索结果对象 500/500 相同；候选无效审计 22 条，API 错误标记 0，解析器触发 1 次。
 
-代码提交 `cb56c25 feat: count clothing pickup return tasks from evidence`；225 项测试、25 个子测试、compileall 和 diff 检查通过。Stage277 仍为最佳全量成绩 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
+代码提交 `cb56c25 feat: count clothing pickup return tasks from evidence`；225 项测试、25 个子测试、compileall 和 diff 检查通过。截至 Stage280，Stage277 仍为最佳全量成绩 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
 [longmemeval-stage280-clothing-store-pickup-return-count-top20-2026-10-29.json](data/longmemeval-stage280-clothing-store-pickup-return-count-top20-2026-10-29.json)。
+
+## Stage281：本科课程海报会场证据保护器（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--undergrad-poster-venue-evidence-guard`。当本科课程研究海报题只有另一场 thesis research poster 的大学证据时，保护器拒绝把会场迁移到本科项目。目标题 `a96c20ee_abs` 返回带引用的弃答，来源索引为 1 和 17；引用校验通过，单题答题器与裁判复放以及全量候选均判 PASS。保护器全量触发 1 次，其余 499 题为 `not_applicable`。
+
+Stage281 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 道答案，得 **442/500（88.4%）**，距 485/500 发布门槛差 43 题，是目前最佳已验证全量 Top-20 结果。与 Stage277 配对：26 题仅候选答对、25 题仅 Stage277 答对、416 题两者都对、33 题两者都错，净增 1；266 个答案文本变化。与 Stage280 配对：23 题仅候选答对、21 题仅 Stage280 答对、419 题两者都对、37 题两者都错，净增 2；255 个答案文本变化。完整检索对象与 Stage277 在 500/500 题相同。候选答案审计无效 24 条，API 错误标记 0。分题型：知识更新 74/78，多会话 110/133，助手事实 51/56，偏好 27/30，用户事实 68/70，时间推理 112/133。由于大量答案文本和配对结果变化，不能把全量分数提升单独归因于这一题保护器。
+
+全量答题器和裁判均接受 seed 42；单题复放也均接受 seed 42。实现提交 `62a50b1 fix: reject unrelated poster venue inference`；230 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `3ba03c8600e8bd0594116c1ae3ed757c66be0b2da543a34cd2f0ab6ac0f4db41`；单题复放 SHA-256 为 `adaaf2efb7deb4f4214444e94ba9297b10932270ff45a0896107da49d11d6f06`。成绩卡见
+[longmemeval-stage281-undergrad-poster-venue-guard-top20-2026-10-29.json](data/longmemeval-stage281-undergrad-poster-venue-guard-top20-2026-10-29.json)。
+
+100% 记忆精准度仍未测量，异地灾备恢复演练仍未验证。Stage281 没有测试 Stage166 随机 token 原型，因此不把本轮准确率变化归因于该机制。

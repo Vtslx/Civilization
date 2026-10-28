@@ -1,0 +1,138 @@
+{
+  "stage": 281,
+  "date": "2026-10-29",
+  "experiment": "undergraduate-poster-venue-evidence-guard",
+  "feature": "Default-off guard prevents assigning a university to an undergraduate-course poster when the retrieved venue supports only a different thesis-research poster.",
+  "plan_commit": "071eab7 docs: plan undergrad poster venue evidence guard",
+  "adapter_commit": "62a50b1 fix: reject unrelated poster venue inference",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 230,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "7ce85350a5898253d436f2b389c0876149361ebd65cd35c06318b239f9927298",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation and judging rerun over all 500 Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage268": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage281-undergrad-poster-venue-guard",
+  "top_k": 200,
+  "cutoff": 20,
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 442,
+    "accuracy": 0.884,
+    "target_correct": 485,
+    "shortfall": 43,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {
+        "correct": 74,
+        "total": 78
+      },
+      "multi-session": {
+        "correct": 110,
+        "total": 133
+      },
+      "single-session-assistant": {
+        "correct": 51,
+        "total": 56
+      },
+      "single-session-preference": {
+        "correct": 27,
+        "total": 30
+      },
+      "single-session-user": {
+        "correct": 68,
+        "total": 70
+      },
+      "temporal-reasoning": {
+        "correct": 112,
+        "total": 133
+      }
+    },
+    "paired_against_stage277": {
+      "baseline_correct": 441,
+      "candidate_correct": 442,
+      "both_correct": 416,
+      "both_wrong": 33,
+      "candidate_only_correct": 26,
+      "baseline_only_correct": 25,
+      "answer_text_changed_rows": 266,
+      "retrieval_objects_equal": 500,
+      "net_delta": 1
+    },
+    "paired_against_stage280": {
+      "baseline_correct": 440,
+      "candidate_correct": 442,
+      "both_correct": 419,
+      "both_wrong": 37,
+      "candidate_only_correct": 23,
+      "baseline_only_correct": 21,
+      "answer_text_changed_rows": 255,
+      "retrieval_objects_equal": 500,
+      "net_delta": 2
+    },
+    "undergrad_poster_guard_status_counts": {
+      "not_applicable": 499,
+      "abstained_unlinked_course_poster_venue": 1
+    },
+    "invalid_answer_audit_rows": 24,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "a96c20ee_abs",
+    "question": "At which university did I present a poster for my undergrad course research project?",
+    "stage277_judgment": "PASS",
+    "stage280_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "There is not enough information in the retrieved memories to identify a university for the undergraduate-course research poster.",
+    "guard_status": "abstained_unlinked_course_poster_venue",
+    "source_memory_indices": [
+      1,
+      17
+    ],
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "a96c20ee_abs",
+    "correct": 1,
+    "total": 1,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "guard_status": "abstained_unlinked_course_poster_venue",
+    "result_artifact": "/Volumes/Net/civilization-stage281-course-poster-guard-20261029/candidate/longmemeval_results_20261029_003230.json",
+    "result_size_bytes": 476646,
+    "result_sha256": "adaaf2efb7deb4f4214444e94ba9297b10932270ff45a0896107da49d11d6f06"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage281-course-poster-guard-20261029/candidate/longmemeval_results_20261029_004703.json",
+    "size_bytes": 245155441,
+    "sha256": "3ba03c8600e8bd0594116c1ae3ed757c66be0b2da543a34cd2f0ab6ac0f4db41"
+  },
+  "best_observed_full_score": {
+    "stage": 281,
+    "correct": 442,
+    "total": 500,
+    "accuracy": 0.884,
+    "gate": 485,
+    "shortfall": 43
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the guard opt-in. It converted the unsupported undergraduate-course poster venue claim into a cited abstention and passed both target replay and full-run judging. The fresh full candidate reached a new best 442/500, but 266 answer texts changed and paired outcomes versus Stage277 included 26 candidate-only and 25 baseline-only answers; do not attribute the aggregate +1 solely to this guard.",
+  "limitations": "Stage281 does not meet the 97% Top-20 gate. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. This run does not exercise the Stage166 stochastic-token prototype."
+}
