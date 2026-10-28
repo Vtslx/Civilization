@@ -1,0 +1,56 @@
+{
+  "stage": "Stage272",
+  "date": "2026-10-28",
+  "experiment": "Retry judge responses that omit the required terminal verdict",
+  "adapter_repo": "memory-benchmarks",
+  "adapter_commit": "329531e fix: retry malformed judge verdicts",
+  "answerer_model": "unchanged saved Stage268 answers",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "OpenAI-compatible",
+  "judge_seed": 42,
+  "judge_seed_accepted": true,
+  "source_result": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/longmemeval_results_stage268_parenthood_choice_source_coverage.json",
+  "source_full_score": {
+    "correct": 440,
+    "total": 500,
+    "accuracy": 0.88,
+    "is_fresh_generation": true
+  },
+  "malformed_judge_output_scan": {
+    "rows_scanned": 500,
+    "malformed_terminal_verdicts": 1,
+    "malformed_question_ids": ["2ebe6c92"],
+    "note": "The raw response concluded yes inside the reasoning tag but omitted the separate final yes/no required by the judge prompt. The old parser treated the missing terminal verdict as false."
+  },
+  "isolated_saved_answer_rejudge": {
+    "rows_rejudged": 1,
+    "other_saved_judgments_reused": 499,
+    "question_id": "2ebe6c92",
+    "answer_unchanged": "The Nightingale by Kristin Hannah",
+    "baseline_judgment": "FAIL",
+    "retry_judgment": "PASS",
+    "retry_verdict": "yes",
+    "seed_accepted": true,
+    "score_before": 440,
+    "score_after": 441,
+    "score_delta": 1,
+    "is_fresh_generation": false
+  },
+  "adapter_verification": {
+    "tests_passed": 194,
+    "subtests_passed": 25,
+    "targeted_judge_and_seed_tests": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "behavior": {
+    "valid_verdict_requests_added": 0,
+    "malformed_verdict_retry_limit": 1,
+    "reasoning_tag_verdict_accepted_without_retry": false,
+    "second_malformed_response": "fail closed; preserve both raw responses"
+  },
+  "decision": "Keep the parser strict and retry only the malformed judge response. The isolated saved-answer score moved 440/500 to 441/500 because the retry returned an explicit yes for an unchanged answer. This is not a fresh full generation; Stage268 remains the best verified fresh full score at 440/500.",
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "limitations": "The 97% full Top-20 target remains 485/500. The 100% memory-precision target and live offsite disaster-recovery restore remain unverified. The adapter change is committed in a temporary clone on /Volumes/Net while the original /Users volume rejects writes for lack of space; the commit still needs transfer to the original checkout."
+}
