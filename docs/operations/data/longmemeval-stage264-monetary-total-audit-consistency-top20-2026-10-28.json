@@ -1,0 +1,117 @@
+{
+  "stage": 264,
+  "date": "2026-10-28",
+  "experiment": "Reconcile contradictory currency totals with exact cited item amounts",
+  "plan_commit": "52d8c6d docs: plan monetary total consistency guard",
+  "adapter_commit": "d611e37 fix: reconcile monetary totals with cited items",
+  "run_id": "stage264-monetary-total-consistency",
+  "timestamp": "20261028_135351",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage263 per-question results; frozen retrieval order reused",
+  "retrieval_order_matches_stage263": {
+    "top_20": 500,
+    "top_200": 500
+  },
+  "feature": {
+    "cli_flag": "--monetary-total-answer-consistency",
+    "default_enabled": false,
+    "scope": "Explicit currency aggregate questions with a structured counted-item audit",
+    "rewrite_requirements": [
+      "Every selected item amount appears in an exact user-authored citation",
+      "Selected item amounts use the same supported currency",
+      "Selected item sum matches count_value",
+      "The answer has an explicit leading total that contradicts count_value",
+      "The rewritten answer passes the full validator"
+    ],
+    "missing_or_ambiguous_amount_behavior": "Leave the original response unchanged"
+  },
+  "frozen_stage263_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 433,
+    "candidate_correct": 434,
+    "paired_outcomes": {
+      "both_correct": 433,
+      "both_wrong": 66,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "36b9f61e",
+        "question": "What is the total amount I spent on luxury items in the past few months?",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "baseline_answer_total": 3000,
+        "verified_user_item_total": 2500,
+        "candidate_answer": "$2,500 total.",
+        "citation_validation": "PASS",
+        "seed_accepted": true
+      }
+    ],
+    "decision": "One contradictory saved answer changed from FAIL to PASS with zero regressions."
+  },
+  "full_candidate": {
+    "correct": 431,
+    "total": 500,
+    "accuracy": 0.862,
+    "target_correct": 485,
+    "shortfall": 54,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 70, "total": 78},
+      "multi-session": {"correct": 100, "total": 133},
+      "single-session-assistant": {"correct": 52, "total": 56},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "single-session-user": {"correct": 69, "total": 70},
+      "temporal-reasoning": {"correct": 113, "total": 133}
+    },
+    "guard_reconciliations": 0,
+    "target_question_fresh_answer": {
+      "question_id": "36b9f61e",
+      "judgment": "PASS",
+      "answer": "$2,500 total.",
+      "guard_status": "already_consistent"
+    }
+  },
+  "paired_against_stage263_full": {
+    "baseline_correct": 433,
+    "candidate_correct": 431,
+    "accuracy_delta_percentage_points": -0.4,
+    "paired_outcomes": {
+      "both_correct": 410,
+      "both_wrong": 46,
+      "candidate_only_correct": 21,
+      "baseline_only_correct": 23
+    },
+    "answer_text_changed_rows": 278
+  },
+  "unified_result_file": {
+    "path": "/Volumes/Net/civilization-stage264-monetary-total-consistency-20261028/candidate/longmemeval_results_stage264_monetary_total_consistency.json",
+    "size_bytes": 230287664,
+    "sha256": "65d60b190d207dd86dd8888e155ac7422318f5dc90894e7ed63e388536c28b3c"
+  },
+  "best_verified_full_score": {
+    "stage": 243,
+    "correct": 438,
+    "total": 500,
+    "accuracy": 0.876,
+    "shortfall": 47
+  },
+  "verification": {
+    "adapter_tests": 165,
+    "subtests": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "decision": "Keep the monetary total guard opt-in. The Stage263 saved-answer replay corrected one contradicted total, but the fresh 500-question regeneration scored 431/500 versus Stage263's 433/500. The target answer was already coherent in Stage264 generation, so the full-run delta is not attributable to the guard. Stage243 remains the best verified full score at 438/500.",
+  "memory_precision_measured": false,
+  "limitations": "The 97% Top-20 gate remains unmet. The 100% memory precision target remains unmeasured. This guard only reconciles explicit user-cited monetary item audits and performs no persistent memory writes."
+}

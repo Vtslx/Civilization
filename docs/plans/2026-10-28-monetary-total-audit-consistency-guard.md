@@ -34,3 +34,11 @@ Run focused tests, the complete adapter suite, compileall, and `git diff --check
 ### Task 4: Run a full 500-question candidate
 
 Regenerate all 500 answers over Stage263 frozen retrieval with only this guard newly enabled. Record paired outcomes, per-type scores, invalid audits, and artifact hashes. Commit the adapter module with an English message and record the evidence in Civilization.
+
+## Stage264 outcome
+
+- Adapter module commit: `d611e37 fix: reconcile monetary totals with cited items`.
+- Adapter verification: 165 tests and 25 subtests passed; `compileall` and `git diff --check` passed.
+- On Stage263's frozen saved answers, the guard changed `36b9f61e` from FAIL to PASS: the three exact user-cited item amounts summed to $2,500 while the answer's leading total claimed $3,000. Citation validation and the live judge passed; no other saved answer changed.
+- The full 500-answer regeneration over frozen Stage263 retrieval scored 431/500 (86.2%), versus Stage263 433/500 and the best Stage243 score 438/500. Paired outcomes against Stage263 were 21 candidate-only and 23 baseline-only; the full-run delta does not establish an overall gain. The target answer was already $2,500 in the fresh generation, so the guard did not trigger there. Keep the feature opt-in.
+- Scorecard: `docs/operations/data/longmemeval-stage264-monetary-total-audit-consistency-top20-2026-10-28.json`.
