@@ -1,0 +1,132 @@
+{
+  "stage": 280,
+  "date": "2026-10-29",
+  "experiment": "clothing-store-pickup-return-count-resolution",
+  "feature": "Default-off resolver counts distinct pending clothing pickup and return tasks from exact user-authored store and dry-cleaning quotes.",
+  "plan_commit": "6d4a216 docs: date clothing pickup count plan",
+  "adapter_commit": "cb56c25 feat: count clothing pickup return tasks from evidence",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 225,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "ca4dd671f36ac217ce4c285347f91055d6217087b88470c474fb375b3058fa80",
+  "retrieval_source": "Stage268 frozen Top-200 results; answer generation and judging rerun on Top-20 input",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage268": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage280-clothing-store-count",
+  "top_k": 200,
+  "cutoff": 20,
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 440,
+    "accuracy": 0.88,
+    "target_correct": 485,
+    "shortfall": 45,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 112, "total": 133},
+      "single-session-assistant": {"correct": 52, "total": 56},
+      "single-session-preference": {"correct": 27, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 110, "total": 133}
+    },
+    "paired_against_stage268": {
+      "baseline_correct": 440,
+      "candidate_correct": 440,
+      "both_correct": 416,
+      "both_wrong": 36,
+      "candidate_only_correct": 24,
+      "baseline_only_correct": 24,
+      "net_delta": 0,
+      "answer_text_changed_rows": 277
+    },
+    "paired_against_stage277": {
+      "baseline_correct": 441,
+      "candidate_correct": 440,
+      "both_correct": 413,
+      "both_wrong": 32,
+      "candidate_only_correct": 27,
+      "baseline_only_correct": 28,
+      "net_delta": -1,
+      "answer_text_changed_rows": 277
+    },
+    "paired_against_stage279": {
+      "baseline_correct": 434,
+      "candidate_correct": 440,
+      "both_correct": 416,
+      "both_wrong": 42,
+      "candidate_only_correct": 24,
+      "baseline_only_correct": 18,
+      "net_delta": 6,
+      "answer_text_changed_rows": 270
+    },
+    "clothing_resolver_status_counts": {
+      "not_applicable": 499,
+      "resolved_unique_clothing_store_tasks": 1
+    },
+    "invalid_answer_audit_rows": {
+      "stage268": 23,
+      "stage277": 19,
+      "stage279": 26,
+      "candidate": 22
+    },
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "0a995998",
+    "question": "How many items of clothing do I need to pick up or return from a store?",
+    "stage268_judgment": "FAIL",
+    "stage277_judgment": "FAIL",
+    "stage279_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "3 items of clothing",
+    "resolver_status": "resolved_unique_clothing_store_tasks",
+    "item_count": 3,
+    "source_memory_indices": [1, 2, 4],
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "0a995998",
+    "correct": 1,
+    "total": 1,
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage280-clothing-count-20261029/candidate/longmemeval_results_20261029_000348.json",
+    "result_size_bytes": 524461,
+    "result_sha256": "ab57a6477ec58040c6051c4a2ee583f6b4bf0b454dbc35ba603ba2fda45cc5e9"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage280-clothing-count-20261029/candidate/longmemeval_results_20261029_001853.json",
+    "size_bytes": 245074817,
+    "sha256": "bc294c4997b01f1084456aea886d4427c40565df0f2c17e66d66a376203bc161"
+  },
+  "best_observed_full_score": {
+    "stage": 277,
+    "correct": 441,
+    "total": 500,
+    "accuracy": 0.882,
+    "gate": 485,
+    "shortfall": 44
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the resolver opt-in. It repaired one supported FAIL row with three exact user-authored task citations and passed live judging. The fresh candidate tied Stage268 at 440/500 but remained one answer below Stage277; broad answer changes and paired outcomes prevent attributing the full-score movement to this one-row rule.",
+  "limitations": "Stage280 does not meet the 97% gate. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified."
+}

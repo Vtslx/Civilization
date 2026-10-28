@@ -229,3 +229,11 @@ benchmark adapter 新增默认关闭的 `--loyalty-points-remaining-resolution`�
 
 保留 opt-in。最终代码提交为 `bff133a feat: resolve remaining loyalty points from evidence`；220 项测试、25 个子测试、compileall、diff 检查通过。最佳全量成绩仍为 Stage277 的 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
 [longmemeval-stage279-loyalty-points-remaining-top20-2026-10-28.json](data/longmemeval-stage279-loyalty-points-remaining-top20-2026-10-28.json)。
+## Stage280：衣物门店取/退待办计数（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--clothing-store-pickup-return-count-resolution`。它只在衣物取货/退货计数题中识别用户原话里的明确待办，并区分取货、退货两个动作；相同干洗待办在多条记忆重复提及时只计一次，朋友代管的毛衣不算门店待办。若用户原话包含未能解析的门店衣物任务，解析器不输出部分计数。
+
+目标题 `0a995998` 的 Top-20 用户原话分别提到取回 Zara 换货的新靴子、取回送洗的海军蓝西装外套、以及另一条退回 Zara 靴子的待办。重复的西装外套记录合并后得到 3 项；三条引用均通过校验，真实单题答题与裁判复放 PASS。Stage280 全量重答在 Stage268 冻结检索上得 **440/500（88.0%）**，与 Stage268 持平，比 Stage277 少 1 题。配对 Stage268：24 题仅候选答对、24 题仅基线答对、416 题两者都对、36 题两者都错，净差 0；与 Stage277 配对净差 −1（27 题仅候选答对、28 题仅基线答对、413 题两者都对、32 题两者都错）。277 个答案文本变化，不能将总体结果归因于单个待办解析器。检索结果对象 500/500 相同；候选无效审计 22 条，API 错误标记 0，解析器触发 1 次。
+
+代码提交 `cb56c25 feat: count clothing pickup return tasks from evidence`；225 项测试、25 个子测试、compileall 和 diff 检查通过。Stage277 仍为最佳全量成绩 **441/500（88.2%）**，离 485/500 还差 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。成绩卡见
+[longmemeval-stage280-clothing-store-pickup-return-count-top20-2026-10-29.json](data/longmemeval-stage280-clothing-store-pickup-return-count-top20-2026-10-29.json)。
