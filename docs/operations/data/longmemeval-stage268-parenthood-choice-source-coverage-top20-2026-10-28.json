@@ -1,0 +1,109 @@
+{
+  "stage": 268,
+  "date": "2026-10-28",
+  "experiment": "User-source name coverage for parenthood-order comparisons",
+  "plan_commit": "3f73d50 docs: plan parenthood choice source guard",
+  "adapter_commit": "fca8995 fix: abstain on unnamed parenthood comparison options",
+  "run_id": "stage268-parenthood-choice-source-coverage",
+  "timestamp": "20261028_152419",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage267 per-question results; frozen retrieval order reused",
+  "retrieval_order_matches_stage267": {
+    "top_20": 500,
+    "top_200": 500
+  },
+  "feature": {
+    "existing_cli_flag": "--temporal-choice-audit-consistency",
+    "default_enabled": false,
+    "parenthood_behavior": "Abstain only when a compared person is entirely absent from user-authored Top-20 messages; assistant-only name mentions do not count.",
+    "other_temporal_choice_behavior": "Existing source-audit consistency rules remain unchanged"
+  },
+  "frozen_stage267_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 431,
+    "candidate_correct": 432,
+    "paired_outcomes": {
+      "both_correct": 431,
+      "both_wrong": 68,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "gpt4_fe651585_abs",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "missing_option": "Tom",
+        "candidate_citation_validation": "PASS",
+        "candidate_answer": "I cannot determine which option became a parent first because the supplied user-authored memories do not mention Tom."
+      }
+    ],
+    "judge_seed_accepted": true,
+    "decision": "One unsupported named-person comparison changed from FAIL to PASS with citation validation and no saved-answer regression."
+  },
+  "full_candidate": {
+    "correct": 440,
+    "total": 500,
+    "accuracy": 0.88,
+    "target_correct": 485,
+    "shortfall": 45,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {"correct": 71, "total": 78},
+      "multi-session": {"correct": 109, "total": 133},
+      "single-session-assistant": {"correct": 51, "total": 56},
+      "single-session-preference": {"correct": 26, "total": 30},
+      "single-session-user": {"correct": 69, "total": 70},
+      "temporal-reasoning": {"correct": 114, "total": 133}
+    },
+    "parenthood_guard_triggered_rows": 0,
+    "fresh_target_row": {
+      "question_id": "gpt4_fe651585_abs",
+      "judgment": "PASS",
+      "guard_status": "not_applicable",
+      "note": "The fresh answerer generation already abstained correctly."
+    }
+  },
+  "paired_against_stage267_full": {
+    "baseline_correct": 431,
+    "candidate_correct": 440,
+    "accuracy_delta_percentage_points": 1.8,
+    "paired_outcomes": {
+      "both_correct": 413,
+      "both_wrong": 42,
+      "candidate_only_correct": 27,
+      "baseline_only_correct": 18
+    },
+    "answer_text_changed_rows": 271
+  },
+  "unified_result_file": {
+    "path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/longmemeval_results_stage268_parenthood_choice_source_coverage.json",
+    "size_bytes": 230342416,
+    "sha256": "47b1c05b31b32399a54c4da6465d7624fa14cc6798644f06f7065821d9d7faf2"
+  },
+  "best_observed_full_score": {
+    "stage": 268,
+    "correct": 440,
+    "total": 500,
+    "accuracy": 0.88,
+    "prior_reference_stage": 243,
+    "prior_reference_correct": 438
+  },
+  "verification": {
+    "adapter_tests": 173,
+    "subtests": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "decision": "Keep the parenthood-name coverage check under the existing temporal-choice opt-in guard. The frozen replay fixed the unsupported Tom comparison. The fresh full candidate scored 440/500, but the guard triggered on zero rows because the model already abstained on the target; 271 answer texts changed against Stage267, so the overall +9 paired delta is not attributed to this guard.",
+  "memory_precision_measured": false,
+  "limitations": "The 97% Top-20 gate remains unmet by 45 answers. The 100% memory-precision target remains unmeasured. This guard only addresses parenthood comparisons where a named option is absent from user-authored evidence and does not write persistent memory."
+}
