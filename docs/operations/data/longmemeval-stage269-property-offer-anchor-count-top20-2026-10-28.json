@@ -1,0 +1,167 @@
+{
+  "stage": 269,
+  "date": "2026-10-28",
+  "experiment": "Resolve a property count anchored to a named offer target",
+  "plan_commit": "331f0c1 docs: plan property offer anchor resolver",
+  "adapter_commit": "d7bc7ba fix: resolve property offer anchor counts",
+  "run_id": "stage269-property-offer-anchor-count-v2",
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai-compatible Magpie gateway",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "top_k": 200,
+  "cutoff": "top_20",
+  "retrieval_source": "Stage268 per-question results; frozen retrieval reused",
+  "retrieval_order_matches_stage268": {
+    "top_20": 500,
+    "top_200_available_results": 500,
+    "result_list_lengths": 500,
+    "list_length_distribution": {
+      "200": 495,
+      "199": 2,
+      "198": 2,
+      "194": 1
+    }
+  },
+  "feature": {
+    "cli_flag": "--property-offer-anchor-count-resolution",
+    "default_enabled": false,
+    "requirements": [
+      "A strict property/home/house count question about viewing before an offer on a named target",
+      "At least two distinctive target terms and exactly one matching counted item",
+      "A complete valid count audit with positive whole property quantities summing to count_value",
+      "A target item with an explicit before-anchor relation and one user-authored source segment that names the target, describes viewing, and mentions the offer",
+      "A target quantity of one with incremental quantity basis",
+      "A rewritten answer that states the other-property count and the inclusive total and passes citation and count validation"
+    ],
+    "behavior": "Preserve other item citations, retain or extend the target citation from the exact user message, and leave ambiguous or weakly supported audits unchanged"
+  },
+  "frozen_stage268_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 440,
+    "candidate_correct": 441,
+    "paired_outcomes": {
+      "both_correct": 440,
+      "both_wrong": 59,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0
+    },
+    "changed_rows": [
+      {
+        "question_id": "gpt4_7fce9456",
+        "baseline_judgment": "FAIL",
+        "candidate_judgment": "PASS",
+        "excluded_target": "3-bedroom townhouse in Brookside",
+        "other_property_count": 4,
+        "total_including_target": 5,
+        "candidate_citation_validation": "PASS",
+        "candidate_count_audit_validation": "PASS",
+        "candidate_answer": "You viewed 4 other properties before making an offer on the townhouse in the Brookside neighborhood. The other properties were: 3-bedroom bungalow in Oakwood; Property in Cedar Creek; 1-bedroom condo; 2-bedroom condo. Including the target property itself, that is 5 properties viewed by the time of the offer."
+      }
+    ],
+    "judge_seed_accepted": true,
+    "decision": "One saved-answer error changed from FAIL to PASS with valid user-authored evidence and no replay regressions."
+  },
+  "full_candidate": {
+    "correct": 425,
+    "total": 500,
+    "accuracy": 0.85,
+    "target_correct": 485,
+    "shortfall": 60,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {
+        "correct": 67,
+        "total": 78
+      },
+      "multi-session": {
+        "correct": 103,
+        "total": 133
+      },
+      "single-session-assistant": {
+        "correct": 50,
+        "total": 56
+      },
+      "single-session-preference": {
+        "correct": 27,
+        "total": 30
+      },
+      "single-session-user": {
+        "correct": 68,
+        "total": 70
+      },
+      "temporal-reasoning": {
+        "correct": 110,
+        "total": 133
+      }
+    },
+    "resolver_status_counts": {
+      "not_applicable": 499,
+      "excluded_unique_offer_target": 1
+    },
+    "target_row": {
+      "question_id": "gpt4_7fce9456",
+      "baseline_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "resolver_status": "excluded_unique_offer_target",
+      "candidate_count_audit_validated": true
+    },
+    "paired_against_stage268_full": {
+      "baseline_correct": 440,
+      "candidate_correct": 425,
+      "accuracy_delta_percentage_points": -3.0,
+      "paired_outcomes": {
+        "both_correct": 408,
+        "both_wrong": 43,
+        "candidate_only_correct": 17,
+        "baseline_only_correct": 32
+      },
+      "answer_text_changed_rows": 266
+    },
+    "invalid_answer_audits": {
+      "stage268": 23,
+      "candidate": 30
+    }
+  },
+  "superseded_diagnostic_run": {
+    "run_id": "stage269-property-offer-anchor-count",
+    "correct": 422,
+    "total": 500,
+    "target_resolver_status": "unsupported_target_relation",
+    "decision": "Superseded before final evaluation after inspection showed that the answerer sometimes emitted a valid before relation and a shortened user citation; the resolver was updated to bind an exact source quote spanning the view and offer sentences."
+  },
+  "current_best_observed_full_score": {
+    "stage": 268,
+    "correct": 440,
+    "total": 500,
+    "accuracy": 0.88,
+    "shortfall": 45
+  },
+  "artifacts": {
+    "frozen_answer_replay": "/Volumes/Net/civilization-stage269-property-offer-anchor-count-20261028/frozen-answer-replay.json",
+    "superseded_diagnostic_unified_result": {
+      "path": "/Volumes/Net/civilization-stage269-property-offer-anchor-count-20261028/candidate/longmemeval_results_20261028_160922.json",
+      "sha256": "2fe80cc36a21f870de3572109e3e9761e018d14f20e3b9a4359d40bda6387693",
+      "size_bytes": 244370306
+    },
+    "final_unified_result": {
+      "path": "/Volumes/Net/civilization-stage269-property-offer-anchor-count-20261028/candidate-v2/longmemeval_results_20261028_162643.json",
+      "sha256": "b053232bf767bcced2c323d423623f389e1691392f08462e28e9299e3fa7da9c",
+      "size_bytes": 244375288,
+      "prompt_source_sha256": "917ce4de71862396e28968c6e66dade26223e4d0e8e4e18c17e5417062a42e4f"
+    }
+  },
+  "verification": {
+    "adapter_tests": 179,
+    "subtests": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "decision": "Keep the narrow resolver opt-in. Frozen replay supports one targeted correction with no regression, and the final full run shows the target row also corrected. The full candidate score is below Stage268 and 266 answer texts changed, so the aggregate delta is not attributed to this resolver.",
+  "memory_precision_measured": false,
+  "persistent_memory_writes": 0,
+  "limitations": "The best observed full Top-20 score remains 440/500, 45 answers short of 485/500. The final Stage269 run scored 425/500, and the 100% memory-precision target remains unmeasured."
+}
