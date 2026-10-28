@@ -397,3 +397,15 @@ Stage293 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`d2158ee fix: ground single-session preferences in user evidence`；283 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `88273ed8e460c9f5e6bd6df609669ef1bf5211d23599f475199cbd9cf7c7b411`；冻结复放汇总哈希见 Stage293 JSON。详见[Stage293 成绩卡](data/longmemeval-stage293-single-session-preference-evidence-top20-2026-10-29.json)。
 
 保留为 opt-in。Stage293 未提升全量成绩；Stage291 仍是最佳 452/500，距离 485 还差 33。记忆精准度尚未测量，异地灾备恢复未验证。Stage293 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage294：酒店推荐偏好解析（2026-10-29）
+
+适配器新增默认关闭的 `--hotel-recommendation-preference-resolution`，仅用于 `single-session-preference`。它把用户明确表达的酒店景观偏好和另一条用户原话中的屋顶泳池或阳台热水浴缸偏好迁移到新目的地。答案只使用引用原文支持的说法；若检索记忆已提及目标目的地酒店，或用户有冲突的负向偏好，则不改写；不会假装找到了当前酒店或房源。
+
+在冻结检索题 `0edc2aef` 上，Stage293 的答案只说明记忆谈到 Seattle 和 Las Vegas，因此被判 FAIL。新答案归纳了用户亲自表达的城市景观与设施偏好，引用第 5、6 条来源，并说明提供的记忆没有 Miami 酒店记录，judge 判 PASS。引用验证通过。
+
+Stage294 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **448/500（89.6%）**。Stage291 仍为最佳 452/500（90.4%），距离 485/500 门槛差 33 题。与 Stage291 配对：16 题仅候选答对、20 题仅基线答对、432 题两者都对、32 题两者都错，净差 −4；254 个答案文本变化。与 Stage293 配对：18 题仅候选答对、20 题仅基线答对、430 题两者都对、32 题两者都错，净差 −2；260 个答案文本变化。完整检索对象 500/500 一致。酒店解析器作用于 30 道偏好题，仅修正 `0edc2aef` 一题，另 29 题不适用；470 题范围外。无效答案审计 25 条（Stage293 为 24），API 错误 0。分题型：知识更新 75/78，多会话 106/133，助手事实 54/56，偏好 29/30，用户事实 68/70，时间推理 116/133。答案文本变化较多且生成存在波动，不能把总分下降归因于这一条解析器。
+
+答题器和裁判均接受 seed 42。适配器提交：`5d311e2 fix: preserve hotel preference filters for new destinations`；288 项测试、25 个子测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `f113e612dc12810c8c10d82877880c0c19affb3505537f94320dbfabe42ba939`；目标复放 SHA-256 为 `6251a81c6e3ef990dcbbcbc936497009eb54cd0a4259cb54d5cbcae416c93b7a`。详见[Stage294 成绩卡](data/longmemeval-stage294-hotel-preference-top20-2026-10-29.json)。
+
+保留为 opt-in。Stage294 未提升最佳全量成绩；Stage291 仍为 452/500，距离 485 差 33。记忆精准度尚未测量，异地灾备恢复未验证。Stage294 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。

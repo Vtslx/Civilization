@@ -1,0 +1,124 @@
+{
+  "stage": 294,
+  "date": "2026-10-29",
+  "experiment": "hotel-recommendation-preference-resolution",
+  "feature": "Default-off, single-session-preference resolver that transfers exact user-authored hotel view and amenity filters to a new destination, and declines when retrieved memories mention a destination-specific hotel.",
+  "plan_commit": "9d51c54 docs: plan hotel preference resolver",
+  "adapter_commit": "5d311e2 fix: preserve hotel preference filters for new destinations",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "pytest_tests_passed": 288,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "08d8a13a3844ba9f5a530d61b09a1ddd94471e04cea9ab90a5ac80df89c0d997",
+  "retrieval_source": "Stage268 frozen Top-200 result files; full search-result objects match Stage268, Stage291, and Stage293 in all 500 rows.",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage268": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "c0c00f6d",
+  "top_k": 200,
+  "cutoff": 20,
+  "target_live_replay": {
+    "question_id": "0edc2aef",
+    "question_type": "single-session-preference",
+    "baseline_stage293_judgment": "FAIL",
+    "candidate_judgment": "PASS",
+    "answerer_regenerated_from_frozen_retrieval": true,
+    "resolver_status": "revised_from_user_hotel_preferences",
+    "candidate_answer": "Your earlier hotel searches emphasize a great city view and distinctive features such as a rooftop pool or a hot tub on the balcony. The supplied memories don't identify a hotel in Miami; use those preferences as filters when comparing current Miami options.",
+    "source_memory_indices": [5, 6],
+    "source_pair_count": 2,
+    "citation_validation": "PASS",
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage294-hotel-preference-20261029/candidate/frozen-replay/predicted_stage294-hotel-replay/0edc2aef.json",
+    "result_size_bytes": 519341,
+    "result_sha256": "6251a81c6e3ef990dcbbcbc936497009eb54cd0a4259cb54d5cbcae416c93b7a"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 448,
+    "accuracy": 0.896,
+    "target_correct": 485,
+    "shortfall": 37,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 68, "total": 70},
+      "multi-session": {"correct": 106, "total": 133},
+      "single-session-preference": {"correct": 29, "total": 30},
+      "temporal-reasoning": {"correct": 116, "total": 133},
+      "knowledge-update": {"correct": 75, "total": 78},
+      "single-session-assistant": {"correct": 54, "total": 56}
+    },
+    "paired_against_stage291": {
+      "baseline_correct": 452,
+      "candidate_correct": 448,
+      "both_correct": 432,
+      "both_wrong": 32,
+      "candidate_only_correct": 16,
+      "baseline_only_correct": 20,
+      "answer_text_changed_rows": 254,
+      "retrieval_objects_equal": 500,
+      "net_delta": -4
+    },
+    "paired_against_stage293": {
+      "baseline_correct": 450,
+      "candidate_correct": 448,
+      "both_correct": 430,
+      "both_wrong": 32,
+      "candidate_only_correct": 18,
+      "baseline_only_correct": 20,
+      "answer_text_changed_rows": 260,
+      "retrieval_objects_equal": 500,
+      "net_delta": -2
+    },
+    "hotel_recommendation_preference_resolution_enabled_rows": 30,
+    "hotel_recommendation_preference_resolution_status_counts": {
+      "not_enabled": 470,
+      "not_applicable": 29,
+      "revised_from_user_hotel_preferences": 1
+    },
+    "invalid_answer_audit_rows": 25,
+    "stage293_invalid_answer_audit_rows": 24,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_rows": {
+    "0edc2aef": {
+      "stage293_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "resolver_status": "revised_from_user_hotel_preferences",
+      "source_memory_indices": [5, 6],
+      "citation_validation": "PASS"
+    }
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage294-hotel-preference-20261029/candidate/full-run/longmemeval_results_20261029_061514.json",
+    "size_bytes": 246305222,
+    "sha256": "f113e612dc12810c8c10d82877880c0c19affb3505537f94320dbfabe42ba939"
+  },
+  "best_observed_full_score": {
+    "stage": 291,
+    "correct": 452,
+    "total": 500,
+    "accuracy": 0.904,
+    "gate": 485,
+    "shortfall": 33
+  },
+  "memory_precision_measured": false,
+  "decision": "Keep the resolver opt-in: the frozen target replay changed 0edc2aef from FAIL to PASS with exact user citations, and the resolver triggered only on that row in the full candidate. Stage294 scored 448/500, below Stage291 and Stage293; broad answer changes and generation variability do not support attributing the aggregate movement to the resolver.",
+  "limitations": "The best full Top-20 score remains 452/500 (90.4%), 33 answers below the 485/500 gate. Stage294 is 448/500 and does not improve the best. Memory precision remains unmeasured; live offsite disaster-recovery restore remains unverified. Stage294 does not exercise Stage166; the stochastic reservation protocol still has no provider-generation, durable-memory, or LongMemEval accuracy A/B evidence."
+}
