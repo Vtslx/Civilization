@@ -261,3 +261,29 @@ Stage282 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，�
 [longmemeval-stage282-yearless-event-date-interval-top20-2026-10-29.json](data/longmemeval-stage282-yearless-event-date-interval-top20-2026-10-29.json)。
 
 该 resolver 保持 opt-in：它在冻结子集上无回退地修正一题，但 fresh 全量成绩净变化为 0。当前最佳全量成绩仍为 442/500（88.4%）；100% 记忆精准度尚未验证，异地灾备恢复演练仍未完成。Stage282 未测试 Stage166 随机 token 原型。
+
+## Stage283：职位绑定的工程师人数证据保护器（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--professional-role-count-evidence-guard`，仅用于问题明确询问用户在某个职位下带领多少工程师的情形。当数值答案只由另一职位的用户原话支持时，保护器引用该原话并弃答；若一条用户原话直接给出题目职位和团队人数，则保留答案，不推断职位等价。
+
+在 Stage282 冻结答案上复放时，保护器只改写 `031748ae_abs`：原答案“4 engineers”引用的是 Senior Software Engineer 职位，而题目问 Software Engineer Manager；候选改为带引用的弃答，引用校验通过，真实裁判 PASS。其余 499 条已保存判定复用，零回退。单题实时裁判复放也 PASS，seed 42 被接受。
+
+Stage283 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **446/500（89.2%）**，距 485/500 门槛差 39 题，是目前最佳已验证全量成绩。较 Stage282 的 442/500，配对结果为 24 题仅候选答对、20 题仅 Stage282 答对、422 题两者都对、34 题两者都错，净增 4；256 个答案文本发生变化，因此不能把全量提升单独归因于这条单题规则。检索结果对象 500/500 一致。保护器全量启用 500 题，输出 1 条职位不匹配弃答、1 条职位与人数直接匹配状态，其余 498 题不适用。候选无效答案审计 25 条，API 错误标记为 0。分题型：知识更新 69/78，多会话 115/133，助手事实 51/56，偏好 28/30，用户事实 67/70，时间推理 116/133。
+
+答题器和裁判均接受 seed 42。实现提交 `c36974b feat: guard engineer counts by user role title`；241 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `d7c1991e3b6d168006c3cb08094ea4372069d5b0254a8bd04f6606fa486c5918`；单题裁判产物 SHA-256 为 `030c38c98174074be4c9768f70a1ff5f4d135676a66be7b36df83b0c4aa4d4eb`。成绩卡见
+[longmemeval-stage283-professional-role-count-guard-top20-2026-10-29.json](data/longmemeval-stage283-professional-role-count-guard-top20-2026-10-29.json)。
+
+保留该保护器为 opt-in。100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。Stage283 没有测试 Stage166 随机 token 原型。
+
+## Stage283：职位绑定的工程师人数证据保护器（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--professional-role-count-evidence-guard`，仅用于问题明确询问用户在某个职位下带领多少工程师的情形。当数值答案只由另一职位的用户原话支持时，保护器引用该原话并弃答；若一条用户原话直接给出题目职位和团队人数，则保留答案，不推断职位等价。
+
+在 Stage282 冻结答案上复放时，保护器只改写 `031748ae_abs`：原答案“4 engineers”引用的是 Senior Software Engineer 职位，而题目问 Software Engineer Manager；候选改为带引用的弃答，引用校验通过，真实裁判 PASS。其余 499 条已保存判定复用，零回退。单题实时裁判复放也 PASS，seed 42 被接受。
+
+Stage283 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **446/500（89.2%）**，距 485/500 门槛差 39 题，是目前最佳已验证全量成绩。较 Stage282 的 442/500，配对结果为 24 题仅候选答对、20 题仅 Stage282 答对、422 题两者都对、34 题两者都错，净增 4；256 个答案文本发生变化，因此不能把全量提升单独归因于这条单题规则。检索结果对象 500/500 一致。保护器全量启用 500 题，输出 1 条职位不匹配弃答、1 条职位与人数直接匹配状态，其余 498 题不适用。候选无效答案审计 25 条，API 错误标记为 0。分题型：知识更新 69/78，多会话 115/133，助手事实 51/56，偏好 28/30，用户事实 67/70，时间推理 116/133。
+
+答题器和裁判均接受 seed 42。实现提交 `c36974b feat: guard engineer counts by user role title`；241 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `d7c1991e3b6d168006c3cb08094ea4372069d5b0254a8bd04f6606fa486c5918`；单题裁判产物 SHA-256 为 `030c38c98174074be4c9768f70a1ff5f4d135676a66be7b36df83b0c4aa4d4eb`。成绩卡见
+[longmemeval-stage283-professional-role-count-guard-top20-2026-10-29.json](data/longmemeval-stage283-professional-role-count-guard-top20-2026-10-29.json)。
+
+保留该保护器为 opt-in。100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。Stage283 没有测试 Stage166 随机 token 原型。
