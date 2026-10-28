@@ -373,3 +373,15 @@ Stage291 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 �
 答题器和裁判均接受 seed 42。适配器提交：`64f60c7 fix: match assistant recommendations to explicit clues`；275 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `d5baeb73ba2599c2bf784a212a28e6568f43ff1753859e414dd01f7b975376ff`；冻结目标复放 SHA-256 为 `487db9879d03406e68581e0d8bb05864ed2e09e477d9e3832fbdc9c71a6a377a`。详见[Stage291 成绩卡](data/longmemeval-stage291-assistant-recommendation-clue-top20-2026-10-29.json)。
 
 保留两个开关为 opt-in。Stage291 距离 485/500 仍差 33 题；记忆精准度尚未测量，异地灾备恢复未验证。Stage291 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。
+
+## Stage292：医疗影像论文偏好解析（2026-10-29）
+
+适配器新增默认关闭的 `--research-publication-preference-resolution`，用于宽泛的 `single-session-preference` 论文/会议偏好问题。只有至少两个不同用户来源消息对直接询问医疗影像研究论文或文章时，才将医疗影像视为主要阅读兴趣。规则保留精确用户引用，忽略助手-only 说法；若另有明确的竞争研究主题，则不触发。
+
+在 Stage291 冻结题 `75832dbd` 上，答案从多智能体强化学习会议列表改为医疗影像研究方向，依据来自三个用户消息对；会议名称另引用户关于 peer-reviewed AI 会议的原话。引用校验和真实裁判均 PASS；冻结全量只改这一条，分数从 452/500 到 453/500，另外 499 条判定复用，零回退。冻结助手偏好题型从 55/56 提升到 56/56。
+
+Stage292 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得 **451/500（90.2%）**。该成绩与 Stage288 持平，比 Stage291 的 452/500 低 1；当前最佳仍为 Stage291，距离 485/500 差 33 题。与 Stage288 配对：18 题仅候选答对、18 题仅基线答对、433 题两者都对、31 题两者都错，净差 0；250 个答案文本变化。与 Stage291 配对：19 题仅候选答对、20 题仅基线答对、432 题两者都对、29 题两者都错，净差 −1；244 个答案文本变化。检索对象 500/500 一致。解析器作用于 30 道偏好题，触发 1 次、29 次不适用，另外 470 题范围外；无效答案审计 26 条（Stage291 为 22），API 错误 0。分题型：知识更新 76/78，多会话 112/133，助手事实 55/56，偏好 26/30，用户事实 65/70，时间推理 117/133。答案输出波动较大，不能把总分变化归因于单一解析器。
+
+答题器和裁判均接受 seed 42。适配器提交：`6a3828b fix: ground publication suggestions in repeated user interests`；279 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `fa27de249b12a25760714daa4195f61844d3696636fb4cc9619d5e0c4294964d`；冻结目标复放 SHA-256 为 `ddb6f74e9f2bf5d59d729688f526f4c2df19391cf439a19d644b5d21b9e4344e`。详见[Stage292 成绩卡](data/longmemeval-stage292-medical-imaging-publication-preference-top20-2026-10-29.json)。
+
+保留为 opt-in。Stage292 距离 485/500 还差 34；Stage291 仍是最佳 452/500，差 33。记忆精准度尚未测量，异地灾备恢复未验证。Stage292 未运行 Stage166；随机预留仍无 provider 生成、持久化记忆或准确率 A/B 证据。

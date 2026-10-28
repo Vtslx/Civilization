@@ -1,0 +1,133 @@
+{
+  "stage": 292,
+  "date": "2026-10-29",
+  "experiment": "medical-imaging-publication-preference-resolution",
+  "feature": "Default-off resolver for broad publication/conference preferences that finds a unique topic supported by at least two distinct user-authored research requests about medical image analysis.",
+  "plan_commit": "3e782b3 docs: plan research preference resolver",
+  "adapter_commit": "6a3828b fix: ground publication suggestions in repeated user interests",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 279,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "95930ad37d335fb4c5ec9a8f2ae2dbd1c46df51e32098ee9110e663fdfd6a199",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage291; all 500 answers were freshly generated and judged over frozen Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage291-assistant-recommendation-clue-20261029/candidate/full-run/predicted_stage291-assistant-recommendation-clue",
+  "retrieval_order_matches_stage291": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage292-medical-imaging-publication-preference",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 452,
+    "candidate_correct": 453,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 452,
+    "both_wrong": 47,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 499,
+    "citation_validation": "PASS",
+    "target_question_id": "75832dbd",
+    "candidate_judgment": "PASS"
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 451,
+    "accuracy": 0.902,
+    "target_correct": 485,
+    "shortfall": 34,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 65, "total": 70},
+      "multi-session": {"correct": 112, "total": 133},
+      "single-session-preference": {"correct": 26, "total": 30},
+      "temporal-reasoning": {"correct": 117, "total": 133},
+      "knowledge-update": {"correct": 76, "total": 78},
+      "single-session-assistant": {"correct": 55, "total": 56}
+    },
+    "paired_against_stage288": {
+      "baseline_correct": 451,
+      "candidate_correct": 451,
+      "both_correct": 433,
+      "both_wrong": 31,
+      "candidate_only_correct": 18,
+      "baseline_only_correct": 18,
+      "answer_text_changed_rows": 250,
+      "retrieval_objects_equal": 500,
+      "net_delta": 0
+    },
+    "paired_against_stage291": {
+      "baseline_correct": 452,
+      "candidate_correct": 451,
+      "both_correct": 432,
+      "both_wrong": 29,
+      "candidate_only_correct": 19,
+      "baseline_only_correct": 20,
+      "answer_text_changed_rows": 244,
+      "retrieval_objects_equal": 500,
+      "net_delta": -1
+    },
+    "research_publication_preference_resolution_effective_rows": 30,
+    "research_publication_preference_resolution_status_counts": {
+      "not_enabled": 470,
+      "not_applicable": 29,
+      "revised_from_repeated_medical_imaging_requests": 1
+    },
+    "invalid_answer_audit_rows": 26,
+    "stage291_invalid_answer_audit_rows": 22,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "75832dbd",
+    "stage291_judgment": "FAIL",
+    "stage291_answer": "Given your interest in multi-agent and multimodal reinforcement learning, robotics, and autonomous systems, you might find NeurIPS, ICML, ICLR, CVPR, and ICCV interesting. These are conferences you mentioned in your statement of purpose; the supplied memories don’t identify recent publications by title that match those interests.",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "Your recent research requests focus on deep learning for medical image analysis, including multimodal image fusion, transfer learning, domain adaptation, and explainable AI. You also mentioned peer-reviewed AI venues such as NeurIPS, CVPR, ICML, ICLR, ICCV; I would focus on their healthcare and medical-imaging work.",
+    "resolver_status": "revised_from_repeated_medical_imaging_requests",
+    "source_pair_count": 3,
+    "source_memory_indices": [3, 4, 5, 13],
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "75832dbd",
+    "correct": 1,
+    "total": 1,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage292-medical-imaging-publication-preference-20261029/frozen-replay/target.json",
+    "result_size_bytes": 511772,
+    "result_sha256": "ddb6f74e9f2bf5d59d729688f526f4c2df19391cf439a19d644b5d21b9e4344e"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage292-medical-imaging-publication-preference-20261029/candidate/full-run/longmemeval_results_20261029_052311.json",
+    "size_bytes": 246112752,
+    "sha256": "fa27de249b12a25760714daa4195f61844d3696636fb4cc9619d5e0c4294964d"
+  },
+  "best_observed_full_score": {
+    "stage": 291,
+    "tied_by_stage": 292,
+    "correct": 452,
+    "total": 500,
+    "accuracy": 0.904,
+    "gate": 485,
+    "shortfall": 33
+  },
+  "memory_precision_measured": false,
+  "decision": "The frozen Stage291 saved-answer replay changed only 75832dbd from FAIL to PASS using three distinct user-authored research-request source pairs and a separate user quote for venue names; citation validation and live judging passed. In the fresh full run the feature triggered once and the target passed, but the overall score remained 451/500, tied with Stage288 and one below Stage291. Against Stage288 there were 18 candidate-only and 18 baseline-only correct answers across 250 changed texts; do not attribute score movement to the one-row resolver. Keep the flag opt-in.",
+  "limitations": "Stage292 remains 34 answers below 485/500; Stage291 remains the best full score at 452/500, 33 short. Memory precision remains unmeasured and live offsite disaster-recovery restore remains unverified. Stage292 does not exercise Stage166; the stochastic reservation prototype has no provider-generation, durable-memory, or accuracy A/B evidence."
+}
