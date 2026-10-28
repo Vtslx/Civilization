@@ -209,3 +209,14 @@ benchmark adapter 新增默认关闭的 `--research-poster-conference-venue-reso
 
 本轮最佳已验证全量成绩更新为 **441/500（88.2%）**，仍低于 **485/500（97%）**；100% 记忆精准度尚未测量，异地灾备恢复演练仍未验证。成绩卡见
 [longmemeval-stage277-research-poster-venue-top20-2026-10-28.json](data/longmemeval-stage277-research-poster-venue-top20-2026-10-28.json)。
+
+## Stage278：硕士完成度终点校验（2026-10-28）
+
+benchmark adapter 新增默认关闭的 `--unverified-masters-education-span-guard`。它只检查“从高中到硕士完成”的正式教育年限题；当答案给出数值，而用户原话只证明较低学历并表示“考虑”读硕士、没有用户本人完成硕士的直接证据时，改为带引用的弃答。用户明确说自己完成硕士时保留数值答案；assistant-only 说法不算完成证据。有关硕士论文提交时间差的问题不触发。
+
+Stage278 在 Stage268 冻结 Top-200 检索上重新生成并裁判全部 500 题，得分 **435/500（87.0%）**，较 Stage277 的 441/500 少 6 题，较 Stage268 的 440/500 少 5 题。对 Stage277 配对：20 题仅候选答对、26 题仅 Stage277 答对、415 题两者都对、39 题两者都错；272 个答案文本变化，故总体下降不能归因于该单题规则。Top-20、Top-200 与完整检索结果对象在 500/500 题上完全一致；无效答案审计 23 条，API 错误标记 0。一次模型生成超时由重试恢复。
+
+目标题 `gpt4_372c3eed_abs` 从 Stage277 的“10 years”/FAIL 变为引用高中教育背景和硕士意向的弃答/PASS；单题真实答题与裁判复放也 PASS。硕士论文时间差题 `gpt4_21adecb5` 仍为 6 个月/PASS，护栏状态 `not_applicable`。护栏在全量数据中触发 1 次，其余 499 题未触发。保留 opt-in。实现提交 `3cc53e3 fix: abstain on unsupported masters education spans`；215 项测试、25 个子测试、compileall、diff 检查通过。成绩卡见
+[longmemeval-stage278-unverified-masters-education-span-top20-2026-10-28.json](data/longmemeval-stage278-unverified-masters-education-span-top20-2026-10-28.json)。
+
+Stage277 仍是最佳全量成绩 **441/500（88.2%）**，比 485/500 发布门槛少 44 题；100% 记忆精准度未测量，异地灾备恢复演练仍未验证。
