@@ -1,0 +1,151 @@
+{
+  "stage": 286,
+  "date": "2026-10-29",
+  "experiment": "collection-cumulative-count-increment-resolution",
+  "feature": "Default-off resolver adds one later user-cited coin to an older cumulative total only when it belongs to the same filtered collection and has a qualifying explicit year.",
+  "plan_commit": "f7184ef docs: plan collection cumulative count increment resolver",
+  "adapter_commit": "a18ed3e feat: include later qualifying coins in collection totals",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_tests": {
+    "unittest_tests_passed": 254,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "8322e931cb2fcf12a7718cca762144051d134f783e6f83a0171b665159b8453c",
+  "retrieval_source": "Stage268 frozen Top-200 results carried through Stage283; all 500 answerer and judge outputs freshly generated over Top-20 inputs",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "retrieval_order_matches_stage283": {
+    "top_20": 500,
+    "top_200": 500,
+    "full_search_result_objects": 500
+  },
+  "run_id": "stage286-collection-total-increment",
+  "top_k": 200,
+  "cutoff": 20,
+  "frozen_saved_answer_replay": {
+    "question_count": 500,
+    "baseline_correct": 446,
+    "candidate_correct": 447,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 446,
+    "both_wrong": 53,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 499,
+    "citation_validation": "PASS",
+    "target_question_id": "69fee5aa",
+    "candidate_judgment": "PASS"
+  },
+  "frozen_knowledge_update_replay": {
+    "question_count": 78,
+    "baseline_correct": 75,
+    "candidate_correct": 76,
+    "candidate_only_correct": 1,
+    "baseline_only_correct": 0,
+    "both_correct": 75,
+    "both_wrong": 2,
+    "answer_text_changed_rows": 1,
+    "other_saved_judgments_reused": 77
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 447,
+    "accuracy": 0.894,
+    "target_correct": 485,
+    "shortfall": 38,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {
+        "correct": 66,
+        "total": 70
+      },
+      "multi-session": {
+        "correct": 113,
+        "total": 133
+      },
+      "single-session-preference": {
+        "correct": 26,
+        "total": 30
+      },
+      "temporal-reasoning": {
+        "correct": 115,
+        "total": 133
+      },
+      "knowledge-update": {
+        "correct": 75,
+        "total": 78
+      },
+      "single-session-assistant": {
+        "correct": 52,
+        "total": 56
+      }
+    },
+    "paired_against_stage283": {
+      "baseline_correct": 446,
+      "candidate_correct": 447,
+      "both_correct": 426,
+      "both_wrong": 33,
+      "candidate_only_correct": 21,
+      "baseline_only_correct": 20,
+      "answer_text_changed_rows": 264,
+      "retrieval_objects_equal": 500,
+      "net_delta": 1
+    },
+    "collection_total_include_subsequent_additions_enabled_rows": 500,
+    "collection_total_include_subsequent_additions_applied_rows": [],
+    "collection_total_include_subsequent_additions_status_counts": {
+      "not_applicable": 500
+    },
+    "invalid_answer_audit_rows": 24,
+    "stage283_invalid_answer_audit_rows": 25,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "69fee5aa",
+    "question": "How many pre-1920 American coins do I have in my collection?",
+    "stage283_judgment": "FAIL",
+    "stage283_answer": "37 coins",
+    "candidate_judgment": "PASS",
+    "candidate_answer": "38 coins",
+    "resolver_status": "not_applicable",
+    "count_value": 38.0,
+    "count_unit": "coins",
+    "count_completeness_status": "reviewed",
+    "citation_validation": "PASS"
+  },
+  "target_live_replay": {
+    "question_id": "69fee5aa",
+    "correct": 1,
+    "total": 1,
+    "judge_seed_accepted": true,
+    "result_artifact": "/Volumes/Net/civilization-stage286-collection-total-20261029/candidate/collection-total-target.json",
+    "result_size_bytes": 489182,
+    "result_sha256": "2a4e9cadbda1e6d419e9ef62bc2406d0b966a17440202782d56b1b5f4b3f395a"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage286-collection-total-20261029/candidate/full-run/longmemeval_results_20261029_030007.json",
+    "size_bytes": 245591083,
+    "sha256": "c9f28bccff568019ed2fe03a2500074d8bc1f9e21532cd59a57681d701259cfa"
+  },
+  "best_observed_full_score": {
+    "stage": 286,
+    "correct": 447,
+    "total": 500,
+    "accuracy": 0.894,
+    "gate": 485,
+    "shortfall": 38
+  },
+  "memory_precision_measured": false,
+  "decision": "The frozen saved-answer replay changed only 69fee5aa from 37 to 38 coins, passed citation validation and live judging, and had no regressions. Keep the resolver opt-in. In the fresh full run it did not fire; the answerer and its completeness audit independently added the 1915 coin, and the target passed. The candidate scored 447/500, one above Stage283, but paired outcomes were 21 candidate-only and 20 baseline-only across 264 changed answers; do not attribute the aggregate +1 to this guard.",
+  "limitations": "Stage286 remains 38 answers below the 97% Top-20 gate. The separate 100% memory-precision target remains unmeasured; live offsite disaster-recovery restore remains unverified. This run does not exercise the Stage166 stochastic-token prototype."
+}

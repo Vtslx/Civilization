@@ -288,6 +288,32 @@ Stage285 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，�
 
 保留解析器为 opt-in：它在冻结答案上零回退地修正一题，但 fresh 全量未提升。最佳成绩仍为 Stage283 的 **446/500（89.2%）**，距 485/500 门槛差 39。记忆精准度和异地灾备恢复仍未验证。Stage285 未测试 Stage166 随机 token 原型。
 
+## Stage286：合并后续符合筛选的收藏新增项（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--collection-total-include-subsequent-additions`。只有在同一个明确筛选的收藏中，用户原话报告了一个累计总数，之后又有一条用户原话新增一件带年份且满足题目年份筛选的物品，并且更新顺序早于题目日期、之后没有更新的累计总数时，才会递增。助手说法、超出年份范围、多个新增项或顺序不明均不触发。
+
+在 Stage283 冻结答案上复放，解析器只改写 `69fee5aa`：用户报告的 37 枚 1920 年前美国硬币，加上后来加入收藏的一枚 1915-S Barber quarter，得到 38。1972 年 doubled-die cent 因超出筛选年份而排除。引用校验和真实裁判均通过，其余 499 个保存判定复用且零回退。
+
+Stage286 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **447/500（89.4%）**，比 485/500 门槛差 38 题，是目前最佳 fresh 全量成绩。与 Stage283 配对：21 题仅候选答对、20 题仅 Stage283 答对、426 题两者都对、33 题两者都错，净增 1；264 个答案文本变化。检索对象 500/500 相同。解析器全量启用，但实际触发 0 次；目标题由答题器和 count-completeness audit 自行得出 38，状态 `not_applicable`。候选无效答案审计 24 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 75/78，多会话 113/133，助手事实 52/56，偏好 26/30，用户事实 66/70，时间推理 115/133。全量净增不能归因于该解析器。
+
+答题器和裁判均接受 seed 42。实现提交 `a18ed3e feat: include later qualifying coins in collection totals`；254 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `c9f28bccff568019ed2fe03a2500074d8bc1f9e21532cd59a57681d701259cfa`；冻结单题复放 SHA-256 为 `2a4e9cadbda1e6d419e9ef62bc2406d0b966a17440202782d56b1b5f4b3f395a`。成绩卡见
+[longmemeval-stage286-collection-total-increment-top20-2026-10-29.json](data/longmemeval-stage286-collection-total-increment-top20-2026-10-29.json)。
+
+保留解析器为 opt-in：冻结目标修正确认通过，但 fresh 全量中未触发。100% 记忆精准度和异地灾备恢复演练仍未验证。Stage286 未测试 Stage166 随机 token 原型。
+
+## Stage286：合并后续符合筛选的收藏新增项（2026-10-29）
+
+benchmark adapter 新增默认关闭的 `--collection-total-include-subsequent-additions`。只有在同一个明确筛选的收藏中，用户原话报告了一个累计总数，之后又有一条用户原话新增一件带年份且满足题目年份筛选的物品，并且更新顺序早于题目日期、之后没有更新的累计总数时，才会递增。助手说法、超出年份范围、多个新增项或顺序不明均不触发。
+
+在 Stage283 冻结答案上复放，解析器只改写 `69fee5aa`：用户报告的 37 枚 1920 年前美国硬币，加上后来加入收藏的一枚 1915-S Barber quarter，得到 38。1972 年 doubled-die cent 因超出筛选年份而排除。引用校验和真实裁判均通过，其余 499 个保存判定复用且零回退。
+
+Stage286 在 Stage268 冻结 Top-200 检索上重新生成并裁判 500 题，得 **447/500（89.4%）**，比 485/500 门槛差 38 题，是目前最佳 fresh 全量成绩。与 Stage283 配对：21 题仅候选答对、20 题仅 Stage283 答对、426 题两者都对、33 题两者都错，净增 1；264 个答案文本变化。检索对象 500/500 相同。解析器全量启用，但实际触发 0 次；目标题由答题器和 count-completeness audit 自行得出 38，状态 `not_applicable`。候选无效答案审计 24 条（Stage283 为 25），API 错误标记 0。分题型：知识更新 75/78，多会话 113/133，助手事实 52/56，偏好 26/30，用户事实 66/70，时间推理 115/133。全量净增不能归因于该解析器。
+
+答题器和裁判均接受 seed 42。实现提交 `a18ed3e feat: include later qualifying coins in collection totals`；254 项测试、compileall 和 diff 检查通过。完整结果 SHA-256 为 `c9f28bccff568019ed2fe03a2500074d8bc1f9e21532cd59a57681d701259cfa`；冻结单题复放 SHA-256 为 `2a4e9cadbda1e6d419e9ef62bc2406d0b966a17440202782d56b1f5b4f3b395a`。成绩卡见
+[longmemeval-stage286-collection-total-increment-top20-2026-10-29.json](data/longmemeval-stage286-collection-total-increment-top20-2026-10-29.json)。
+
+保留解析器为 opt-in：冻结目标修正确认通过，但 fresh 全量中未触发。100% 记忆精准度和异地灾备恢复演练仍未验证。Stage286 未测试 Stage166 随机 token 原型。
+
 ## Stage284：排除未完成的医生咨询计数（2026-10-29）
 
 benchmark adapter 新增默认关闭的 `--doctor-visit-count-exclude-planned-consultations`。对于“我看过多少位不同医生”，只有当匿名医生项的精确用户引文是在询问手术前咨询时该问什么、且没有任何用户引文证明咨询已经发生，才排除该项。剩余医生必须是不同对象，且每项均有有效用户原话引用，才能重算总数。
