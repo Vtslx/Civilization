@@ -19,8 +19,8 @@
   "feature": {
     "cli_flag": "--multi-clause-count-answer-synthesis",
     "default_enabled": false,
-    "new_fallback": "When a valid audit has one item, extract both states only from unique user-authored sentences with the same simple unit and action; require role context when named; reject conflicting start/current source counts; use cumulative snapshots and validate the rewritten answer.",
-    "existing_two-item_audit_path": "Unchanged"
+    "new_fallback": "When a valid audit contains one state item, recover the missing start/current count only from unique explicit user-authored sentences with the same simple unit and action and any named role context. Reject conflicting state counts.",
+    "existing_two_item_audit_path": "Unchanged"
   },
   "frozen_stage269_saved_answer_replay": {
     "question_count": 500,
@@ -100,7 +100,8 @@
       "031748ae": {
         "stage268_judgment": "PASS",
         "stage270_judgment": "PASS",
-        "full_run_source_fallback_status": "not_triggered; answerer supplied both count items"
+        "source_fallback_in_fresh_run": false,
+        "note": "The answerer supplied both state items; the existing two-item audit path revised the answer."
       },
       "gpt4_7fce9456": {
         "stage268_judgment": "FAIL",
@@ -120,7 +121,7 @@
       },
       "answer_text_changed_rows": 276
     },
-    "paired_against_stage269_full": {
+    "paired_against_stage269_v2_full": {
       "baseline_correct": 425,
       "candidate_correct": 432,
       "accuracy_delta_percentage_points": 1.4,
@@ -169,7 +170,7 @@
     "compileall": "PASS",
     "git_diff_check": "PASS"
   },
-  "decision": "Keep the source-backed fallback opt-in. Frozen replay supports one correction with no regression. The full run scored 432/500, below Stage268's 440/500; 276 answer texts changed, so the +7 versus Stage269 is not attributed to this resolver. In the full run the answerer supplied both count items for the target row, so the new fallback itself was exercised by the frozen replay, not the fresh answer generation.",
+  "decision": "Keep the source-backed fallback opt-in. Frozen replay supports one correction with no regression. The full run scored 432/500, below Stage268's 440/500; 276 answer texts changed, so the aggregate movement is not attributed to this resolver. The new fallback did not fire in fresh generation because the answerer supplied both state items.",
   "memory_precision_measured": false,
   "persistent_memory_writes": 0,
   "limitations": "The best observed full Top-20 score remains 440/500, 45 answers short of 485/500. The 100% memory-precision target remains unmeasured."
