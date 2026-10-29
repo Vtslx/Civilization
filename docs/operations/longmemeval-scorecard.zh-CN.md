@@ -504,6 +504,8 @@ Stage302 有 14 道非数值时间推理错题，全部 14 道的答案来源会
 
 这些指标衡量 LongMemEval 标注下的检索证据相关性，不等于长期存储记忆事实的真实准确率；标注没有覆盖所有可能有用的上下文。它们不能证明 100% 存储记忆精确度，该目标仍未测量。详见[Stage304 证据精确度代理报告](data/longmemeval-stage304-source-pair-precision-proxy-2026-10-29.json)。
 
+Stage162 scorecard 已加入 `answer_source_pair_precision_at_20` 与 pair metadata coverage 字段（提交 `1a49b5c feat: report annotated source-pair precision at 20`），后续完整结果可以直接用同一口径输出精确度和覆盖率。
+
 ## Stage305：冻结答案额外审计修复 pilot（2026-10-29）
 
 在 Stage302 的 29 条无效答案审计上，保留原答案和 Top-20 证据，只额外请求一次结构化修复。6 条错误完全清零，23 条仍无效；15 条返回答案文本变化，其中 6 条被接受（4 条答案变化、2 条仅补全结构），裁判结果净变化为 0。详见[Stage305 修复试验](data/longmemeval-stage305-extra-answer-audit-repair-pilot-2026-10-29.json)。该 pilot 支持尝试默认关闭的有界修复，但不证明总体准确率改善。

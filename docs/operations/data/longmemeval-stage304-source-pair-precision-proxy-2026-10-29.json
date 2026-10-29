@@ -2,6 +2,8 @@
   "stage": 304,
   "date": "2026-10-29",
   "experiment": "stage302-answer-source-pair-precision-diagnostic",
+  "precision_metric_code_commit": "1a49b5c feat: report annotated source-pair precision at 20",
+  "scorecard_metric_name": "answer_source_pair_precision_at_20",
   "result_artifact": "/Volumes/Net/civilization-stage302-ledger-verifier-full-20261029/candidate/full-run/longmemeval_results_20261029_085706.json",
   "result_sha256": "0a837c89907c11791fb56cfa57f809d4e194d489d876122c04b6a8cebe8b1498",
   "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
@@ -19,7 +21,8 @@
     "annotated_answer_pairs": 883,
     "answer_pairs_retrieved_in_top20": 866,
     "recall_at_20": 0.980747,
-    "unique_retrieved_pairs_in_top20": 9400,
+    "retrieved_source_pair_positions_at_top20": 9400,
+    "pair_metadata_coverage_at_20": 1.0,
     "strict_answer_pair_precision_proxy_at_20": 0.092128,
     "questions_with_all_answer_pairs_in_top20": 457
   },
