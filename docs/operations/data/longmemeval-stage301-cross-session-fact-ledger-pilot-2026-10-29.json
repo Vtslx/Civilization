@@ -1,0 +1,77 @@
+{
+  "stage": 301,
+  "date": "2026-10-29",
+  "experiment": "cross-session-fact-ledger-verifier-pilot",
+  "feature": "Default-off structured ledger verifier for non-aggregate multi-session answers. The ledger reviewer replaces the generic reviewer on scoped rows, validates user-authored citations and selected fact IDs, and fails open to the pre-review answer.",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_commit": "d1b2d70 feat: add opt-in cross-session fact ledger verifier",
+  "design_commit": "1eb4739 docs: plan cross-session fact ledger verifier",
+  "switch": "--cross-session-fact-ledger-verifier",
+  "default_enabled": false,
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "7d8f7c45c5d84113fe52efd371631124c4c188f0418e98d52563b56f04b01cdd",
+  "retrieval_source": "Stage300 saved Top-200 candidate sets and the exact recorded selected Top-20 order; no reranker call in the pilot.",
+  "eligibility": {
+    "question_type": "multi-session",
+    "aggregate_questions_excluded": true,
+    "eligible_nonaggregate_rows": 22,
+    "multi_session_total": 133,
+    "numeric_aggregate_rows_excluded": 111
+  },
+  "verification": {
+    "full_tests_passed": 303,
+    "subtests_passed": 25,
+    "new_ledger_contract_tests_passed": 10,
+    "compileall_passed": true,
+    "git_diff_check_passed": true,
+    "ruff_available": false
+  },
+  "six_known_failure_pilot": {
+    "question_count": 6,
+    "stage300_baseline_correct": 0,
+    "candidate_correct": 2,
+    "candidate_only_correct": 2,
+    "ledger_revised_to_pass": 1,
+    "answer_generation_changed_without_ledger_revision": 1,
+    "api_error_rows": 0,
+    "invalid_answer_audit_rows": 0,
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage301-fact-ledger-pilot-20261029/candidate/full-run/longmemeval_results_20261029_084042.json",
+      "size_bytes": 2968972,
+      "sha256": "4ece6c66b8f41b7ba3011039ced3cc4cdcbe65e3af88b69efc24865e68348151"
+    }
+  },
+  "eligible_cohort_pilot": {
+    "question_count": 22,
+    "baseline_correct": 16,
+    "candidate_correct": 16,
+    "both_correct": 13,
+    "both_wrong": 3,
+    "candidate_only_correct": 3,
+    "baseline_only_correct": 3,
+    "net_delta": 0,
+    "ledger_statuses": {
+      "ledger_revised": 8,
+      "ledger_unchanged": 2,
+      "insufficient_evidence": 11,
+      "rejected_unverified_revision": 1
+    },
+    "ledger_revisions_to_pass_from_baseline_fail": 2,
+    "ledger_revisions_regressing_baseline_pass": 0,
+    "api_error_rows": 0,
+    "invalid_answer_audit_rows": 1,
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage301-fact-ledger-22-20261029/candidate/full-run/longmemeval_results_20261029_084300.json",
+      "size_bytes": 10992134,
+      "sha256": "6c8a6304609b75f7199b57479bfc74e0f7dadc780e7612c20e96a200c5527f9e"
+    }
+  },
+  "decision": "Keep the verifier opt-in. The six-row pilot includes one correction caused by the ledger and one pass from fresh answer generation when the ledger abstained. On the complete 22-row eligible cohort, the full candidate tied Stage300 at 16/22; paired outcomes were three wins and three losses. Two ledger revisions changed Stage300 failures to PASS, and no ledger revision turned a Stage300 PASS into FAIL. The run-level tie reflects answer-generation variation and does not establish a net full-score improvement.",
+  "limitations": "This is a 22-row pilot, not the release score. Stage166 stochastic token reservation was not exercised. Memory precision and live offsite restore remain unmeasured/unverified."
+}

@@ -1,0 +1,98 @@
+{
+  "stage": 302,
+  "date": "2026-10-29",
+  "experiment": "cross-session-fact-ledger-full-top20",
+  "feature": "Fresh full-run evaluation with the opt-in cross-session fact ledger enabled for non-aggregate multi-session answers.",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_commit": "d1b2d70 feat: add opt-in cross-session fact ledger verifier",
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "7d8f7c45c5d84113fe52efd371631124c4c188f0418e98d52563b56f04b01cdd",
+  "retrieval_source": "Stage268 frozen Top-200 candidates as recorded in Stage300. Reused the exact Stage300 reranked Top-20 order on 265 rows and original Top-20 order on the other 235; Top-20 order matched the Stage300 selected order in 500/500 rows. No reranker calls were made.",
+  "run_id": "13822817",
+  "timestamp": "20261029_085706",
+  "top_k": 200,
+  "cutoff": 20,
+  "cross_session_fact_ledger_verifier_enabled": true,
+  "llm_reranker_called": false,
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 450,
+    "accuracy": 0.9,
+    "target_correct": 485,
+    "shortfall": 35,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 73, "total": 78},
+      "multi-session": {"correct": 111, "total": 133},
+      "single-session-assistant": {"correct": 54, "total": 56},
+      "single-session-preference": {"correct": 30, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 114, "total": 133}
+    },
+    "paired_against_stage300": {
+      "baseline_correct": 452,
+      "candidate_correct": 450,
+      "both_correct": 430,
+      "both_wrong": 28,
+      "candidate_only_correct": 20,
+      "baseline_only_correct": 22,
+      "answer_text_changed_rows": 255,
+      "net_delta": -2
+    },
+    "invalid_answer_audit_rows": 29,
+    "stage300_invalid_answer_audit_rows": 22,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "ledger_eligible_cohort": {
+    "question_count": 22,
+    "baseline_correct": 16,
+    "candidate_correct": 16,
+    "both_correct": 13,
+    "both_wrong": 3,
+    "candidate_only_correct": 3,
+    "baseline_only_correct": 3,
+    "net_delta": 0,
+    "ledger_statuses": {
+      "ledger_revised": 6,
+      "ledger_unchanged": 2,
+      "insufficient_evidence": 12,
+      "rejected_unverified_revision": 1,
+      "rejected_unresolved_fact_state": 1
+    },
+    "ledger_revisions_to_pass_from_baseline_fail": 2,
+    "ledger_revisions_regressing_baseline_pass": 0,
+    "invalid_answer_audit_rows": 1,
+    "api_error_rows": 0
+  },
+  "target_rows": {
+    "92a0aa75": {"stage300": "FAIL", "stage302": "PASS", "ledger_status": "ledger_revised"},
+    "gpt4_5501fe77": {"stage300": "FAIL", "stage302": "PASS", "ledger_status": "ledger_revised"},
+    "88432d0a": {"stage300": "FAIL", "stage302": "FAIL", "ledger_status": "not_applicable"}
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage302-ledger-verifier-full-20261029/candidate/full-run/longmemeval_results_20261029_085706.json",
+    "size_bytes": 246603602,
+    "sha256": "0a837c89907c11791fb56cfa57f809d4e194d489d876122c04b6a8cebe8b1498"
+  },
+  "best_observed_full_score": {
+    "stage": 299,
+    "correct": 461,
+    "total": 500,
+    "accuracy": 0.922,
+    "gate": 485,
+    "shortfall": 24
+  },
+  "memory_precision_measured": false,
+  "stage166_exercised": false,
+  "decision": "The ledger corrected two multi-session failures and no ledger revision regressed a Stage300 PASS. The multi-session category improved from 109/133 to 111/133, while the full score was 450/500, two below Stage300 and 11 below Stage299. Because 255 answers changed and accepted seeds did not make generations deterministic, the overall score delta cannot be attributed to the ledger alone. Keep the verifier default-off; this run does not demonstrate the 97% gate.",
+  "limitations": "The best observed full score remains Stage299 at 461/500, 24 short of 485. Stage302's full candidate is 450/500. Memory precision remains unmeasured, live offsite disaster-recovery restore remains unverified, and Stage166 stochastic token reservation was not run."
+}
