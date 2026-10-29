@@ -496,7 +496,7 @@ Stage302 对全部 500 题重新生成并裁判，使用 Stage300 保存的候�
 
 Stage302 有 14 道非数值时间推理错题，全部 14 道的答案来源会话都在冻结 Top-20。时间事件账本原型在这 14 题上做了两次同检索复跑：初版候选判对 4/14，但 4 个 PASS 均发生在账本返回证据不足或拒绝证据后，账本没有贡献答案修订；加入明确相对时间锚点处理后得 2/14，其中唯一一次账本修订仍被 judge 判错。两次 API 错误均为 0；引用/答案审计分别无效 1、2 行。
 
-该原型没有证明能够从事件账本修复题目，因此未继续跑 78 道适用题或全量500题，未提交代码，并已从工作树撤回。为复现负向实验，保留了[Stage303 成绩卡](data/longmemeval-stage303-temporal-event-ledger-pilot-2026-10-29.json)及临时补丁哈希。当前最佳仍是 Stage299 的 461/500（92.2%），距离 485 差24；记忆精准度未测量，异地灾备恢复未验证。Stage303 未运行 Stage166，随机态记忆仍无效果证据。
+该原型没有证明能够从事件账本修复题目，因此未继续跑 78 道适用题或全量500题。代码曾以 `063c384 feat: add opt-in temporal event ledger verifier` 实验性提交，pilot 后已由 `7333662 revert: remove temporal event ledger prototype` 撤回。为复现负向实验，保留了[Stage303 成绩卡](data/longmemeval-stage303-temporal-event-ledger-pilot-2026-10-29.json)及 refinement patch。当前最佳仍是 Stage299 的 461/500（92.2%），距离 485 差24；记忆精准度未测量，异地灾备恢复未验证。Stage303 未运行 Stage166，随机态记忆仍无效果证据。
 
 ## Stage304：Top-20 记忆证据精确度代理指标（2026-10-29）
 
