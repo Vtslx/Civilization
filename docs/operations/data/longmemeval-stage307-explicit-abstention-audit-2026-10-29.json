@@ -1,0 +1,16 @@
+{
+  "stage": 307,
+  "date": "2026-10-29",
+  "experiment": "explicit-memory-limited-abstention-audit-diagnostic",
+  "source_stage": 306,
+  "source_result": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage306-audit-repair-20261029/candidate/full-run/longmemeval_results_20261029_095927.json",
+  "source_result_sha256": "6625f1e608d7efa82ca55d0fff8a5f7cd77be2af8fb7556646eaaf3f539444a2",
+  "source_question_count": 500,
+  "invalid_answer_audit_rows": 21,
+  "explicit_memory_limited_abstentions_among_invalid": 9,
+  "benchmark_abstention_and_judge_pass": 6,
+  "benchmark_answerable_and_judge_fail": 3,
+  "proposed_regex_change_committed": false,
+  "decision": "Do not broaden the answer validator to accept every memory-limited sentence as an abstention. Six of these were correct benchmark abstentions, but three answerable questions were incorrectly abstained and judged FAIL. Treating all nine as audit-valid would hide semantic misses behind a structural validation pass.",
+  "limitations": "This diagnostic did not modify answers, judgments, or stored memory. Stored-memory factual precision remains unmeasured."
+}

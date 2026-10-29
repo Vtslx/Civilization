@@ -515,3 +515,7 @@ Stage162 scorecard 已加入 `answer_source_pair_precision_at_20` 与 pair metad
 Stage306 使用与 Stage302 完全相同的保存检索结果和 Top-20 顺序，打开默认关闭的 `--extra-answer-audit-repair`。所有 500 题重新生成并裁判，得 **444/500（88.8%）**，比 Stage302 低 6；配对为候选独赢 17、基线独赢 23、427 题都对、33 题都错，净差 −6。候选无效答案审计从 Stage302 的 29 条降至 21 条，API 错误 0；额外修复在 24 行触发，3 行通过全部校验，接受的修复没有造成裁判标签翻转。全量有 232 个答案文本变化，故整体分差不能归因于这项修复。保持默认关闭。详见[Stage306 成绩卡](data/longmemeval-stage306-extra-answer-audit-repair-top20-2026-10-29.json)。
 
 当前最佳仍是 Stage299 的 461/500，距 485 差24。Stage306 低于目标，且“审计结构有效”不等于存储记忆事实精确度；官方 100% 存储记忆精确度目标仍未测量。异地灾备仍未验证；同机跨文件系统合成演练已通过。Stage166 随机态预留仍没有生产调用、持久写入或准确率 A/B 证据。
+
+## Stage307：显式 abstention 与结构审计边界检查（2026-10-29）
+
+Stage306 的 21 条无效审计中，有 9 条答案以“记忆未说明”类句式明确 abstain；其中 6 条属于 benchmark abstention 且裁判 PASS，另外 3 条实际上应回答具体事实、裁判 FAIL。若 validator 一律将此类措辞视作有效 abstention，会把三条错误答案隐藏在结构审计中。因此不提交该 regex 放宽，答案结构和 benchmark 语义正确性继续分开报告。详见[Stage307 abstention 诊断](data/longmemeval-stage307-explicit-abstention-audit-2026-10-29.json)。
