@@ -1,0 +1,74 @@
+{
+  "stage": 303,
+  "date": "2026-10-29",
+  "experiment": "temporal-event-ledger-verifier-negative-pilot",
+  "feature": "Experimental default-off event ledger for non-aggregate temporal-reasoning answers. The prototype was not committed and is not part of the adapter's default path.",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "base_adapter_commit": "d1b2d70 feat: add opt-in cross-session fact ledger verifier",
+  "design_commit": "7c95a6b docs: plan temporal event ledger verifier",
+  "code_module_commit": null,
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "retrieval_source": "Stage302 saved Top-200 candidate sets with exactly the same selected Top-20 order; no reranker call.",
+  "scope": {
+    "question_type": "temporal-reasoning",
+    "non_aggregate_temporal_rows": 78,
+    "known_failure_pilot_rows": 14,
+    "known_failure_answer_session_coverage": "14/14"
+  },
+  "initial_prompt_pilot": {
+    "run_id": "21bbffd0",
+    "timestamp": "20261029_091546",
+    "prompt_source_sha256": "d84e103f0639dc6380215750ba1acc46b44ea23806574137254bb3baccdb05ec",
+    "baseline_correct": 0,
+    "candidate_correct": 4,
+    "ledger_statuses": {
+      "rejected_unresolved_event_time": 5,
+      "insufficient_evidence": 7,
+      "rejected_invalid_evidence": 1,
+      "rejected_unresolved_event_state": 1
+    },
+    "ledger_revisions_to_pass": 0,
+    "invalid_answer_audit_rows": 1,
+    "api_error_rows": 0,
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage303-temporal-ledger-pilot-20261029/candidate/full-run/longmemeval_results_20261029_091546.json",
+      "size_bytes": 6973927,
+      "sha256": "714108c3c7918e3ba9ff56e949bca238322bc1ed18871a96264c6c372b70dcfa"
+    }
+  },
+  "relative_time_prompt_refinement": {
+    "run_id": "41958dab",
+    "timestamp": "20261029_091948",
+    "prompt_source_sha256": "ff962a7e067f62c5cb86df22dd8df650254c912a90cfd92c4da9c3f9d826a1e2",
+    "baseline_correct": 0,
+    "candidate_correct": 2,
+    "ledger_statuses": {
+      "insufficient_evidence": 10,
+      "rejected_invalid_evidence": 2,
+      "rejected_unresolved_event_time": 1,
+      "ledger_revised": 1
+    },
+    "ledger_revisions_to_pass": 0,
+    "ledger_revisions_still_fail": 1,
+    "invalid_answer_audit_rows": 2,
+    "api_error_rows": 0,
+    "result_artifact": {
+      "path": "/Volumes/Net/civilization-stage303-temporal-ledger-refined-20261029/candidate/full-run/longmemeval_results_20261029_091948.json",
+      "size_bytes": 6973427,
+      "sha256": "a914ecd7bc1225124b11fba63790e3403326da7b1d838822902ca1de019d1216"
+    }
+  },
+  "experimental_patch": {
+    "path": "/Volumes/Net/civilization-stage303-temporal-ledger-refined-20261029/experiment-patch.diff",
+    "size_bytes": 11369,
+    "sha256": "286658862b7b2e0b514e04bbf7cfaab02342ca404fa16d2951b19510eadb388b"
+  },
+  "decision": "Reject and discard the temporal event-ledger code. Neither pilot produced a judge-accepted answer revision from the ledger. The first run's four PASS answers came while the ledger abstained or rejected its result. After relative-time handling was relaxed only for directly cited relative phrases, the only ledger revision still failed the judge. Do not proceed to the 78-row or 500-row temporal-ledger evaluation.",
+  "limitations": "Both are 14-row pilots with fresh answer generation, not full benchmark runs. The best observed full score remains Stage299 at 461/500 (92.2%), 24 below 485. Stage166 stochastic token reservation was not exercised; memory precision remains unmeasured and live offsite disaster-recovery restore is unverified."
+}
