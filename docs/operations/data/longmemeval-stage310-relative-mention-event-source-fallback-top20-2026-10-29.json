@@ -1,0 +1,158 @@
+{
+  "stage": 310,
+  "date": "2026-10-29",
+  "experiment": "relative-mention-date-event-source-fallback",
+  "feature": "Default-off fallback resolves a sports event named in one user-authored message observed on the exact day named by an explicit relative mention-date question.",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_commit": "971bc23 feat: resolve sports events from exact mention dates",
+  "adapter_verification": {
+    "pytest_tests_passed": 322,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "four_question_paired_pilot": {
+    "question_count": 4,
+    "question_types": {
+      "temporal-reasoning": 4
+    },
+    "retrieval_source": "Frozen Stage299 Top-200 results; control and candidate used identical retrieval and model configuration.",
+    "prompt_source_sha256": "4b46ec73dd8f110ddc970cbd73c07feedcbb5782523c0f43c928842bb3bf0cb4",
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "control": {
+      "correct": 1,
+      "accuracy": 0.25,
+      "run_id": "df58c4cc",
+      "invalid_answer_audits": 0
+    },
+    "candidate": {
+      "correct": 2,
+      "accuracy": 0.5,
+      "run_id": "e8b7e542",
+      "invalid_answer_audits": 0,
+      "resolver_revised_rows": 1
+    },
+    "paired_outcomes": {
+      "both_correct": 1,
+      "both_wrong": 2,
+      "candidate_only_correct": 1,
+      "control_only_correct": 0,
+      "net_delta": 1,
+      "answer_text_changed_rows": 4
+    },
+    "api_error_rows": 0,
+    "target_row": {
+      "question_id": "gpt4_e061b84g",
+      "question_date": "2023-07-01",
+      "target_observation_date": "2023-06-17",
+      "control_judgment": "FAIL",
+      "control_answer": "The Spring Sprint Triathlon.",
+      "candidate_judgment": "PASS",
+      "candidate_answer": "the company's annual charity soccer tournament",
+      "source_is_user_authored": true,
+      "citation_validation": "PASS"
+    },
+    "control_artifact": {
+      "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage309-relative-mention-20261029/control/longmemeval_results_20261029_114634.json",
+      "size_bytes": 1953503,
+      "sha256": "211aa9d262abf98fb9aa1f1c8b4dc23f60400c1b2933c67f5fb1e6236ebd1d59"
+    },
+    "candidate_artifact": {
+      "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage309-relative-mention-20261029/candidate/longmemeval_results_20261029_114721.json",
+      "size_bytes": 1953919,
+      "sha256": "e5c8a14ff6174b2c407db8e8df002533b016050ea41345a2bfe12fdca795a28b"
+    }
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "cutoff": "top_20",
+    "top_k": 200,
+    "retrieval_reused": true,
+    "retrieval_source": "Stage299 frozen Top-200 candidate rankings; LLM reranker calls disabled.",
+    "relative_mention_event_source_resolution_enabled": true,
+    "relative_mention_event_source_resolution_revised_rows": 1,
+    "all_questions_completed": true,
+    "correct": 444,
+    "accuracy": 0.888,
+    "target_correct": 485,
+    "shortfall": 41,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {
+        "correct": 69,
+        "total": 78
+      },
+      "multi-session": {
+        "correct": 111,
+        "total": 133
+      },
+      "single-session-assistant": {
+        "correct": 54,
+        "total": 56
+      },
+      "single-session-preference": {
+        "correct": 29,
+        "total": 30
+      },
+      "single-session-user": {
+        "correct": 69,
+        "total": 70
+      },
+      "temporal-reasoning": {
+        "correct": 112,
+        "total": 133
+      }
+    },
+    "paired_against_stage299": {
+      "baseline_correct": 461,
+      "candidate_correct": 444,
+      "both_correct": 435,
+      "both_wrong": 30,
+      "candidate_only_correct": 9,
+      "baseline_only_correct": 26,
+      "answer_text_changed_rows": 257,
+      "net_delta": -17
+    },
+    "invalid_answer_audit_rows": 22,
+    "stage299_invalid_answer_audit_rows": 28,
+    "api_error_marked_rows": 0,
+    "run_id": "4e786e1d",
+    "prompt_source_sha256": "4b46ec73dd8f110ddc970cbd73c07feedcbb5782523c0f43c928842bb3bf0cb4",
+    "answerer_seed_accepted": true,
+    "judge_seed_accepted": true,
+    "target_row": {
+      "question_id": "gpt4_e061b84g",
+      "baseline_judgment": "FAIL",
+      "candidate_judgment": "PASS",
+      "resolver_status": "revised_from_exact_mention_date_source",
+      "target_observation_date": "2023-06-17",
+      "source_memory_index": 16,
+      "citation_validation": "PASS"
+    },
+    "result_artifact": {
+      "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage310-relative-mention-full-20261029/candidate/longmemeval_results_20261029_120413.json",
+      "size_bytes": 246816217,
+      "sha256": "317208b04e76be335b375ab70705b0836a8ab7dc9d6721086b9fbf388db6a513"
+    }
+  },
+  "best_observed_full_score": {
+    "stage": 299,
+    "correct": 461,
+    "total": 500,
+    "accuracy": 0.922,
+    "gate": 485,
+    "shortfall": 24
+  },
+  "memory_precision_measured": false,
+  "offsite_disaster_recovery_restore_verified": false,
+  "decision": "Keep the exact-date mention fallback default-off. It passed a four-question paired replay, corrected one answer from FAIL to PASS with a user citation, and fired once in the fresh 500-question candidate. The full run scored 444/500, below Stage299's 461/500 best; 257 answers changed, so the aggregate decline is not attributed to the single-row resolver. The 97% gate remains unmet.",
+  "limitations": "The resolver covers only explicit sports-event mention questions with a unique user-authored event phrase on the exact target observation date. The full run did not use a current-code control arm, and the prompt source hash differs from Stage299. Memory precision and live offsite disaster-recovery restore remain unverified."
+}
