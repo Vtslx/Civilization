@@ -211,6 +211,9 @@ def test_stage162_reports_answer_pair_recall_below_session_recall(tmp_path: Path
     assert retrieval["answer_source_pairs"] == 2
     assert retrieval["answer_source_pairs_in_top_20"] == 1
     assert retrieval["answer_source_pair_recall_at_20"] == 0.5
+    assert retrieval["answer_source_pair_precision_at_20"] == 0.5
+    assert retrieval["answer_source_pair_metadata_coverage_at_20"] == 1.0
+    assert retrieval["retrieved_source_pair_positions_at_top_20"] == 2
     assert retrieval["questions_with_all_answer_pairs_in_top_20"] == 1
     assert retrieval["answers_correct_with_all_answer_pairs_in_top_20"] == 0
     assert retrieval["answers_wrong_with_all_answer_pairs_in_top_20"] == 1

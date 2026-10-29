@@ -150,6 +150,19 @@ def build_longmemeval_scorecard(
                 and baseline["evidence_retrieval"]["answer_source_pair_recall_at_20"] is not None
                 else None
             ),
+            "answer_source_pair_precision_at_20_delta_percentage_points": (
+                round(
+                    (
+                        candidate["evidence_retrieval"]["answer_source_pair_precision_at_20"]
+                        - baseline["evidence_retrieval"]["answer_source_pair_precision_at_20"]
+                    )
+                    * 100,
+                    2,
+                )
+                if candidate["evidence_retrieval"]["answer_source_pair_precision_at_20"] is not None
+                and baseline["evidence_retrieval"]["answer_source_pair_precision_at_20"] is not None
+                else None
+            ),
             "answer_source_pair_recall_at_200_delta_percentage_points": (
                 round(
                     (
@@ -427,6 +440,10 @@ def _evidence_retrieval_metrics(
             "answer_source_pairs": None,
             "answer_source_pairs_in_top_20": None,
             "answer_source_pair_recall_at_20": None,
+            "retrieved_source_pair_positions_at_top_20": None,
+            "answer_source_pair_positions_in_top_20": None,
+            "answer_source_pair_precision_at_20": None,
+            "answer_source_pair_metadata_coverage_at_20": None,
             "answer_source_pairs_in_top_200": None,
             "answer_source_pair_recall_at_200": None,
             "questions_with_all_answer_pairs_in_top_20": None,
@@ -453,6 +470,7 @@ def _evidence_retrieval_metrics(
         for result in result_rows.values()
     )
     answer_pair_questions = answer_pairs = pair_hit20 = pair_hit200 = 0
+    pair_positions20 = pair_position_hits20 = pair_labeled_retrieval_positions20 = 0
     questions_all_pairs20 = questions_all_pairs200 = 0
     correct_all_pairs20 = error_all_pairs20 = 0
     for question_id, result in result_rows.items():
@@ -479,6 +497,9 @@ def _evidence_retrieval_metrics(
                 "answer_pairs": 0,
                 "pair_hit_at_20": 0,
                 "pair_hit_at_200": 0,
+                "pair_positions_at_20": 0,
+                "pair_position_hits_at_20": 0,
+                "pair_labeled_retrieval_positions_at_20": 0,
                 "all_pairs_at_20": 0,
                 "all_pairs_at_200": 0,
                 "correct_all_pairs_at_20": 0,
@@ -493,14 +514,23 @@ def _evidence_retrieval_metrics(
             metrics["answer_pair_questions"] += 1
             metrics["answer_pairs"] += len(required_pairs)
             if pair_metadata_available:
+                retrieved_pair_positions20 = _retrieved_pair_key_positions(retrieval_results[:20])
                 present20 = _retrieved_pair_keys(retrieval_results[:20])
                 present200 = _retrieved_pair_keys(retrieval_results[:200])
                 hit_pairs20 = len(required_pairs & present20)
                 hit_pairs200 = len(required_pairs & present200)
+                pair_positions20 += len(retrieved_pair_positions20)
+                pair_position_hits20 += sum(pair in required_pairs for pair in retrieved_pair_positions20)
+                pair_labeled_retrieval_positions20 += len(retrieval_results[:20])
                 pair_hit20 += hit_pairs20
                 pair_hit200 += hit_pairs200
                 metrics["pair_hit_at_20"] += hit_pairs20
                 metrics["pair_hit_at_200"] += hit_pairs200
+                metrics["pair_positions_at_20"] += len(retrieved_pair_positions20)
+                metrics["pair_position_hits_at_20"] += sum(
+                    pair in required_pairs for pair in retrieved_pair_positions20
+                )
+                metrics["pair_labeled_retrieval_positions_at_20"] += len(retrieval_results[:20])
                 if required_pairs.issubset(present20):
                     questions_all_pairs20 += 1
                     metrics["all_pairs_at_20"] += 1
@@ -558,6 +588,22 @@ def _evidence_retrieval_metrics(
                 if pair_metadata_available and metrics["answer_pairs"]
                 else None
             ),
+            "retrieved_source_pair_positions_at_top_20": (
+                int(metrics["pair_positions_at_20"]) if pair_metadata_available else None
+            ),
+            "answer_source_pair_positions_in_top_20": (
+                int(metrics["pair_position_hits_at_20"]) if pair_metadata_available else None
+            ),
+            "answer_source_pair_precision_at_20": (
+                round(int(metrics["pair_position_hits_at_20"]) / int(metrics["pair_positions_at_20"]), 6)
+                if pair_metadata_available and metrics["pair_positions_at_20"]
+                else None
+            ),
+            "answer_source_pair_metadata_coverage_at_20": (
+                round(int(metrics["pair_positions_at_20"]) / int(metrics["pair_labeled_retrieval_positions_at_20"]), 6)
+                if pair_metadata_available and metrics["pair_labeled_retrieval_positions_at_20"]
+                else None
+            ),
             "answer_source_pairs_in_top_200": int(metrics["pair_hit_at_200"]) if pair_metadata_available else None,
             "answer_source_pair_recall_at_200": (
                 round(int(metrics["pair_hit_at_200"]) / int(metrics["answer_pairs"]), 6)
@@ -590,6 +636,18 @@ def _evidence_retrieval_metrics(
         "answer_source_pairs": answer_pairs if pair_metadata_available else None,
         "answer_source_pairs_in_top_20": pair_hit20 if pair_metadata_available else None,
         "answer_source_pair_recall_at_20": round(pair_hit20 / answer_pairs, 6) if pair_metadata_available and answer_pairs else None,
+        "retrieved_source_pair_positions_at_top_20": pair_positions20 if pair_metadata_available else None,
+        "answer_source_pair_positions_in_top_20": pair_position_hits20 if pair_metadata_available else None,
+        "answer_source_pair_precision_at_20": (
+            round(pair_position_hits20 / pair_positions20, 6)
+            if pair_metadata_available and pair_positions20
+            else None
+        ),
+        "answer_source_pair_metadata_coverage_at_20": (
+            round(pair_positions20 / pair_labeled_retrieval_positions20, 6)
+            if pair_metadata_available and pair_labeled_retrieval_positions20
+            else None
+        ),
         "answer_source_pairs_in_top_200": pair_hit200 if pair_metadata_available else None,
         "answer_source_pair_recall_at_200": round(pair_hit200 / answer_pairs, 6) if pair_metadata_available and answer_pairs else None,
         "questions_with_all_answer_pairs_in_top_20": questions_all_pairs20 if pair_metadata_available else None,
@@ -650,8 +708,10 @@ def _answer_source_memory_pairs(question: dict[str, Any], answer_session_ids: se
     return answer_pairs
 
 
-def _retrieved_pair_keys(retrieval_results: list[Any]) -> set[tuple[str, int]]:
-    pairs: set[tuple[str, int]] = set()
+def _retrieved_pair_key_positions(retrieval_results: list[Any]) -> list[tuple[str, int]]:
+    """Return one source-pair key per retrieved position with usable metadata."""
+
+    pairs: list[tuple[str, int]] = []
     for item in retrieval_results:
         if not isinstance(item, dict):
             continue
@@ -660,8 +720,12 @@ def _retrieved_pair_keys(retrieval_results: list[Any]) -> set[tuple[str, int]]:
         if isinstance(pair_index, str) and pair_index.isdigit():
             pair_index = int(pair_index)
         if isinstance(session_id, str) and isinstance(pair_index, int):
-            pairs.add((session_id, pair_index))
+            pairs.append((session_id, pair_index))
     return pairs
+
+
+def _retrieved_pair_keys(retrieval_results: list[Any]) -> set[tuple[str, int]]:
+    return set(_retrieved_pair_key_positions(retrieval_results))
 
 
 def _observation_date(date_text: Any) -> str | None:
