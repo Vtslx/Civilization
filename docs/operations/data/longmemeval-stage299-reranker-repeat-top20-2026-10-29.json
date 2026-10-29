@@ -1,0 +1,100 @@
+{
+  "stage": 299,
+  "date": "2026-10-29",
+  "experiment": "selective-reranker-repeat",
+  "feature": "Repeat Stage297's selective LLM reranker on the same frozen retrieval snapshot and run configuration to measure seed-conditioned outcome variation.",
+  "adapter_commit": "975d9d5 fix: exclude exact lower-bound events from relative counts",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_code_changed": false,
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "26b56200154650138b6c140d150811c4a907f90e4220768d10d2babb04369ca5",
+  "retrieval_source": "Stage268 frozen Top-200 candidate IDs; selective reranker enabled for multi-session and temporal-reasoning.",
+  "retrieval_source_path": "/Volumes/Net/civilization-stage268-parenthood-choice-source-coverage-20261028/candidate/predicted_stage268-parenthood-choice-source-coverage",
+  "run_id": "2ef2bf09",
+  "top_k": 200,
+  "cutoff": 20,
+  "reranker_question_types": ["multi-session", "temporal-reasoning"],
+  "reranker_repeat_stability": {
+    "reranked_rows": 266,
+    "same_selected_order_as_stage297": 22,
+    "same_selected_candidate_set_as_stage297": 82,
+    "candidate_id_sets_match_stage268": 500,
+    "top20_order_equal_to_stage268": 272
+  },
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 461,
+    "accuracy": 0.922,
+    "target_correct": 485,
+    "shortfall": 24,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "single-session-user": {"correct": 70, "total": 70},
+      "multi-session": {"correct": 115, "total": 133},
+      "single-session-preference": {"correct": 30, "total": 30},
+      "temporal-reasoning": {"correct": 117, "total": 133},
+      "knowledge-update": {"correct": 75, "total": 78},
+      "single-session-assistant": {"correct": 54, "total": 56}
+    },
+    "paired_against_stage297": {
+      "baseline_correct": 456,
+      "candidate_correct": 461,
+      "both_correct": 442,
+      "both_wrong": 23,
+      "candidate_only_correct": 19,
+      "baseline_only_correct": 14,
+      "answer_text_changed_rows": 247,
+      "top20_order_equal": 256,
+      "net_delta": 5
+    },
+    "paired_against_stage291": {
+      "baseline_correct": 452,
+      "candidate_correct": 461,
+      "both_correct": 441,
+      "both_wrong": 28,
+      "candidate_only_correct": 20,
+      "baseline_only_correct": 11,
+      "answer_text_changed_rows": 254,
+      "top20_order_equal": 272,
+      "net_delta": 9
+    },
+    "invalid_answer_audit_rows": 28,
+    "stage297_invalid_answer_audit_rows": 25,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "target_row": {
+    "question_id": "88432d0a",
+    "stage297_judgment": "FAIL",
+    "candidate_judgment": "FAIL",
+    "candidate_answer": "5 baking events",
+    "boundary_resolver_status": "excluded_open_lower_boundary_events",
+    "boundary_date": "2023-05-16",
+    "remaining_count": 5,
+    "reranker_status": "selected"
+  },
+  "result_artifact": {
+    "path": "/Volumes/Net/civilization-stage299-reranker-repeat-20261029/candidate/full-run/longmemeval_results_20261029_080144.json",
+    "size_bytes": 246567609,
+    "sha256": "4b90c7743b374ae8f402a1eb272f90332ed241f87ea60b4782e838b229fbbe24"
+  },
+  "best_observed_full_score": {
+    "stage": 299,
+    "correct": 461,
+    "total": 500,
+    "accuracy": 0.922,
+    "gate": 485,
+    "shortfall": 24
+  },
+  "memory_precision_measured": false,
+  "decision": "Stage299 is the new best full score at 461/500, five above Stage297 and 24 below 485. Reranker selection is not stable under the same accepted seed: only 22/266 rows kept the exact selected order and 82/266 kept the same selected set. The target baking count failed again with 5 after boundary exclusion. Keep reranking opt-in and treat the score as a single-run best, not a repeatable estimate.",
+  "limitations": "The 97% gate remains unmet by 24 answers. Reranker selection order varies materially between same-seed runs. Memory precision remains unmeasured and live offsite disaster-recovery restore is unverified. Stage299 does not demonstrate Stage166 efficacy."
+}
