@@ -1,0 +1,145 @@
+{
+  "stage": 308,
+  "date": "2026-10-29",
+  "experiment": "reranker-rrf-snapshot-paired-answer-pilot",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_commit": "f7f7be8 feat: add deterministic RRF snapshot preparation",
+  "adapter_verification": {
+    "pytest_tests_passed": 316,
+    "subtests_passed": 25,
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "provider": "openai",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "prompt_source_sha256": "7d8f7c45c5d84113fe52efd371631124c4c188f0418e98d52563b56f04b01cdd",
+  "retrieval_fusion": {
+    "algorithm": "reciprocal-rank-fusion-v1",
+    "rrf_k": 60,
+    "answer_labels_used_for_fusion": false,
+    "question_count": 500,
+    "candidate_capacity": 200,
+    "minimum_candidate_count": 194,
+    "maximum_candidate_count": 200,
+    "fusion_applied_question_count": 266,
+    "top20_changed_from_primary_question_count": 239,
+    "control_order": "Stage299 saved reranker order fused with itself; resulting Top-20 matches Stage299",
+    "candidate_order": "RRF over Stage297 and Stage299 for metadata-selected multi-session and temporal-reasoning rows; primary order preserved for other question types",
+    "pilot_top20_matches_final_scoped_snapshot": 266
+  },
+  "source_pair_retrieval_audit": {
+    "annotation_scope": "470 answerable questions; labels used only for this offline audit",
+    "annotated_answer_pairs": 883,
+    "control_stage299": {
+      "pairs_retrieved_at_20": 869,
+      "pair_recall_at_20": 0.984145,
+      "questions_with_all_pairs_at_20": 458,
+      "strict_answer_pair_precision_proxy_at_20": 0.092447,
+      "answer_session_hits": 882,
+      "answer_session_total": 890
+    },
+    "rrf_candidate": {
+      "pairs_retrieved_at_20": 871,
+      "pair_recall_at_20": 0.986410,
+      "questions_with_all_pairs_at_20": 460,
+      "strict_answer_pair_precision_proxy_at_20": 0.092660,
+      "answer_session_hits": 885,
+      "answer_session_total": 890
+    },
+    "interpretation": "A small sparse-label retrieval proxy gain; this is not stored-memory factual precision and does not prove answer improvement."
+  },
+  "paired_answer_pilot": {
+    "question_count": 266,
+    "question_types": {
+      "multi-session": 133,
+      "temporal-reasoning": 133
+    },
+    "fresh_answer_generation_and_judging": true,
+    "llm_reranker_called": false,
+    "top_k": 200,
+    "cutoff": "top_20",
+    "all_questions_completed": true,
+    "control": {
+      "correct": 231,
+      "accuracy": 0.868421,
+      "invalid_answer_audits": 17,
+      "run_id": "93c057d8"
+    },
+    "candidate": {
+      "correct": 226,
+      "accuracy": 0.849624,
+      "invalid_answer_audits": 20,
+      "run_id": "6801e8d2"
+    },
+    "paired_outcomes": {
+      "both_correct": 217,
+      "both_wrong": 26,
+      "candidate_only_correct": 9,
+      "control_only_correct": 14,
+      "net_delta": -5,
+      "answer_text_changed_rows": 160
+    },
+    "by_question_type": {
+      "multi-session": {
+        "control_correct": 113,
+        "candidate_correct": 112,
+        "candidate_only_correct": 5,
+        "control_only_correct": 6
+      },
+      "temporal-reasoning": {
+        "control_correct": 118,
+        "candidate_correct": 114,
+        "candidate_only_correct": 4,
+        "control_only_correct": 8
+      }
+    },
+    "api_error_rows": 0
+  },
+  "input_snapshots": {
+    "stage297": {
+      "path": "/Volumes/Net/civilization-stage297-weak-type-reranker-20261029/candidate/full-run/longmemeval_results_20261029_072512.json",
+      "size_bytes": 246574814,
+      "sha256": "83017fb0fe7b04ec090eae618bf6301a84ef7aa45b9de400f2a523e11dd7eb8c",
+      "full_score": "456/500"
+    },
+    "stage299": {
+      "path": "/Volumes/Net/civilization-stage299-reranker-repeat-20261029/candidate/full-run/longmemeval_results_20261029_080144.json",
+      "size_bytes": 246567609,
+      "sha256": "4b90c7743b374ae8f402a1eb272f90332ed241f87ea60b4782e838b229fbbe24",
+      "full_score": "461/500"
+    }
+  },
+  "result_artifacts": {
+    "control": {
+      "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage308-reranker-rrf-20261029/control/longmemeval_results_20261029_110901.json",
+      "size_bytes": 132776611,
+      "sha256": "e6a779972c0ce61b1c386fc5c7a9776be0534232ac9ce6e6cc59d9c03a3e006b"
+    },
+    "candidate": {
+      "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage308-reranker-rrf-20261029/candidate/longmemeval_results_20261029_111644.json",
+      "size_bytes": 132779861,
+      "sha256": "b89a5b17fee87f1a07b26ff802a17df0de9576f3ec7729870045a5e21e608704"
+    },
+    "candidate_fusion_manifest": {
+      "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage308-reranker-rrf-20261029/candidate-scoped/reranker-rrf-candidate-scoped_rank_fusion_manifest.json",
+      "sha256": "682efe9aad2aa403fcd6b7f9dd1734eaacc1056090ffe502b342ea298b1de022"
+    }
+  },
+  "best_observed_full_score": {
+    "stage": 299,
+    "correct": 461,
+    "total": 500,
+    "accuracy": 0.922,
+    "gate": 485,
+    "shortfall": 24
+  },
+  "memory_precision_measured": false,
+  "offsite_disaster_recovery_restore_verified": false,
+  "decision": "Keep the deterministic RRF preparation utility as an offline research tool only. The paired 266-question answer pilot regressed by five answers and increased invalid audits by three. Do not activate RRF in the default runtime and do not spend a full 500-question run on this candidate.",
+  "limitations": "This is a 266-question subset experiment, not a full Top-20 score or release result. The Stage299 complete score remains 461/500 (92.2%), 24 below the 485/500 gate. Sparse annotated pair recall is not factual precision of stored memory. Live offsite disaster-recovery restore remains unverified."
+}
