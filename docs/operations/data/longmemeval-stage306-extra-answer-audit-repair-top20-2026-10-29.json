@@ -1,0 +1,80 @@
+{
+  "stage": 306,
+  "date": "2026-10-29",
+  "experiment": "extra-answer-audit-repair-full-frozen-retrieval",
+  "feature": "Default-off CLI option performs one additional structured repair only when the existing answer validator still reports errors; the new response is accepted only if all validation errors are cleared.",
+  "adapter_branch": "codex/research-poster-venue-resolution",
+  "adapter_commit": "0e98f6c feat: add opt-in extra answer audit repair",
+  "design_commit": "8aa8653 docs: plan bounded answer audit repair",
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "prompt_source_sha256": "d84e103f0639dc6380215750ba1acc46b44ea23806574137254bb3baccdb05ec",
+  "retrieval_source": "Stage302 saved per-question retrieval lists; no reranker calls and no search reordering. Top-20 order is identical to Stage302.",
+  "run_id": "9da4a2fb",
+  "timestamp": "20261029_095927",
+  "top_k": 200,
+  "cutoff": 20,
+  "extra_answer_audit_repair_enabled": true,
+  "full_candidate": {
+    "question_count": 500,
+    "correct": 444,
+    "accuracy": 0.888,
+    "target_correct": 485,
+    "shortfall": 41,
+    "target_met": false,
+    "is_fresh_answer_generation": true,
+    "retrieval_reused": true,
+    "question_types": {
+      "knowledge-update": {"correct": 72, "total": 78},
+      "multi-session": {"correct": 106, "total": 133},
+      "single-session-assistant": {"correct": 54, "total": 56},
+      "single-session-preference": {"correct": 28, "total": 30},
+      "single-session-user": {"correct": 68, "total": 70},
+      "temporal-reasoning": {"correct": 116, "total": 133}
+    },
+    "paired_against_stage302": {
+      "baseline_correct": 450,
+      "candidate_correct": 444,
+      "both_correct": 427,
+      "both_wrong": 33,
+      "candidate_only_correct": 17,
+      "baseline_only_correct": 23,
+      "answer_text_changed_rows": 232,
+      "net_delta": -6
+    },
+    "invalid_answer_audit_rows": 21,
+    "stage302_invalid_answer_audit_rows": 29,
+    "api_error_marked_rows": 0,
+    "all_500_rows_completed": true
+  },
+  "repair_execution": {
+    "rows_with_extra_attempt": 24,
+    "accepted_fully_valid_repairs": 3,
+    "accepted_answers_changed": 1,
+    "accepted_answers_unchanged": 2,
+    "rejected_still_invalid": 21,
+    "judge_label_flips_among_accepted_repairs": 0
+  },
+  "result_artifact": {
+    "path": "/Users/yikewang/Documents/本机操作/memory-benchmarks-run-stage306-audit-repair-20261029/candidate/full-run/longmemeval_results_20261029_095927.json",
+    "size_bytes": 246754486,
+    "sha256": "6625f1e608d7efa82ca55d0fff8a5f7cd77be2af8fb7556646eaaf3f539444a2"
+  },
+  "best_observed_full_score": {
+    "stage": 299,
+    "correct": 461,
+    "total": 500,
+    "accuracy": 0.922,
+    "gate": 485,
+    "shortfall": 24
+  },
+  "memory_precision_measured": false,
+  "stage166_exercised": false,
+  "decision": "Keep the extra repair opt-in. A direct frozen-answer pilot fully repaired 6/29 invalid audits with no judge-label change. In the fresh full run, 24 extra repairs were attempted and three were accepted; none changed a judge label. Invalid audits fell from 29 to 21, but the full score was 444/500, six below Stage302. Broad answer variation (232 changed answers) prevents attributing the score delta to the repair.",
+  "limitations": "Stage306 does not meet the 97% gate; the best observed full score remains Stage299 at 461/500, 24 below 485. Structural audit validity is not factual memory precision. Memory precision remains unmeasured, live offsite disaster recovery is unverified, and Stage166 was not run."
+}

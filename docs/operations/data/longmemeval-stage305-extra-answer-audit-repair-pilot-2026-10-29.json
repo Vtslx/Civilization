@@ -1,0 +1,32 @@
+{
+  "stage": 305,
+  "date": "2026-10-29",
+  "experiment": "extra-answer-audit-repair-frozen-answer-pilot",
+  "feature": "One additional structured repair using the exact Stage302 saved answer, validation errors, and frozen Top-20 evidence.",
+  "adapter_commit_under_test": "d1b2d70 fix/feat baseline with one existing repair attempt",
+  "provider": "openai",
+  "answerer_model": "group/auto-gpt-6-luna",
+  "judge_model": "group/auto-gpt-6-luna",
+  "openai_seed": 42,
+  "answerer_seed_accepted": true,
+  "judge_seed_accepted": true,
+  "source_result": "/Volumes/Net/civilization-stage302-ledger-verifier-full-20261029/candidate/full-run/longmemeval_results_20261029_085706.json",
+  "source_result_sha256": "0a837c89907c11791fb56cfa57f809d4e194d489d876122c04b6a8cebe8b1498",
+  "prompt_source_sha256": "d84e103f0639dc6380215750ba1acc46b44ea23806574137254bb3baccdb05ec",
+  "question_count": 29,
+  "repairs_fully_valid": 6,
+  "still_invalid": 23,
+  "answer_text_changed": 15,
+  "accepted_changed_answers": 4,
+  "accepted_unchanged_answers": 2,
+  "candidate_only_correct": 0,
+  "baseline_only_correct": 0,
+  "judge_accuracy_net_delta": 0,
+  "repair_summary_artifact": {
+    "path": "/Volumes/Net/civilization-stage305-answer-audit-repair-pilot-20261029/repair-pilot-summary.json",
+    "size_bytes": 8749,
+    "sha256": "76cc318480201bea653fd389db1e09780e156a68c88129faaf78049e69cb9f2f"
+  },
+  "decision": "The bounded repair correctly removed all validation errors in six saved answers and caused no judge-label flips. Keep the feature opt-in and test the integrated CLI path on a complete frozen-retrieval run.",
+  "limitations": "This is a 29-row repair pilot, not a full benchmark score. Structural citation/audit validity is not the same as factual precision of all stored memory."
+}
