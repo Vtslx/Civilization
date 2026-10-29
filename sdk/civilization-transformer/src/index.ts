@@ -33,4 +33,4 @@ export type {
 } from "./types.js";
 
 /** SDK release line. */
-export const SDK_VERSION = "0.00.08-crab";
+export const SDK_VERSION = "1.0.0";

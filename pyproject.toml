@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "astreusn-civilization-v1"
-version = "0.1.0"
+version = "1.0.0"
 description = "Decision, memory, job, and export service with a provider-agnostic runtime"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]

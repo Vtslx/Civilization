@@ -28,7 +28,7 @@ npm pack           # produces the installable tarball
 Consume the tarball from another project:
 
 ~~~bash
-npm install /path/to/sdk/civilization-transformer/astreusn-civilization-transformer-0.00.08-crab.tgz
+npm install /path/to/sdk/civilization-transformer/astreusn-civilization-transformer-1.0.0.tgz
 ~~~
 
 Releases are also published to a private npm registry for internal consumers;
