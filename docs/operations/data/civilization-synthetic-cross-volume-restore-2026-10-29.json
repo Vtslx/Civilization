@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-29",
+  "drill": "synthetic-encrypted-backup-cross-volume-restore",
+  "outcome": "PASS",
+  "state_used": "ephemeral synthetic Orion session and empty global-memory snapshot; no live user state",
+  "source_mount": "/Volumes/Net",
+  "replica_mount": "local system data volume",
+  "source_and_replica_filesystems_differ": true,
+  "checks": {
+    "encrypted_bundle_created": true,
+    "authenticated_verify_passed": true,
+    "replica_checksum_and_authentication_passed": true,
+    "restore_to_new_directory_passed": true,
+    "restored_session_hydrated": true,
+    "cell_id_and_content_match": true,
+    "plaintext_canary_absent_from_ciphertext": true,
+    "backup_permissions_0600": true,
+    "temporary_artifacts_removed": true
+  },
+  "encrypted_backup_size_bytes": 10568,
+  "replica_sha256": "2e1d9d9f528d544d88a06e79cc0aa0b285a706f7e3239c33eb1e233e3c565de9",
+  "replica_remote_s3": false,
+  "offsite_failure_domain_verified": false,
+  "live_state_restore_verified": false,
+  "limitations": "This validates the local encrypted backup, cross-filesystem replica, and application-level session recovery path on one host. It does not test an offsite S3 endpoint, site-level failure, schedule, alerting, or recovery from a live user state."
+}

@@ -321,3 +321,9 @@ describes this rule in [Abort incomplete multipart uploads](https://docs.aws.ama
 - **No archive compression.** Journals are compacted into snapshots and old
   sessions can be removed with `civilization prune`; backup tar files are
   uncompressed and the command does not back up job/export data.
+
+## Synthetic cross-volume restore drill (2026-10-29)
+
+An ephemeral synthetic Orion session was written on the `/Volumes/Net` filesystem, encrypted with the v2 backup API, verified, replicated to a different local filesystem, and restored into a new directory. The restored persistence reader hydrated the same `cell_id` and content. The encrypted bundle was mode `0600`, the synthetic plaintext canary was absent from the ciphertext, and every check passed. Temporary source, replica, and restore directories were removed automatically. No production memory or S3 endpoint was used.
+
+This confirms local backup integrity, cross-filesystem copy, and application-level restore on one host. It does not verify an offsite failure domain, S3 replication, backup scheduling, alerting, or restoration of a live user state. The live offsite disaster-recovery gate remains open. See [synthetic drill record](data/civilization-synthetic-cross-volume-restore-2026-10-29.json).
