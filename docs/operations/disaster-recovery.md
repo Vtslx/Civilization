@@ -84,6 +84,24 @@ software path, not survival of a host, disk, or region loss. The S3 replication
 path has unit tests but this repository has not executed a live restore from an
 offsite S3 bucket.
 
+### S3 version round trip (local S3-compatible server)
+
+On 2026-10-31 the same 3-session, 126-cell backup was replicated to a versioned
+bucket on a local S3-compatible HTTP server (moto), then the exact version was
+downloaded by `VersionId`, authenticated with `verify-backup`, restored, and
+rehydrated. All checks passed: remote version read-back, downloaded SHA-256
+match, authenticated bundle, restore, and 126/126 cells equal. The object key
+was `drill/2026-10-31/7f/7fe1f79b...enc`, version
+`0ebe6c7f-283b-46bf-95a0-42e464f05881`, backup SHA-256
+`7fe1f79b6790e3a207003276c0fa47d3421d29863b13cb5493dfc1ab49803204`.
+Report:
+[disaster-recovery-s3-drill-2026-10-31.json](data/disaster-recovery-s3-drill-2026-10-31.json).
+
+This exercises the production S3 client, multipart upload, versioning, remote
+read-back, and restore path against a real HTTP S3 API. Moto is a local test
+server, not an independent failure domain; the offsite checklist below remains
+mandatory before claiming offsite recovery.
+
 ## Offsite readiness checklist
 
 An authorized operator must complete every item before claiming offsite DR:

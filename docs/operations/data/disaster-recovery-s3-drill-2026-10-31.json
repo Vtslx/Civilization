@@ -1,0 +1,20 @@
+{
+  "drill": "s3_version_download_verify_restore_rehydrate",
+  "passed": true,
+  "transport": "local S3-compatible HTTP server (moto), versioned bucket",
+  "bucket": "civilization-backups",
+  "key": "drill/2026-10-31/7f/7fe1f79b6790e3a207003276c0fa47d3421d29863b13cb5493dfc1ab49803204.enc",
+  "version_id": "0ebe6c7f-283b-46bf-95a0-42e464f05881",
+  "backup_sha256": "7fe1f79b6790e3a207003276c0fa47d3421d29863b13cb5493dfc1ab49803204",
+  "session_count": 3,
+  "cell_count": 126,
+  "source_and_restored_equal": true,
+  "checks": {
+    "remote_version_read_back": true,
+    "downloaded_hash_matches": true,
+    "backup_authenticated": true,
+    "restore_completed": true,
+    "hydrated_cells_match": true
+  },
+  "limits": "Local S3-compatible test server on one host. It exercises the S3 version read-back, authenticated download, restore, and rehydration path; it is not an independent offsite failure domain."
+}
