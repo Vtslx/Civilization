@@ -20,6 +20,8 @@ service baseline.
   rate limits, export delivery, encrypted backups, restore, and optional
   S3-compatible backup replication.
 - Python and TypeScript SDK surfaces.
+- README embeds the v1.0.0 LongMemEval results figure and links to the
+  accompanying research write-up.
 
 ### Validation status and known boundaries
 

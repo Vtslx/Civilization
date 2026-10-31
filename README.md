@@ -112,6 +112,12 @@ uploads after a window longer than the expected retry/resume period; see
 `civilization scorecard` checks full LongMemEval answerer results against the
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
 
+### LongMemEval results
+
+![Civilization v1.0.0 LongMemEval research results](https://demo-website-6ef0f2.api.edge.zorker.app/openlink/storage/Demo/Github/Vtslx/Civilization/civilization-v1.0.0-results-figure.png)
+
+Read the accompanying write-up: [Civilization v1.0.0 LongMemEval research results](https://www.hydite.com/blog/civilization-v1-0-0-longmemeval-research-results).
+
 Orion retrieval uses fielded BM25F ranking with bounded priors, explicit
 recency tie-breaking, speaker-aware ranking, and date/source-session coverage
 for temporal
