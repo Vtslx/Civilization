@@ -712,6 +712,79 @@ def _command_scorecard(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------- #
+# memory-precision
+# --------------------------------------------------------------------------- #
+def _command_memory_precision(args: argparse.Namespace) -> int:
+    from .engine.memory.precision import (
+        MemoryPrecisionPolicy,
+        audit_memory_cells,
+        load_transcript,
+    )
+    from .engine.persistence import PersistenceConfig, SessionPersistence, session_directory
+
+    state_dir = Path(args.state_dir).expanduser()
+    spans = load_transcript(args.transcript)
+    policy = MemoryPrecisionPolicy(
+        require_user_authorship=args.require_user_authorship,
+        allow_assistant_evidence=args.allow_assistant_evidence,
+        allow_derived_cells=args.allow_derived_cells,
+        require_every_quote=args.require_every_quote,
+    )
+    persistence = SessionPersistence(
+        PersistenceConfig(mode="in_process", state_dir=str(state_dir), fsync="never")
+    )
+    session_ids = list(dict.fromkeys(args.session_id or []))
+    if not session_ids:
+        sessions_root = session_directory(state_dir, "_").parent
+        if not sessions_root.is_dir():
+            raise SystemExit(f"no session journals under {sessions_root}")
+        session_ids = sorted(path.name for path in sessions_root.iterdir() if path.is_dir())
+    if not session_ids:
+        raise SystemExit(f"no session journals under {state_dir}")
+
+    reports = []
+    total = 0
+    supported = 0
+    for session_id in session_ids:
+        store = persistence.hydrate(session_id)
+        report = audit_memory_cells(
+            store.cells.values(),
+            spans,
+            session_id=session_id,
+            target=args.target,
+            policy=policy,
+        )
+        reports.append(report.to_dict())
+        total += report.total_cells
+        supported += report.supported_cells
+
+    aggregate_precision = 1.0 if total == 0 else supported / total
+    aggregate = {
+        "total_cells": total,
+        "supported_cells": supported,
+        "precision": aggregate_precision,
+        "target": args.target,
+        "target_met": aggregate_precision + 1e-12 >= args.target,
+        "empty": total == 0,
+    }
+    payload: dict[str, Any] = {
+        "metric": "stored_memory_factual_precision",
+        "state_dir": str(state_dir.resolve()),
+        "sessions": reports,
+        "aggregate": aggregate,
+    }
+    if len(reports) == 1:
+        payload.update(reports[0])
+    if args.output:
+        output = Path(args.output).expanduser()
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(payload, ensure_ascii=False, indent=2, default=str) + "\n", encoding="utf-8")
+        print(f"memory precision report saved: {output.resolve()}")
+    _print(payload, as_json=True)
+    return 0 if aggregate["target_met"] else 1
+
+
+# --------------------------------------------------------------------------- #
 # persist-sidecar
 # --------------------------------------------------------------------------- #
 def _command_persist_sidecar(args: argparse.Namespace) -> int:
@@ -986,6 +1059,46 @@ def build_parser() -> argparse.ArgumentParser:
     scorecard.add_argument("--target-accuracy", type=float, default=0.97, help="release target in [0, 1]")
     scorecard.add_argument("--output", default=None, help="optional JSON scorecard output path")
     scorecard.set_defaults(func=_command_scorecard)
+
+    memory_precision = subparsers.add_parser(
+        "memory-precision",
+        help="audit stored memory cells against their cited transcript spans",
+    )
+    memory_precision.add_argument("--state-dir", default="var/state", help="memory state directory")
+    memory_precision.add_argument(
+        "--session-id",
+        action="append",
+        default=None,
+        help="session to audit; repeatable (default: every session under state-dir)",
+    )
+    memory_precision.add_argument("--transcript", required=True, help="JSONL or JSON source spans with source_id, role, text")
+    memory_precision.add_argument("--target", type=float, default=1.0, help="required precision in [0, 1]")
+    memory_precision.add_argument(
+        "--require-user-authorship",
+        action="store_true",
+        help="reject cells whose citations are not user-authored spans",
+    )
+    memory_precision.add_argument(
+        "--allow-assistant-evidence",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="allow assistant-authored spans as evidence (default: on)",
+    )
+    memory_precision.add_argument(
+        "--allow-derived-cells",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="accept consolidation cells only when every parent cell is supported (default: on)",
+    )
+    memory_precision.add_argument(
+        "--require-every-quote",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="require every provenance quote to match, not just the first (default: on)",
+    )
+    memory_precision.add_argument("--output", default=None, help="optional JSON report output path")
+    memory_precision.add_argument("--json", action="store_true", help="machine-readable output (always JSON)")
+    memory_precision.set_defaults(func=_command_memory_precision)
 
     sidecar = subparsers.add_parser(
         "persist-sidecar",
