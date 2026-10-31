@@ -785,6 +785,41 @@ def _command_memory_precision(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------- #
+# dr-drill
+# --------------------------------------------------------------------------- #
+def _command_dr_drill(args: argparse.Namespace) -> int:
+    from .engine.persistence.drill import DrillError, run_local_drill
+
+    passphrase = os.environ.get(args.passphrase_env)
+    if not passphrase:
+        raise SystemExit(
+            f"the encrypted drill needs a passphrase in {args.passphrase_env} "
+            "(inject it from a secret manager; do not pass it on the command line)"
+        )
+    backup_dir = Path(args.backup_dir).expanduser()
+    replica_dir = Path(args.replica_dir).expanduser()
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    replica_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        report = run_local_drill(
+            state_dir=args.state_dir,
+            backup_dir=backup_dir,
+            replica_dir=replica_dir,
+            passphrase=passphrase,
+            require_distinct_filesystem=not args.allow_same_filesystem,
+        )
+    except (DrillError, OSError, ValueError) as error:
+        raise SystemExit(f"disaster-recovery drill failed: {error}") from error
+    if args.output:
+        output = Path(args.output).expanduser()
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str) + "\n", encoding="utf-8")
+        print(f"drill report saved: {output.resolve()}")
+    _print(report, as_json=True)
+    return 0 if report["passed"] else 1
+
+
+# --------------------------------------------------------------------------- #
 # persist-sidecar
 # --------------------------------------------------------------------------- #
 def _command_persist_sidecar(args: argparse.Namespace) -> int:
@@ -1099,6 +1134,31 @@ def build_parser() -> argparse.ArgumentParser:
     memory_precision.add_argument("--output", default=None, help="optional JSON report output path")
     memory_precision.add_argument("--json", action="store_true", help="machine-readable output (always JSON)")
     memory_precision.set_defaults(func=_command_memory_precision)
+
+    dr_drill = subparsers.add_parser(
+        "dr-drill",
+        help="back up, replicate to a second filesystem, restore, and compare memory",
+    )
+    dr_drill.add_argument("--state-dir", default="var/state", help="source memory state directory")
+    dr_drill.add_argument("--backup-dir", required=True, help="existing directory for the encrypted drill backup")
+    dr_drill.add_argument(
+        "--replica-dir",
+        required=True,
+        help="existing directory for the replica; must be on a different filesystem unless overridden",
+    )
+    dr_drill.add_argument(
+        "--passphrase-env",
+        default="CIVILIZATION_BACKUP_PASSPHRASE",
+        help="environment variable holding the backup passphrase",
+    )
+    dr_drill.add_argument(
+        "--allow-same-filesystem",
+        action="store_true",
+        help="test/CI only: use a plain copy when the replica is on the same filesystem",
+    )
+    dr_drill.add_argument("--output", default=None, help="optional JSON drill report path")
+    dr_drill.add_argument("--json", action="store_true", help="machine-readable output")
+    dr_drill.set_defaults(func=_command_dr_drill)
 
     sidecar = subparsers.add_parser(
         "persist-sidecar",

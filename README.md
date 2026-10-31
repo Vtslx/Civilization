@@ -115,6 +115,10 @@ uploads after a window longer than the expected retry/resume period; see
 transcript spans and exits non-zero below the target; the metric and its
 measured controlled corpora are in
 [stored-memory precision](docs/operations/memory-precision.md).
+`civilization dr-drill` runs backup, cross-filesystem replication, restore, and
+cell-by-cell comparison as one acceptance gate; the failure model, offsite
+checklist, and executed drill evidence are in
+[disaster recovery](docs/operations/disaster-recovery.md).
 
 ### LongMemEval results
 

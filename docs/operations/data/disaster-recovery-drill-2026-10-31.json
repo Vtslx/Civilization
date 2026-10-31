@@ -1,0 +1,57 @@
+{
+  "drill": "local_backup_replicate_restore_rehydrate",
+  "passed": true,
+  "state_dir": "/Volumes/Net/dr-state",
+  "backup_dir": "/Volumes/Net/dr-backup",
+  "replica_dir": "/private/tmp/civ-dr-replica",
+  "distinct_filesystem": true,
+  "replica_mode": "authenticated_cross_filesystem_replication",
+  "session_count": 3,
+  "cell_count": 126,
+  "link_count": 0,
+  "duration_seconds": 0.121,
+  "backup_sha256": "32e50acdf792f6a0f867b539f2b25543ed94ef810b71b1b567fd17ca7d18cee0",
+  "checks": [
+    {
+      "name": "backup_created",
+      "passed": true,
+      "detail": "drill-backup.civbackup (56295 bytes)"
+    },
+    {
+      "name": "backup_is_private",
+      "passed": true,
+      "detail": "mode 0o600"
+    },
+    {
+      "name": "backup_authenticated",
+      "passed": true,
+      "detail": "encrypted=True entries=3"
+    },
+    {
+      "name": "replica_created",
+      "passed": true,
+      "detail": "/private/tmp/civ-dr-replica/drill-backup.civbackup (61893 bytes; authenticated_cross_filesystem_replication)"
+    },
+    {
+      "name": "replica_hash_matches",
+      "passed": true,
+      "detail": "source and replica SHA-256 match"
+    },
+    {
+      "name": "restore_completed",
+      "passed": true,
+      "detail": "3 entries restored"
+    },
+    {
+      "name": "session_set_matches",
+      "passed": true,
+      "detail": "3 source sessions, 3 restored"
+    },
+    {
+      "name": "cell_and_link_contents_match",
+      "passed": true,
+      "detail": "126 cells and 0 links compared"
+    }
+  ],
+  "limits": "Local cross-filesystem evidence on one host. It verifies the backup, replication, restore, and rehydration path; it is not an offsite or independent-failure-domain restore."
+}
