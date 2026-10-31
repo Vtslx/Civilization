@@ -1,0 +1,65 @@
+{
+  "metric": "stored_memory_factual_precision",
+  "state_dir": "/Volumes/Net/mb-precision-audit/state",
+  "sessions": [
+    {
+      "session_id": "controlled-1",
+      "metric": "stored_memory_factual_precision",
+      "definition": "supported memory cells / all stored memory cells",
+      "total_cells": 7,
+      "supported_cells": 7,
+      "precision": 1.0,
+      "target": 1.0,
+      "target_met": true,
+      "empty": false,
+      "status_counts": {
+        "supported": 7
+      },
+      "transcript_span_count": 6,
+      "policy": {
+        "require_user_authorship": false,
+        "allow_assistant_evidence": true,
+        "allow_derived_cells": true,
+        "require_every_quote": true,
+        "normalize_unicode": true
+      },
+      "findings": []
+    }
+  ],
+  "aggregate": {
+    "total_cells": 7,
+    "supported_cells": 7,
+    "precision": 1.0,
+    "target": 1.0,
+    "target_met": true,
+    "empty": false
+  },
+  "session_id": "controlled-1",
+  "definition": "supported memory cells / all stored memory cells",
+  "total_cells": 7,
+  "supported_cells": 7,
+  "precision": 1.0,
+  "target": 1.0,
+  "target_met": true,
+  "empty": false,
+  "status_counts": {
+    "supported": 7
+  },
+  "transcript_span_count": 6,
+  "policy": {
+    "require_user_authorship": false,
+    "allow_assistant_evidence": true,
+    "allow_derived_cells": true,
+    "require_every_quote": true,
+    "normalize_unicode": true
+  },
+  "findings": [],
+  "corpus": {
+    "kind": "controlled_provenance_complete_session",
+    "description": "Seven cells written through SessionPersistence with exact quoted provenance; one semantic cell derived from three supported episodic parents.",
+    "transcript_path": "/Volumes/Net/mb-precision-audit/transcript.jsonl",
+    "transcript_sha256": "ae220fc454f2c4f55372aa4b729b70f335302b6cae5205abc88e7f56270dd8ab",
+    "generated_at": "2026-10-31"
+  },
+  "command": "civilization memory-precision --state-dir <tmp>/state --session-id controlled-1 --transcript <tmp>/transcript.jsonl --output report.json --json"
+}

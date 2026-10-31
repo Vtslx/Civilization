@@ -111,6 +111,10 @@ uploads after a window longer than the expected retry/resume period; see
 [AWS incomplete-upload lifecycle guidance](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpu-abort-incomplete-mpu-lifecycle-config.html).
 `civilization scorecard` checks full LongMemEval answerer results against the
 485/500 gate and rejects protocol-mismatched baselines ([scorecard workflow](docs/operations/longmemeval-scorecard.md)).
+`civilization memory-precision` audits every stored cell against exact cited
+transcript spans and exits non-zero below the target; the metric and its
+measured controlled corpora are in
+[stored-memory precision](docs/operations/memory-precision.md).
 
 ### LongMemEval results
 

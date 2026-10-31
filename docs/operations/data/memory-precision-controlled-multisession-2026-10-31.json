@@ -1,0 +1,89 @@
+{
+  "metric": "stored_memory_factual_precision",
+  "state_dir": "/Volumes/Net/mb-precision-audit-large/state",
+  "sessions": [
+    {
+      "session_id": "controlled-1",
+      "metric": "stored_memory_factual_precision",
+      "definition": "supported memory cells / all stored memory cells",
+      "total_cells": 44,
+      "supported_cells": 44,
+      "precision": 1.0,
+      "target": 1.0,
+      "target_met": true,
+      "empty": false,
+      "status_counts": {
+        "supported": 44
+      },
+      "transcript_span_count": 120,
+      "policy": {
+        "require_user_authorship": false,
+        "allow_assistant_evidence": true,
+        "allow_derived_cells": true,
+        "require_every_quote": true,
+        "normalize_unicode": true
+      },
+      "findings": []
+    },
+    {
+      "session_id": "controlled-2",
+      "metric": "stored_memory_factual_precision",
+      "definition": "supported memory cells / all stored memory cells",
+      "total_cells": 44,
+      "supported_cells": 44,
+      "precision": 1.0,
+      "target": 1.0,
+      "target_met": true,
+      "empty": false,
+      "status_counts": {
+        "supported": 44
+      },
+      "transcript_span_count": 120,
+      "policy": {
+        "require_user_authorship": false,
+        "allow_assistant_evidence": true,
+        "allow_derived_cells": true,
+        "require_every_quote": true,
+        "normalize_unicode": true
+      },
+      "findings": []
+    },
+    {
+      "session_id": "controlled-3",
+      "metric": "stored_memory_factual_precision",
+      "definition": "supported memory cells / all stored memory cells",
+      "total_cells": 44,
+      "supported_cells": 44,
+      "precision": 1.0,
+      "target": 1.0,
+      "target_met": true,
+      "empty": false,
+      "status_counts": {
+        "supported": 44
+      },
+      "transcript_span_count": 120,
+      "policy": {
+        "require_user_authorship": false,
+        "allow_assistant_evidence": true,
+        "allow_derived_cells": true,
+        "require_every_quote": true,
+        "normalize_unicode": true
+      },
+      "findings": []
+    }
+  ],
+  "aggregate": {
+    "total_cells": 132,
+    "supported_cells": 132,
+    "precision": 1.0,
+    "target": 1.0,
+    "target_met": true,
+    "empty": false
+  },
+  "corpus": {
+    "kind": "controlled_provenance_complete_multi_session",
+    "description": "Three sessions, 120 episodic cells with exact quoted provenance (user and assistant roles) and 12 derived semantic cells; every citation resolves to one of 120 generated spans.",
+    "transcript_sha256": "1549585b1a3779c676726b40b851ba47f8fcd341e0ee659bb3f7ca095a881288",
+    "generated_at": "2026-10-31"
+  }
+}

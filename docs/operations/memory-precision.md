@@ -98,6 +98,27 @@ A consolidation cell cites its parents instead:
 The API already accepts `metadata` on `write_memory` and `consolidate_memory`;
 no schema change is needed.
 
+## Measured result (2026-10-31)
+
+Two controlled corpora were written through `SessionPersistence` and audited
+with the command above:
+
+| Corpus | Sessions | Cells | Supported | Precision | Report |
+|---|---:|---:|---:|---:|---|
+| Single-session provenance | 1 | 7 | 7 | 1.0 | [memory-precision-controlled-session-2026-10-31.json](data/memory-precision-controlled-session-2026-10-31.json) |
+| Multi-session provenance | 3 | 132 | 132 | 1.0 | [memory-precision-controlled-multisession-2026-10-31.json](data/memory-precision-controlled-multisession-2026-10-31.json) |
+
+Both corpora include exact user and assistant quotes and consolidation cells
+derived from supported parents. The reports record the transcript SHA-256,
+policy, cell counts, and the exact command. They establish that the audit
+reports 100% on a provenance-complete store; they are controlled corpora, not a
+census of production user memory. The 132-cell report is the stronger evidence
+because it exercises derived cells and multiple sessions.
+
+The negative path is covered by the test suite: fabricated quotes, missing
+spans, missing provenance, assistant-only user claims, unsupported parents, and
+cycles all produce a non-1.0 report and a non-zero CLI exit.
+
 ## What 100% means
 
 A 100% result means **every cell in the audited session was supported by an
