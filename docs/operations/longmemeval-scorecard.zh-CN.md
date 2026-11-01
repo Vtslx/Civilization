@@ -519,3 +519,13 @@ Stage306 使用与 Stage302 完全相同的保存检索结果和 Top-20 顺序�
 ## Stage307：显式 abstention 与结构审计边界检查（2026-10-29）
 
 Stage306 的 21 条无效审计中，有 9 条答案以“记忆未说明”类句式明确 abstain；其中 6 条属于 benchmark abstention 且裁判 PASS，另外 3 条实际上应回答具体事实、裁判 FAIL。若 validator 一律将此类措辞视作有效 abstention，会把三条错误答案隐藏在结构审计中。因此不提交该 regex 放宽，答案结构和 benchmark 语义正确性继续分开报告。详见[Stage307 abstention 诊断](data/longmemeval-stage307-explicit-abstention-audit-2026-10-29.json)。
+
+## Stage312：固定证据上换成更强回答模型（2026-11-01）
+
+Stage312 在完全相同的固定 Top-20 证据上，把回答模型从 GPT-6 换成 **GPT-5.6 Luna**（`auto/gpt-5.6-luna`），裁判仍为 `group/auto-gpt-6-luna`、seed 42，保留 Stage311 的全部 resolver 配置和 `top_20` 口径。证据集是 Stage262 冻结 Top-200 经一次 GPT-6 selective reranker 固定下来的前 20 条；回答阶段不再调用 reranker。
+
+全量 500 题重新生成并裁判，得 **466/500（93.2%）**，是目前验证过的最高全量成绩：比 Stage299 的 461 高 5，距 485/500 门槛差 **19**。分类型：knowledge-update 74/78（94.9%）、multi-session 121/133（91.0%）、single-session-assistant 55/56（98.2%）、single-session-preference 28/30（93.3%）、single-session-user 68/70（97.1%）、temporal-reasoning 120/133（90.2%）。API 错误 0；abstention 题 29/30 正确。
+
+这不是 prompt-identical 的配对实验：Stage299 使用 Stage268 检索快照和实时 reranker，Stage312 使用 Stage262 快照和固定 Top-20，因此总分对比只能作描述。更强的证据来自答案来源审计：34 条错题中有 32 条的全部标注答案会话已在 Top-20，33 条在 Top-200；剩余差距主要在答案推理，不在检索。30 题困难集上，GPT-6 得 34/60，GPT-5.6 在同一证据上得 48/60。
+
+Adapter 提交：`59cf5f9 feat: reconstruct stage311 adapter and add answer reconciliation`。成绩卡、数据集哈希和结果哈希见 [Stage312 成绩卡](data/longmemeval-stage312-gpt56-answerer-top20-2026-11-01.json)。97% 门槛仍差 19 题；这是单 seed 结果，尚未证明可重复。异地灾备仍未验证；同机跨文件系统和本地 S3 兼容演练各以 126/126 个 cell 通过。

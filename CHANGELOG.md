@@ -3,6 +3,29 @@
 Package releases use Semantic Versioning. The `v0.00.xx` identifiers in the
 README and `docs/versions/` track internal research milestones separately.
 
+## [Unreleased]
+
+### Added
+
+- `civilization memory-precision`: fail-closed audit of stored memory cells
+  against exact cited transcript spans, with derived-cell support, role checks,
+  JSON reports, and non-zero exit below the target.
+- `civilization dr-drill`: backup, cross-filesystem replication, restore,
+  rehydration, and cell-by-cell comparison as one acceptance gate.
+- ADR-011 (stored-memory precision audit) and ADR-012 (executable disaster
+  recovery drills).
+- Stage312 LongMemEval evidence: GPT-5.6 Luna answerer on fixed reranked
+  evidence, 466/500 (93.2%), the best verified full result.
+
+### Validation status
+
+- Latest complete Top-20 result: Stage312 scored 466/500 (93.2%), 19 below the
+  485/500 gate.
+- Stored-memory precision: 132/132 cells on a controlled multi-session corpus
+  and 126/126 cells in the DR drill; a production corpus census is not measured.
+- Disaster recovery: local cross-filesystem and local S3-compatible restore
+  drills passed with 126/126 cells each; a live offsite restore is not verified.
+
 ## [1.0.0] - 2026-10-29
 
 First formal release of the Civilization Python package, TypeScript SDK, and
