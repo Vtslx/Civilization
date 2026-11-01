@@ -351,5 +351,7 @@
   "offsite_disaster_recovery_restore_verified": false,
   "local_disaster_recovery_drill_verified": true,
   "decision": "GPT-5.6 Luna is a material answerer improvement on the same fixed evidence: 466/500, a new verified full-run best, five answers above the prior 461 and 19 below the 485 gate. Keep the stronger answerer as the default candidate and continue with targeted numeric/temporal repairs.",
-  "limitations": "The retrieval snapshot is Stage262, not the Stage268 snapshot used by Stage299, so the aggregate comparison is not paired. The run is a single seed; repeatability is not established. The 97% gate remains unmet by 19 answers. Offsite recovery remains unverified; only local cross-filesystem and local S3-compatible drills passed."
+  "limitations": "The retrieval snapshot is Stage262, not the Stage268 snapshot used by Stage299, so the aggregate comparison is not paired. The run is a single seed; repeatability is not established. The 97% gate remains unmet by 19 answers. Offsite recovery remains unverified; only local cross-filesystem and local S3-compatible drills passed.",
+  "adapter_commit_note": "Recorded after the run; the run used the reconstructed Stage311 adapter before answer reconciliation and abstention recovery were added.",
+  "prompt_source_sha256": "3d4a384e9535e0a067031b5ef7f90fed351a778c2cd0fe91f2f2349004cf5b4f"
 }

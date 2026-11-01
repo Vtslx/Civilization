@@ -616,7 +616,10 @@ evidence; Grok 4.7 and DeepSeek V4 Pro did not satisfy the structured-answer
 contract and were not considered.
 
 Adapter commit: `59cf5f9 feat: reconstruct stage311 adapter and add answer
-reconciliation`. The scorecard, dataset hash, and result hash are in
+reconciliation` (recorded after the run; the run used the reconstructed Stage311
+adapter before reconciliation and recovery were added). Prompt source SHA-256:
+`3d4a384e9535e0a067031b5ef7f90fed351a778c2cd0fe91f2f2349004cf5b4f`. The
+scorecard, dataset hash, and result hash are in
 [longmemeval-stage312-gpt56-answerer-top20-2026-11-01.json](data/longmemeval-stage312-gpt56-answerer-top20-2026-11-01.json).
 The 97% gate remains unmet by 19 answers. This is a single-seed run; repeatability
 is not established. Offsite disaster recovery remains unverified; the local
