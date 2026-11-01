@@ -610,8 +610,10 @@ with a fixed Top-20. The aggregate comparison is therefore descriptive, not a
 paired estimate. The answer-session audit is the stronger evidence for the model
 change: all annotated answer sessions were in the Stage312 Top-20 for 32 of the
 34 failures, and 33 of 34 had them in the Top-200. The remaining gap is answer
-reasoning, not retrieval. A 30-question hard-set pilot scored 34/60 with GPT-6
-and 48/60 with GPT-5.6 on identical evidence.
+reasoning, not retrieval. A 60-question hard set (30 pilot questions plus 30 Stage312 failures) scored
+34/60 with GPT-6, 48/60 with GPT-5.6, and 41/60 with Kimi K3 on identical
+evidence; Grok 4.7 and DeepSeek V4 Pro did not satisfy the structured-answer
+contract and were not considered.
 
 Adapter commit: `59cf5f9 feat: reconstruct stage311 adapter and add answer
 reconciliation`. The scorecard, dataset hash, and result hash are in
