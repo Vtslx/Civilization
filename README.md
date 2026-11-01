@@ -44,7 +44,7 @@ documents.
 | `docs/versions/` | One baseline record per implemented version, plus recorded experiments. |
 | `docs/readme/` | This README in eight additional languages. |
 
-Over 500 tests cover the line, from the first rule-gate unit tests to the
+Over 580 tests cover the line, from the first rule-gate unit tests to the
 service, memory, and SDK contracts.
 
 ## Architecture at a glance
@@ -318,7 +318,7 @@ tests, examples, and documentation.
 
 ```bash
 python -m pip install -e '.[test]'   # pytest plus the engine and analysis deps
-pytest                                # 508 tests; the model-dependent ones skip
+pytest                                # 645 tests; the model-dependent ones skip
 ```
 
 Extras: `.[embedded]` hosts the service in-process, `.[test]` runs the suite,
