@@ -586,3 +586,36 @@ Reranker selections varied between the same-seed runs: only 22/266 rows kept the
 Both seeds were accepted. No adapter code changed; the run used adapter commit `975d9d5`. Full result SHA-256: `4b90c7743b374ae8f402a1eb272f90332ed241f87ea60b4782e838b229fbbe24`. See [longmemeval-stage299-reranker-repeat-top20-2026-10-29.json](data/longmemeval-stage299-reranker-repeat-top20-2026-10-29.json).
 
 Keep reranking opt-in. Stage299 is the best observed run, but same-seed selection stability is low and the reranked target regressed. The 97% goal remains 24 answers short; memory precision and live offsite recovery remain unverified. Stage299 does not demonstrate Stage166 efficacy.
+
+## Stage312: stronger answerer on fixed reranked evidence (2026-11-01)
+
+Stage312 replaced the GPT-6 answerer with **GPT-5.6 Luna** (`auto/gpt-5.6-luna`)
+on an identical fixed Top-20 evidence set, keeping the GPT-6 judge
+(`group/auto-gpt-6-luna`), seed 42, the full Stage311 resolver configuration,
+and `top_20`. The evidence set is the Stage262 frozen Top-200 pool with one
+selective GPT-6 reranker pass fixed before the run; no live reranker ran during
+answer generation.
+
+It freshly generated and judged all 500 answers and scored **466/500 (93.2%)**,
+the best verified full result so far: five answers above the prior 461/500 best
+and **19 below the 485/500 gate**. Per type: knowledge-update 74/78 (94.9%),
+multi-session 121/133 (91.0%), single-session-assistant 55/56 (98.2%),
+single-session-preference 28/30 (93.3%), single-session-user 68/70 (97.1%), and
+temporal-reasoning 120/133 (90.2%). The scorecard reports zero API-error rows
+and 29/30 correct on abstention questions.
+
+The candidate and baseline are not prompt-identical: Stage299 used the Stage268
+retrieval snapshot and a live reranker, while Stage312 used the Stage262 snapshot
+with a fixed Top-20. The aggregate comparison is therefore descriptive, not a
+paired estimate. The answer-session audit is the stronger evidence for the model
+change: all annotated answer sessions were in the Stage312 Top-20 for 32 of the
+34 failures, and 33 of 34 had them in the Top-200. The remaining gap is answer
+reasoning, not retrieval. A 30-question hard-set pilot scored 34/60 with GPT-6
+and 48/60 with GPT-5.6 on identical evidence.
+
+Adapter commit: `59cf5f9 feat: reconstruct stage311 adapter and add answer
+reconciliation`. The scorecard, dataset hash, and result hash are in
+[longmemeval-stage312-gpt56-answerer-top20-2026-11-01.json](data/longmemeval-stage312-gpt56-answerer-top20-2026-11-01.json).
+The 97% gate remains unmet by 19 answers. This is a single-seed run; repeatability
+is not established. Offsite disaster recovery remains unverified; the local
+cross-filesystem and local S3-compatible drills passed (126/126 cells each).
