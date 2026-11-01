@@ -597,23 +597,31 @@ selective GPT-6 reranker pass fixed before the run; no live reranker ran during
 answer generation.
 
 It freshly generated and judged all 500 answers and scored **466/500 (93.2%)**,
-the best verified full result so far: five answers above the prior 461/500 best
-and **19 below the 485/500 gate**. Per type: knowledge-update 74/78 (94.9%),
+**19 below the 485/500 gate**. Per type: knowledge-update 74/78 (94.9%),
 multi-session 121/133 (91.0%), single-session-assistant 55/56 (98.2%),
 single-session-preference 28/30 (93.3%), single-session-user 68/70 (97.1%), and
 temporal-reasoning 120/133 (90.2%). The scorecard reports zero API-error rows
 and 29/30 correct on abstention questions.
 
-The candidate and baseline are not prompt-identical: Stage299 used the Stage268
-retrieval snapshot and a live reranker, while Stage312 used the Stage262 snapshot
-with a fixed Top-20. The aggregate comparison is therefore descriptive, not a
-paired estimate. The answer-session audit is the stronger evidence for the model
-change: all annotated answer sessions were in the Stage312 Top-20 for 32 of the
-34 failures, and 33 of 34 had them in the Top-200. The remaining gap is answer
-reasoning, not retrieval. A 60-question hard set (30 pilot questions plus 30 Stage312 failures) scored
-34/60 with GPT-6, 48/60 with GPT-5.6, and 41/60 with Kimi K3 on identical
-evidence; Grok 4.7 and DeepSeek V4 Pro did not satisfy the structured-answer
-contract and were not considered.
+The valid comparison is a **same-evidence control**, not the historical Stage299
+number. A second full 500-question run used GPT-6 Luna as the answerer on the
+same 500 fixed Top-20 evidence rows, the same GPT-6 judge, the same seed, and the
+same resolver flags. The first 20 evidence items were identical in **500/500**
+rows. GPT-6 scored **441/500 (88.2%)**; paired outcomes were 435 both-correct,
+**31 candidate-only**, **6 control-only**, and 28 both-wrong, a net **+25** for
+GPT-5.6. Per-type net deltas: multi-session +10, temporal-reasoning +12,
+knowledge-update +4, preference −1, assistant 0, user 0. The model change is
+therefore a real same-context gain, not a retrieval or prompt confound.
+
+The historical Stage299 461/500 is **not** the paired baseline: it used the
+Stage268 retrieval snapshot and a live selective reranker. Treat any 466-vs-461
+comparison as descriptive only. The answer-session audit reinforces the
+same-evidence result: all annotated answer sessions were in the Stage312 Top-20
+for 32 of the 34 failures, and 33 of 34 had them in the Top-200. The remaining
+gap is answer reasoning, not retrieval. A 60-question hard set (30 pilot
+questions plus 30 Stage312 failures) scored 34/60 with GPT-6, 48/60 with GPT-5.6,
+and 41/60 with Kimi K3 on identical evidence; Grok 4.7 and DeepSeek V4 Pro did
+not satisfy the structured-answer contract and were not considered.
 
 Adapter commit: `59cf5f9 feat: reconstruct stage311 adapter and add answer
 reconciliation` (recorded after the run; the run used the reconstructed Stage311

@@ -524,8 +524,10 @@ Stage306 的 21 条无效审计中，有 9 条答案以“记忆未说明”类�
 
 Stage312 在完全相同的固定 Top-20 证据上，把回答模型从 GPT-6 换成 **GPT-5.6 Luna**（`auto/gpt-5.6-luna`），裁判仍为 `group/auto-gpt-6-luna`、seed 42，保留 Stage311 的全部 resolver 配置和 `top_20` 口径。证据集是 Stage262 冻结 Top-200 经一次 GPT-6 selective reranker 固定下来的前 20 条；回答阶段不再调用 reranker。
 
-全量 500 题重新生成并裁判，得 **466/500（93.2%）**，是目前验证过的最高全量成绩：比 Stage299 的 461 高 5，距 485/500 门槛差 **19**。分类型：knowledge-update 74/78（94.9%）、multi-session 121/133（91.0%）、single-session-assistant 55/56（98.2%）、single-session-preference 28/30（93.3%）、single-session-user 68/70（97.1%）、temporal-reasoning 120/133（90.2%）。API 错误 0；abstention 题 29/30 正确。
+全量 500 题重新生成并裁判，得 **466/500（93.2%）**，距 485/500 门槛差 **19**。分类型：knowledge-update 74/78（94.9%）、multi-session 121/133（91.0%）、single-session-assistant 55/56（98.2%）、single-session-preference 28/30（93.3%）、single-session-user 68/70（97.1%）、temporal-reasoning 120/133（90.2%）。API 错误 0；abstention 题 29/30 正确。
 
-这不是 prompt-identical 的配对实验：Stage299 使用 Stage268 检索快照和实时 reranker，Stage312 使用 Stage262 快照和固定 Top-20，因此总分对比只能作描述。更强的证据来自答案来源审计：34 条错题中有 32 条的全部标注答案会话已在 Top-20，33 条在 Top-200；剩余差距主要在答案推理，不在检索。30 题困难集上，GPT-6 得 34/60，GPT-5.6 在同一证据上得 48/60。
+有效对照不是历史 Stage299 的 461，而是**同证据对照**。第二个全量 500 题运行把回答模型换回 GPT-6 Luna，使用完全相同的 500 条固定 Top-20 证据、同一个 GPT-6 裁判、同一个 seed 和同一套 resolver。两次运行的 Top-20 前 20 条证据在 **500/500** 行完全一致。GPT-6 得 **441/500（88.2%）**；配对结果为 435 题都对、**31 题仅 GPT-5.6 对**、**6 题仅 GPT-6 对**、28 题都错，GPT-5.6 净胜 **+25**。分类型净增：multi-session +10、temporal-reasoning +12、knowledge-update +4、preference −1、assistant 0、user 0。因此模型更换是真实的同上下文增益，不是检索或 prompt 混淆。
+
+历史 Stage299 的 461/500 **不是**本结果的配对基线：它使用 Stage268 检索快照和实时 selective reranker；466 与 461 的对比只能作描述。答案来源审计进一步支持同证据结论：34 条错题中有 32 条的全部标注答案会话已在 Top-20，33 条在 Top-200；剩余差距主要在答案推理，不在检索。60 题困难集上，GPT-6 得 34/60，GPT-5.6 在同一证据上得 48/60，Kimi K3 得 41/60。
 
 Adapter 提交：`59cf5f9 feat: reconstruct stage311 adapter and add answer reconciliation`。成绩卡、数据集哈希和结果哈希见 [Stage312 成绩卡](data/longmemeval-stage312-gpt56-answerer-top20-2026-11-01.json)。97% 门槛仍差 19 题；这是单 seed 结果，尚未证明可重复。异地灾备仍未验证；同机跨文件系统和本地 S3 兼容演练各以 126/126 个 cell 通过。

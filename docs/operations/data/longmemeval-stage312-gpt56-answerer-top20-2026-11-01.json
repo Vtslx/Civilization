@@ -336,7 +336,7 @@
     "baseline_correct": 461,
     "candidate_correct": 466,
     "net_delta": 5,
-    "comparison_note": "Not a prompt-identical paired run: Stage299 used the Stage268 retrieval snapshot and a live selective reranker; this run used the Stage262 snapshot with a fixed Top-20. The comparison is descriptive only."
+    "comparison_note": "Not the valid baseline for this claim: Stage299 used the Stage268 retrieval snapshot and a live selective reranker. The valid same-context comparison is control_same_evidence (GPT-6, 441/500) and paired_same_evidence (net +25)."
   },
   "best_observed_full_score": {
     "stage": 312,
@@ -350,8 +350,99 @@
   "memory_precision_evidence": "Controlled provenance-complete corpora: 7/7 and 132/132 cells; not a census of production memory.",
   "offsite_disaster_recovery_restore_verified": false,
   "local_disaster_recovery_drill_verified": true,
-  "decision": "GPT-5.6 Luna is a material answerer improvement on the same fixed evidence: 466/500, a new verified full-run best, five answers above the prior 461 and 19 below the 485 gate. Keep the stronger answerer as the default candidate and continue with targeted numeric/temporal repairs.",
-  "limitations": "The retrieval snapshot is Stage262, not the Stage268 snapshot used by Stage299, so the aggregate comparison is not paired. The run is a single seed; repeatability is not established. The 97% gate remains unmet by 19 answers. Offsite recovery remains unverified; only local cross-filesystem and local S3-compatible drills passed.",
+  "decision": "On identical fixed Top-20 evidence (500/500 rows), GPT-5.6 Luna scored 466/500 versus 441/500 for GPT-6 Luna: 31 candidate-only wins, 6 control-only wins, net +25. The answerer change is a real same-context gain, not a retrieval or prompt-confounded one. The full score remains 19 answers below the 485 gate.",
+  "limitations": "The run is a single seed and the provider is not perfectly deterministic, so the +25 is a measured paired difference, not a guaranteed repeat. The historical Stage299 461/500 is a different retrieval snapshot and is not a paired baseline. The 97% gate remains unmet by 19 answers. Offsite recovery remains unverified; only local cross-filesystem and local S3-compatible drills passed.",
   "adapter_commit_note": "Recorded after the run; the run used the reconstructed Stage311 adapter before answer reconciliation and abstention recovery were added.",
-  "prompt_source_sha256": "3d4a384e9535e0a067031b5ef7f90fed351a778c2cd0fe91f2f2349004cf5b4f"
+  "prompt_source_sha256": "3d4a384e9535e0a067031b5ef7f90fed351a778c2cd0fe91f2f2349004cf5b4f",
+  "control_same_evidence": {
+    "answerer_model": "group/auto-gpt-6-luna",
+    "judge_model": "group/auto-gpt-6-luna",
+    "result_artifact": {
+      "path": "/Volumes/Net/mb-runs/gpt6-fixed-control/longmemeval_results_20261101_122025.json",
+      "sha256": "b76a8b10598bbeedfbfeaac4078e78d727c05dab49bcee3dede739c475318839"
+    },
+    "correct": 441,
+    "accuracy": 0.882,
+    "target_met": false,
+    "question_types": {
+      "knowledge-update": {
+        "questions": 78,
+        "correct": 70,
+        "score_sum": 70.0,
+        "accuracy": 0.897436
+      },
+      "multi-session": {
+        "questions": 133,
+        "correct": 111,
+        "score_sum": 111.0,
+        "accuracy": 0.834586
+      },
+      "single-session-assistant": {
+        "questions": 56,
+        "correct": 55,
+        "score_sum": 55.0,
+        "accuracy": 0.982143
+      },
+      "single-session-preference": {
+        "questions": 30,
+        "correct": 29,
+        "score_sum": 29.0,
+        "accuracy": 0.966667
+      },
+      "single-session-user": {
+        "questions": 70,
+        "correct": 68,
+        "score_sum": 68.0,
+        "accuracy": 0.971429
+      },
+      "temporal-reasoning": {
+        "questions": 133,
+        "correct": 108,
+        "score_sum": 108.0,
+        "accuracy": 0.81203
+      }
+    },
+    "note": "Same 500 fixed Top-20 evidence rows, same judge, same seed; only the answerer model differs."
+  },
+  "paired_same_evidence": {
+    "question_count": 500,
+    "both_correct": 435,
+    "candidate_only_correct": 31,
+    "control_only_correct": 6,
+    "both_wrong": 28,
+    "net_delta": 25,
+    "top20_evidence_identical_rows": 500,
+    "by_question_type": {
+      "knowledge-update": {
+        "candidate_correct": 74,
+        "control_correct": 70,
+        "net": 4
+      },
+      "multi-session": {
+        "candidate_correct": 121,
+        "control_correct": 111,
+        "net": 10
+      },
+      "single-session-assistant": {
+        "candidate_correct": 55,
+        "control_correct": 55,
+        "net": 0
+      },
+      "single-session-preference": {
+        "candidate_correct": 28,
+        "control_correct": 29,
+        "net": -1
+      },
+      "single-session-user": {
+        "candidate_correct": 68,
+        "control_correct": 68,
+        "net": 0
+      },
+      "temporal-reasoning": {
+        "candidate_correct": 120,
+        "control_correct": 108,
+        "net": 12
+      }
+    }
+  }
 }
