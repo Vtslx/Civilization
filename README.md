@@ -260,6 +260,14 @@ Register a new backend with `register_runtime(RuntimeKind(...))`.
 
 ### TypeScript SDK
 
+Install the published package from [npm](https://www.npmjs.com/package/@astreusn/civilization-transformer):
+
+```bash
+npm install @astreusn/civilization-transformer@1.0.0
+```
+
+Build and test the SDK from this repository:
+
 ```bash
 cd sdk/civilization-transformer
 npm install && npm run build && npm test
